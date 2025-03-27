@@ -33,7 +33,7 @@ Desenvolvi modelos preditivos (ex: risco de crédito com 85% de acurácia) e aut
 
 Criei dashboards em Power BI para gestão de dados da COVID-19 e análise de churn em telecomunicações.
 
-✔️ **Formação Sólida & Aprendizado Contínuo**:
+✔️ **Formação & Aprendizado Contínuo**:
 
 Ciência da Computação (7º período) + Certificações em Ciência de Dados (EBAC, Sigmoidal).
 
@@ -51,19 +51,13 @@ Experiência em projetos end-to-end (da coleta ao deploy de insights).
 
 Algoritmo de ML para prever inadimplência, integrado a um dashboard em Power BI.
 
-Resultado: Redução de 20% na análise manual de crédito.
-
 🌍 **Dashboard COVID-19**
 
 Visualização em tempo real de casos, com filtros por país e tendências.
 
-Impacto: Utilizado por 50+ profissionais para monitoramento estratégico.
-
 📉 **Análise de Churn (Telecomunicações)**
 
 Identificação dos principais fatores de cancelamento usando PyCaret.
-
-Ação: Recomendações que reduziram churn em 15% no cenário simulado.
 
 ## 💡 O QUE ME MOTIVA?
 
