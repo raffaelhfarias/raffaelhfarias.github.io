@@ -14,7 +14,7 @@ order: 4
 **Experiência com:**
 Python, SQL, Machine Learning, Análise de Dados, Ciência de Dados.
 
-📊 +3 anos de experiência em análise de dados, com foco em transformar dados em insights estratégicos para tomada de decisões. Formando em Ciência da Computação (7º período) e certificado como Cientista de Dados pela [EBAC](https://static.lms.ebaconline.com.br/certs/976b91f1-2981-4229-a42c-8267d96309cc.pdf), [Sigmoidal](https://drive.google.com/file/d/1-HC-57HhQyn395O8vx5AErmuzVTMtdcp/view?usp=sharing) e [Ciência dos Dados](https://hotmart.com/pt-br/club/product/907215/certificate/9d81a58f-4c13-4c7c-8aa5-792be7737550--36887839/validate).
+📊 +3 anos de experiência em análise de dados, com foco em transformar dados em insights estratégicos para tomada de decisões. Formando em Ciência da Computação (7º período) e certificado como Cientista de Dados pela [EBAC](https://ebaconline.com.br/), [Sigmoidal](https://sigmoidal.ai/) e [Ciência dos Dados](https://www.linkedin.com/company/ci%C3%AAncia-dos-dados/).
 
 ## 💡 Habilidades Técnicas:
 → Coleta, tratamento e análise de grandes volumes de dados.</br>
