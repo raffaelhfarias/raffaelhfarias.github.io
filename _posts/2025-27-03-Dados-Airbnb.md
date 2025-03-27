@@ -1,3 +1,10 @@
+---
+title: "Dados Airnb"
+date: 2025-27-03 00:00:00 +0800
+categories: [Análise de Dados]
+tags: [Análise]
+---
+
 [![Autor](https://img.shields.io/badge/autor-rhfariasn-red.svg)](https://shields.io/)
 [![Python](https://img.shields.io/badge/python-3.7+-blue.svg)](https://shields.io/)
 [![Contributions](https://img.shields.io/badge/contributions-bem_vindo-green.svg)](https://shields.io/)
