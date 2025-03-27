@@ -1,8 +1,8 @@
 ---
 title: "Analisando a Taxa de Churn"
 date: 2025-03-27 00:00:00 +0000
-categories: [Análise de Dados]
-tags: [Análise]
+categories: [Analise de Dados]
+tags: [Analise]
 ---
 
 # Analisando a Taxa de Churn
