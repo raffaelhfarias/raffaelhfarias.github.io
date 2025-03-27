@@ -11,19 +11,19 @@ Mentor de futuros analistas | Especialista em Machine Learning Aplicado</sub>
 
 → 📊 **Análise & Modelagem**:
 
-Python (Pandas, NumPy, Scikit-Learn, PyCaret) | SQL | Estatística Aplicada | Machine Learning (Classificação, Regressão, Clusterização)
+Python (Pandas, NumPy, Scikit-Learn, PyCaret), SQL, Estatística Aplicada, Machine Learning (Classificação, Regressão, Clusterização)
 
 → 🚀 **Engenharia de Dados**:
 
-ETL/ELT | Big Data (AWS, Google Cloud) | MongoDB | PySpark (em aprendizado)
+ETL/ELT, Big Data (AWS, Google Cloud), MongoDB, PySpark (em aprendizado)
 
 → 📈 **Visualização & Storytelling**:
 
-Power BI | Tableau | Dashboards Interativos | Data-Driven Decision Making
+Power BI, Tableau, Dashboards Interativos, Data-Driven Decision Making
 
 → 🧠 **Soft Skills**:
 
-Comunicação Clara | Resolução Criativa de Problemas | Adaptabilidade | Paixão por Ensinar (Experiência como Tutor EBAC)
+Comunicação Clara, Resolução Criativa de Problemas, Adaptabilidade, Paixão por Ensinar (Experiência como Tutor EBAC)
 
 ## 🎯 Resumo profissional
 
