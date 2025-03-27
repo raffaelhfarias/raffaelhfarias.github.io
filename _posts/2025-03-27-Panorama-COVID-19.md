@@ -1,8 +1,8 @@
 ---
 title: "Panorama COVID 19"
 date: 2025-03-27 00:00:00 +0000
-categories: [Análise de Dados]
-tags: [Análise]
+categories: [Analise de Dados]
+tags: [Analise]
 ---
 
 # Panorama COVID-19
