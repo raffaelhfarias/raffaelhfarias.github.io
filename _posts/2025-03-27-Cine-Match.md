@@ -1,8 +1,8 @@
 ---
 title: "Cine Match"
 date: 2025-03-27 00:00:00 +0000
-categories: [Recomendação]
-tags: [Recomendação]
+categories: [IA]
+tags: [Sistema de Recomendação]
 ---
 
 # 🎬 CineMatch - Seu Indicador de Filmes Pessoal
