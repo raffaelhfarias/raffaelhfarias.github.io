@@ -17,10 +17,13 @@ Python, SQL, Machine Learning, Análise de Dados, Ciência de Dados.
 📊 +3 anos de experiência em análise de dados, com foco em transformar dados em insights estratégicos para tomada de decisões. Formando em Ciência da Computação (7º período) e certificado como Cientista de Dados pela [EBAC](https://ebaconline.com.br/), [Sigmoidal](https://sigmoidal.ai/) e [Ciência dos Dados](https://www.linkedin.com/company/ci%C3%AAncia-dos-dados/).
 
 ## 💡 Habilidades Técnicas:
-→ Habilidade em coleta, tratamento e análise de grandes volumes de dados.</br>
-→ Modelagem estatística e aplicação de algoritmos de aprendizado de máquina para otimização de processos.</br>
-→ Programação avançada em **Python** e **SQL**, com domínio de bibliotecas como **Scikit-Learn**, **PyCaret**, **Pandas** e **NumPy**.</br>
-→ Visualização de dados com **Power BI** e **Tableau** para criação de dashboards intuitivos e informativos.</br>
+→ Habilidade em coleta, tratamento e análise de grandes volumes de dados.
+
+→ Modelagem estatística e aplicação de algoritmos de aprendizado de máquina para otimização de processos.
+
+→ Programação avançada em **Python** e **SQL**, com domínio de bibliotecas como **Scikit-Learn**, **PyCaret**, **Pandas** e **NumPy**.
+
+→ Visualização de dados com **Power BI** e **Tableau** para criação de dashboards intuitivos e informativos.
 
 ## 🔍 Sobre Mim:
 Sou apaixonado por resolver problemas complexos através de soluções inovadoras e baseadas em dados. Busco constantemente desafios que me permitam aplicar minhas habilidades técnicas e analíticas para gerar impacto real nos negócios.
