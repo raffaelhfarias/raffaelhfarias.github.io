@@ -17,6 +17,3 @@ Estou me aprofudando na área Cientista de Dados, atualmente estudo na faculdade
 
 **Experiência com:**
 Python, SQL, Machine Learning, Análise de Dados, Ciência de Dados.
-
-> Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
-{: .prompt-tip }
