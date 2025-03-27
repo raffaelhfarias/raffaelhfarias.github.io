@@ -4,8 +4,7 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-<sub>Cientista de Dados formado pela EBAC - Escola Britânica de Artes Criativas e Tecnologia
-Mentor de futuros analistas | Especialista em Machine Learning Aplicado</sub>
+<sub>Cientista de Dados formado pela EBAC - Escola Britânica de Artes Criativas e Tecnologia</sub>
 
 ## 🛠️ TECNOLOGIAS & EXPERTISE
 
