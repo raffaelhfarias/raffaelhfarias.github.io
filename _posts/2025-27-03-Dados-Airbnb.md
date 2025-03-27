@@ -1,5 +1,5 @@
 ---
-title: "Dados Airnb"
+title: "Dados Airbnb"
 date: 2025-27-03 00:00:00 +0800
 categories: [Análise de Dados]
 tags: [Análise]
