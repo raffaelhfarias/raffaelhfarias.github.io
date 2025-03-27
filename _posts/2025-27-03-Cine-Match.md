@@ -1,6 +1,6 @@
 ---
 title: "Cine Match"
-date: 2025-27-03 00:00:00 +0800
+date: 2025-03-27 00:00:00 +0000
 categories: [Recomendação]
 tags: [Recomendação]
 ---
