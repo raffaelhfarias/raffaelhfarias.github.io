@@ -6,6 +6,8 @@ order: 4
 
 Oi, eu sou o Raffael! Estou no 7º período do curso Ciência da Computação na faculdade Descomplica. Cientista de Dados formado pela EBAC - Escola Britânica de Artes Criativas e Tecnologia, Sigmoidal e Ciência dos dados. Sou apaixonado por resolver problemas complexos através de soluções inovadoras e baseadas em dados. Busco constantemente desafios que me permitam aplicar minhas habilidades técnicas e analíticas para gerar impacto real nos negócios.
 
+Se eu fosse resumir minhas habilidades de forma abrangente seria a total capacidade em **coletar, transformar e mostrar dados de maneira extremamente eficiente, seja criando algo do zero ou não**.
+
 ## 🛠️ TECNOLOGIAS & EXPERTISE
 
 → 📊 **Análise & Modelagem**:
