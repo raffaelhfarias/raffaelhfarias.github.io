@@ -4,7 +4,7 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-<sub>Cientista de Dados formado pela EBAC - Escola Britânica de Artes Criativas e Tecnologia</sub>
+Oi, eu sou o Raffael! Estou no 7º período do curso Ciência da Computação na faculdade Descomplica. Cientista de Dados formado pela EBAC - Escola Britânica de Artes Criativas e Tecnologia, Sigmoidal e Ciência dos dados. Sou apaixonado por resolver problemas complexos através de soluções inovadoras e baseadas em dados. Busco constantemente desafios que me permitam aplicar minhas habilidades técnicas e analíticas para gerar impacto real nos negócios.
 
 ## 🛠️ TECNOLOGIAS & EXPERTISE
 
