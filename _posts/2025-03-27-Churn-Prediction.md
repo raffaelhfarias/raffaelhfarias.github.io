@@ -4,6 +4,7 @@ description: Taxa de evasão de uma base de clientes. Em serviços como Spotify 
 date: 2025-03-27 00:00:00 +0000
 categories: [Analise de Dados]
 tags: [Analise]
+comments: true
 image: https://raw.githubusercontent.com/raffaelhfarias/churnPrediction/refs/heads/main/imagens/churnrate.jpg
 ---
 
