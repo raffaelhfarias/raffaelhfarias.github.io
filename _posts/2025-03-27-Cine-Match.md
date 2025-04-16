@@ -7,9 +7,6 @@ tags: [Sistema de Recomendação]
 image: https://raw.githubusercontent.com/raffaelhfarias/recomenda-o/refs/heads/main/Others/Screenshot%202025-04-16%20183406.png
 ---
 
-# 🎬 CineMatch - Indicador de Filmes
-
-
 > Link para o Dashboard. 👉
 > [Link do Projeto](https://recomenda-o-j3mfxmgdwbdydzvjbhbqob.streamlit.app/)
 {: .prompt-info }
