@@ -16,7 +16,7 @@ timezone: America/Recife
 
 title: Raffael Henrique # the main title
 
-tagline: Python | SQL | Cientista de Dados | Analista de Dados # it will display as the subtitle
+tagline: Analista de Dados | Cientista de Dados | Analista de BI | Python, SQL, Power BI # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
   A minimal, responsive and feature-rich Jekyll theme for technical writing.
