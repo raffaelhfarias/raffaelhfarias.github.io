@@ -13,10 +13,6 @@ image: https://raw.githubusercontent.com/raffaelhfarias/Dados_Airbnb/main/imgens
 [![Python](https://img.shields.io/badge/python-3.7+-blue.svg)](https://shields.io/)
 [![Contributions](https://img.shields.io/badge/contributions-bem_vindo-green.svg)](https://shields.io/)
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/raffaelhfarias/Dados_Airbnb/main/imgens/Veneza_Airbnb_int.png" alt="imagem maneira relacionada ao projeto">
-</p>
-
 ## Introdução
 
 O [Airbnb](https://www.airbnb.com.br/) já é considerado como sendo a **maior empresa hoteleira da atualidade**. Ah, o detalhe é que ele **não possui nenhum hotel**!
