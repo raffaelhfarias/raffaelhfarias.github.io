@@ -1,5 +1,6 @@
 ---
 title: "[DASHBOARD] Preço da Gasolina no Brasil"
+description: Dashboard para análise dos preços da gasolina no Brasil (2004-2025) feito com Python/Dash.
 date: 2025-04-15 00:00:00 +0000
 categories: [Analise de Dados]
 tags: [Analise]
