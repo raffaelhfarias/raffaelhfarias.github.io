@@ -4,6 +4,7 @@ description: Um sistema de recomendação de filmes baseado em inteligência art
 date: 2025-03-27 00:00:00 +0000
 categories: [IA]
 tags: [Sistema de Recomendação]
+comments: true
 image: https://raw.githubusercontent.com/raffaelhfarias/recomenda-o/refs/heads/main/Others/Screenshot%202025-04-16%20183406.png
 ---
 
