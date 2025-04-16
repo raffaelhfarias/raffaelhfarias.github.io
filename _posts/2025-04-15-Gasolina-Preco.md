@@ -3,6 +3,7 @@ title: "[DASHBOARD] Preço da Gasolina no Brasil"
 date: 2025-04-15 00:00:00 +0000
 categories: [Analise de Dados]
 tags: [Analise]
+image: https://raw.githubusercontent.com/raffaelhfarias/gasolina-preco/refs/heads/main/Others/capa.png
 ---
 
 ![PREÇO GASOLINA_BRASIL](https://raw.githubusercontent.com/raffaelhfarias/gasolina-preco/refs/heads/main/Others/capa.png)
