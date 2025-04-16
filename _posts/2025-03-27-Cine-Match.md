@@ -9,7 +9,8 @@ image: https://raw.githubusercontent.com/raffaelhfarias/recomenda-o/refs/heads/m
 
 # 🎬 CineMatch - Seu Indicador de Filmes Pessoal
 
-> Link para o Dashboard. 👇
+
+> Link para o Dashboard. 👉
 > [Link do Projeto](https://recomenda-o-j3mfxmgdwbdydzvjbhbqob.streamlit.app/)
 {: .prompt-info }
 
