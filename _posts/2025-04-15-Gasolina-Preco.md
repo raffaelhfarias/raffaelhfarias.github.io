@@ -7,9 +7,6 @@ tags: [Analise]
 image: https://raw.githubusercontent.com/raffaelhfarias/gasolina-preco/refs/heads/main/Others/capa.png
 ---
 
-![PREÇO GASOLINA_BRASIL](https://raw.githubusercontent.com/raffaelhfarias/gasolina-preco/refs/heads/main/Others/capa.png)
-
-
 # Preço da Gasolina no Brasil
 
 Dashboard para análise dos preços da gasolina no Brasil (2004-2025) feito com Python/Dash.
