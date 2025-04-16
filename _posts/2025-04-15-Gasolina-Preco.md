@@ -12,9 +12,8 @@ image: https://raw.githubusercontent.com/raffaelhfarias/gasolina-preco/refs/head
 Dashboard para análise dos preços da gasolina no Brasil (2004-2025) feito com Python/Dash.
 
 > Link para o Dashboard. 👇
+> [Dashboard](https://gasolina-preco.onrender.com/)
 {: .prompt-info }
-
-[Dashboard](https://gasolina-preco.onrender.com/)
 
 ## 🔧 Funções
 
