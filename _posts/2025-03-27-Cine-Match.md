@@ -1,15 +1,17 @@
 ---
 title: "Cine Match"
+description: Um sistema de recomendação de filmes baseado em inteligência artificial, que traz sugestões personalizadas para você, sem complicação e de forma prática.
 date: 2025-03-27 00:00:00 +0000
 categories: [IA]
 tags: [Sistema de Recomendação]
+image: https://raw.githubusercontent.com/raffaelhfarias/recomenda-o/refs/heads/main/Others/Screenshot%202025-04-16%20183406.png
 ---
 
 # 🎬 CineMatch - Seu Indicador de Filmes Pessoal
 
-![](https://github.com/raffaelhfarias/recomenda-o/blob/main/Others/gifcapa.gif?raw=true)
-
-# 👉 [CineMatch](https://recomenda-o-j3mfxmgdwbdydzvjbhbqob.streamlit.app/)
+> Link para o Dashboard. 👇
+> [Link do Projeto](https://recomenda-o-j3mfxmgdwbdydzvjbhbqob.streamlit.app/)
+{: .prompt-info }
 
 ## 🌟 O que é o CineMatch?
 Um sistema de recomendação de filmes baseado em inteligência artificial, que traz sugestões personalizadas para você, sem complicação e de forma prática.
