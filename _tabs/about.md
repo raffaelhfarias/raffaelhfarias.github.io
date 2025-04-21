@@ -10,7 +10,6 @@ order: 4
 
 ![](https://raw.githubusercontent.com/MicaelliMedeiros/micaellimedeiros/master/image/computer-illustration.png){: width="400" height="400" .w-50 .right}
 
-<img alt="Colaboratory logo" width="20%" src="https://raw.githubusercontent.com/raffaelhfarias/raffaelhfarias/refs/heads/main/raffaelhenrique.png">
 <sub>*Cientista de Dados* formado pela EBAC - Escola Britânica de Artes Criativas e Tecnologia</sub>
 
 Experiência sólida sendo Cientista de Dados & Analista de Dados, atualmente faço Ciência da Computação (Bacharelado | 8º Período), **completei** o curso na EBAC - Profissão: Cientista de Dados. Se eu resumisse minhas habilidades essenciais, diria que eu sei **Coletar**, **Transformar** e **Mostrar** os dados de maneira totalmente eficiente!
