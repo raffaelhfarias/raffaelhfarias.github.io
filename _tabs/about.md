@@ -8,7 +8,7 @@ order: 4
 [![Python](https://img.shields.io/badge/python-3.7+-blue.svg)](https://shields.io/)
 [![Contributions](https://img.shields.io/badge/contributions-bem_vindo-green.svg)](https://shields.io/)
 
-![](https://raw.githubusercontent.com/MicaelliMedeiros/micaellimedeiros/master/image/computer-illustration.png){: width="400" height="400" .w-75 .normal}
+![](https://raw.githubusercontent.com/MicaelliMedeiros/micaellimedeiros/master/image/computer-illustration.png){: width="400" height="400" .w-50 .right}
 
 <img alt="Colaboratory logo" width="20%" src="https://raw.githubusercontent.com/raffaelhfarias/raffaelhfarias/refs/heads/main/raffaelhenrique.png">
 <sub>*Cientista de Dados* formado pela EBAC - Escola Britânica de Artes Criativas e Tecnologia</sub>
