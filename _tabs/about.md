@@ -19,6 +19,9 @@ Python, Machine Learning, I.A, Análise de Dados, Ciência dos Dados.
 
 # Redes Sociais:  
 
+[![](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/raffael-henrique/)
+[![](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:raffaelhfarias@gmail.com)
+
 # Projetos:
 
 **Análise do Preço da Gasolina no Brasil:** [Repositório](https://github.com/raffaelhfarias/gasolina-preco)<br>
