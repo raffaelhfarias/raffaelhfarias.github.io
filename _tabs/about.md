@@ -4,75 +4,62 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-Oi, eu sou o Raffael! Estou no 7º período do curso Ciência da Computação na faculdade Descomplica. Cientista de Dados formado pela EBAC - Escola Britânica de Artes Criativas e Tecnologia, Sigmoidal e Ciência dos dados. Sou apaixonado por resolver problemas complexos através de soluções inovadoras e baseadas em dados. Busco constantemente desafios que me permitam aplicar minhas habilidades técnicas e analíticas para gerar impacto real nos negócios.
+[![Autor](https://img.shields.io/badge/autor-rhfariasn-red.svg)](https://shields.io/)
+[![Python](https://img.shields.io/badge/python-3.7+-blue.svg)](https://shields.io/)
+[![Contributions](https://img.shields.io/badge/contributions-bem_vindo-green.svg)](https://shields.io/)
 
-Se eu fosse resumir minhas habilidades de forma abrangente seria a total capacidade em **coletar, transformar e mostrar dados de maneira extremamente eficiente, seja criando algo do zero ou não**.
+<img src="https://raw.githubusercontent.com/MicaelliMedeiros/micaellimedeiros/master/image/computer-illustration.png" min-width="400px" max-width="400px" width="400px" align="right" alt="Computador iuriCode">
 
-## 🛠️ TECNOLOGIAS & EXPERTISE
+<img alt="Colaboratory logo" width="20%" src="https://raw.githubusercontent.com/raffaelhfarias/raffaelhfarias/refs/heads/main/raffaelhenrique.png">
+<sub>*Cientista de Dados* formado pela EBAC - Escola Britânica de Artes Criativas e Tecnologia</sub>
 
-→ 📊 **Análise & Modelagem**:
+Experiência sólida sendo Cientista de Dados & Analista de Dados, atualmente faço Ciência da Computação (Bacharelado | 8º Período), **completei** o curso na EBAC - Profissão: Cientista de Dados. Se eu resumisse minhas habilidades essenciais, diria que eu sei **Coletar**, **Transformar** e **Mostrar** os dados de maneira totalmente eficiente!
 
-Python (Pandas, NumPy, Scikit-Learn, PyCaret), SQL, Estatística Aplicada, Machine Learning (Classificação, Regressão, Clusterização)
+**Experiência com:**
+Python, Machine Learning, I.A, Análise de Dados, Ciência dos Dados.
 
-→ 🚀 **Engenharia de Dados**:
+# Redes Sociais:
 
-ETL/ELT, Big Data (AWS, Google Cloud), MongoDB, PySpark (em aprendizado)
+<a href="https://raffaelhfarias.github.io/" alt="Portifolio">
+<img src="https://img.shields.io/badge/Portfolio-255E63?style=for-the-badge&logo=About.me&logoColor=white" /></a>
 
-→ 📈 **Visualização & Storytelling**:
+<a href="https://www.linkedin.com/in/raffael-henrique-59922520a/" alt="Linkedin">
+<img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" /></a>
 
-Power BI, Tableau, Dashboards Interativos, Data-Driven Decision Making
+<a href="mailto:raffaelhfarias@gmail.com" alt="Gmail">
+<img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" /></a>  
 
-→ 🧠 **Soft Skills**:
+# Projetos:
 
-Comunicação Clara, Resolução Criativa de Problemas, Adaptabilidade, Paixão por Ensinar (Experiência como Tutor EBAC)
+**Análise do Preço da Gasolina no Brasil:** [Repositório](https://github.com/raffaelhfarias/gasolina-preco)<br>
+**Sistema de Recomendação de Filmes:** [Repositório](https://github.com/raffaelhfarias/recomenda-o)<br>
+**Analisando dados do Airbnb:** [Repositório](https://github.com/raffaelhfarias/Dados_Airbnb)<br>
+**Panorama COVID-19:** [Repositório](https://github.com/raffaelhfarias/Panorama_COVID-19)<br>
+**Churn Prediction:** [Repositório](https://github.com/raffaelhfarias/churnPrediction)
 
-## 🎯 Resumo profissional
+# Artigos:
 
-✔️ **3+ anos transformando dados em resultados**:
+**Modelagem de risco de crédito com Machine Learning:** [Artigo](https://www.linkedin.com/pulse/modelagem-de-risco-cr%25C3%25A9dito-com-machine-learning-raffael-henrique/?trackingId=B0yknWluRGyXBPjCk0fO%2BA%3D%3D)<br>
+**Qual é a importância da visualização de dados?** [Artigo](https://www.linkedin.com/pulse/qual-%25C3%25A9-import%25C3%25A2ncia-da-visualiza%25C3%25A7%25C3%25A3o-de-dados-raffael-henrique/?trackingId=Zm%2FYj9F8RPauE9VvorbeNQ%3D%3D)
 
-Desenvolvi modelos preditivos (ex: risco de crédito com 85% de acurácia) e automações que reduziram horas manuais.
+# Ferramentas em que tenho conhecimentos do básico ao avançado
 
-Criei dashboards em Power BI para gestão de dados da COVID-19 e análise de churn em telecomunicações.
+![Excel](https://img.shields.io/badge/Excel-217346?style=for-the-badge&logo=microsoft-excel&logoColor=white)
+![SQL](https://img.shields.io/badge/SQL-4479A1?style=for-the-badge&logo=amazon-dynamodb&logoColor=white)
+![Tableau](https://img.shields.io/badge/Tableau-E9762B?style=for-the-badge&logo=tableau&logoColor=white)
+![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![R](https://img.shields.io/badge/R-276DC3?style=for-the-badge&logo=r-project&logoColor=white)
+![Google Sheets](https://img.shields.io/badge/Google%20Sheets-34A853?style=for-the-badge&logo=google-sheets&logoColor=white)
+![BigQuery](https://img.shields.io/badge/BigQuery-4285F4?style=for-the-badge&logo=google-bigquery&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
+![Scikit-Learn](https://img.shields.io/badge/Scikit_Learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
+![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=jupyter&logoColor=white)
+![Apache Spark](https://img.shields.io/badge/Spark-E25A1C?style=for-the-badge&logo=apache-spark&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![Google Cloud](https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)
 
-✔️ **Formação & Aprendizado Contínuo**:
-
-Ciência da Computação (7º período) + Certificações em Ciência de Dados (EBAC, Sigmoidal).
-
-Autodidata em ferramentas emergentes (ex: PySpark, TensorFlow).
-
-✔️ **Mentalidade Prática**:
-
-Foco em entender o negócio antes de escrever a primeira linha de código.
-
-Experiência em projetos end-to-end (da coleta ao deploy de insights).
-
-## 🚀 PROJETOS QUE ME ORGULHO
-
-🤖 **Modelo de Risco de Crédito**
-
-Algoritmo de ML para prever inadimplência, integrado a um dashboard em Power BI.
-
-🌍 **Dashboard COVID-19**
-
-Visualização em tempo real de casos, com filtros por país e tendências.
-
-📉 **Análise de Churn (Telecomunicações)**
-
-Identificação dos principais fatores de cancelamento usando PyCaret.
-
-## 💡 O QUE ME MOTIVA?
-
-"Acredito que dados só têm valor quando resolvem problemas reais. Meu objetivo é bridge entre a técnica e o negócio – traduzindo números em ações claras."
-
-Busco ambientes que valorizem inovação + colaboração.
-
-**Ansioso para contribuir com**:
-
-→ Modelos preditivos que antecipem riscos.
-
-→ Automações que libertem tempo da equipe.
-
-→ Visualizações que democratizem insights.
-
-## 📩 VAMOS CONVERSAR?
-Adoraria discutir como posso agregar ao time! Tenho café, ideias e um GitHub cheio de projetos para mostrar. 😊
