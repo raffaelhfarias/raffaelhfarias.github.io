@@ -24,6 +24,7 @@ Python, Machine Learning, I.A, Análise de Dados, Ciência dos Dados.
 
 # Projetos:
 
+**Estresse entre EUA x China e o Impacto no Brasil:** [Repositório](https://github.com/raffaelhfarias/PowerBI_Projetos/tree/main/Exporta%C3%A7%C3%B5es%20e%20Importa%C3%A7%C3%B5es)<br>
 **Análise do Preço da Gasolina no Brasil:** [Repositório](https://github.com/raffaelhfarias/gasolina-preco)<br>
 **Sistema de Recomendação de Filmes:** [Repositório](https://github.com/raffaelhfarias/recomenda-o)<br>
 **Analisando dados do Airbnb:** [Repositório](https://github.com/raffaelhfarias/Dados_Airbnb)<br>
