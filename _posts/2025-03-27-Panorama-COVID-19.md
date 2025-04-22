@@ -3,7 +3,7 @@ title: "Panorama COVID 19"
 description: O objetivo deste projeto é ¹analisar o dataset da Our World in Data sobre a COVID-19
 date: 2025-03-27 00:00:00 +0000
 categories: [Análise de Dados]
-tags: [Análise]
+tags: [Análise, Dashboard]
 comments: true
 image: https://raw.githubusercontent.com/raffaelhfarias/Panorama_COVID-19/refs/heads/main/others/Screenshot%202025-04-16%20154706.png
 ---
