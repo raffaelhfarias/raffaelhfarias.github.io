@@ -17,6 +17,10 @@ Experiência sólida sendo Cientista de Dados & Analista de Dados, atualmente fa
 **Experiência com:**
 Python, Machine Learning, I.A, Análise de Dados, Ciência dos Dados.
 
+# Meu Currículo:
+
+[![](https://img.shields.io/badge/PDF-D14836?style=for-the-badge&logo=PDF&logoColor=white)](https://drive.google.com/file/d/1fUbJpUb9EniI6QSEOyTmd0anelQfR9rE/view?usp=drive_link)
+
 # Redes Sociais:  
 
 [![](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/raffael-henrique/)
