@@ -19,7 +19,7 @@ Python, Machine Learning, I.A, Análise de Dados, Ciência dos Dados.
 
 # Meu Currículo:
 
-[![](https://img.shields.io/badge/PDF-D14836?style=for-the-badge&logo=PDF&logoColor=white)](https://drive.google.com/file/d/1fUbJpUb9EniI6QSEOyTmd0anelQfR9rE/view?usp=drive_link)
+[![](https://img.shields.io/badge/PDF-D14836?style=for-the-badge&logo=PDF&logoColor=white)](https://drive.google.com/file/d/1wgNdtAUb5IRwQKNTCGL4paCgKJZCOqZX/view?usp=sharing)
 
 # Redes Sociais:  
 
