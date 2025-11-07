@@ -1,3 +1,14 @@
+---
+title: "Extração e Envio Automático de Metas e Resultados"
+description: Sistema robusto e inteligente para automação de captura de metas, extração de dados de vendas e envio automatizado de relatórios via WhatsApp.
+date: 2025-11-07 00:00:00 +0800
+categories: [Automação]
+tags: [Python, Automation]
+comments: true
+image: https://raw.githubusercontent.com/raffaelhfarias/automated_whatsapp_reporting/refs/heads/main/videos/whatsappsender.gif
+---
+
+
 <h1 align="center">
   <br>
   <a href="https://raw.githubusercontent.com/raffaelhfarias/automated_whatsapp_reporting/refs/heads/main/imagens/"><img src="https://raw.githubusercontent.com/raffaelhfarias/automated_whatsapp_reporting/refs/heads/main/imagens/simpleImage.png" alt="robot" width="200"></a>
