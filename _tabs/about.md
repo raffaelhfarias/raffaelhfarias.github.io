@@ -12,10 +12,10 @@ order: 4
 
 <sub>*Cientista de Dados* formado pela EBAC - Escola Britânica de Artes Criativas e Tecnologia</sub>
 
-Experiência sólida sendo Cientista de Dados & Analista de Dados, atualmente faço Ciência da Computação (Bacharelado - 8º Período), **completei** o curso na EBAC - Profissão: Cientista de Dados. Se eu resumisse minhas habilidades essenciais, diria que eu sei **Coletar**, **Transformar** e **Mostrar** os dados de maneira totalmente eficiente!
+Experiência sólida sendo Cientista de Dados & Analista de Dados, formado em Ciência da Computação, **completei** o curso na EBAC - Profissão: Cientista de Dados. Se eu resumisse minhas habilidades essenciais, diria que eu sei **Coletar**, **Transformar** e **Mostrar** os dados de maneira totalmente eficiente!
 
 **Experiência com:**
-Python, Machine Learning, I.A, Análise de Dados, Ciência dos Dados.
+Python, Machine Learning, I.A, Análise de Dados, Ciência dos Dados, Automação de Processos.
 
 # Meu Currículo:
 
