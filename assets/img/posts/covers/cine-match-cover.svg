@@ -1,20 +1,15 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#0B1120"/>
-      <stop offset="1" stop-color="#1E1B4B"/>
-    </linearGradient>
-  </defs>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse"><stop stop-color="#0B1120"/><stop offset="1" stop-color="#1E1B4B"/></linearGradient></defs>
   <rect width="1200" height="630" rx="28" fill="url(#bg)"/>
-  <circle cx="930" cy="118" r="150" fill="#2563EB" fill-opacity="0.10"/>
-  <circle cx="1110" cy="520" r="220" fill="#8B5CF6" fill-opacity="0.08"/>
-  <rect x="220" y="78" width="220" height="40" rx="20" fill="#0F172A" fill-opacity="0.60" stroke="#60A5FA" stroke-opacity="0.45"/>
-  <text x="330" y="103" text-anchor="middle" fill="#E0F2FE" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">MACHINE LEARNING</text>
-  <text x="220" y="214" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="72" font-weight="800">Cine Match</text>
-  <text x="220" y="286" fill="#D6E3FF" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="500">Sistema de recomendação de filmes com base em similaridade textual</text>
-  <rect x="220" y="332" width="368" height="54" rx="15" fill="#0A1020" fill-opacity="0.76" stroke="#374151"/>
-  <text x="248" y="366" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Python · Streamlit · TF-IDF</text>
-  <text x="220" y="454" fill="#93C5FD" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Recomendação inteligente com experiência simples</text>
-  <text x="220" y="490" fill="#CBD5E1" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="500">Aplicação prática de machine learning com foco em usabilidade</text>
-  <text x="220" y="564" fill="#64748B" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Portfólio de Raffael Henrique</text>
+  <circle cx="970" cy="120" r="150" fill="#2563EB" fill-opacity="0.10"/>
+  <circle cx="1120" cy="520" r="220" fill="#8B5CF6" fill-opacity="0.08"/>
+  <rect x="300" y="78" width="220" height="40" rx="20" fill="#0F172A" fill-opacity="0.60" stroke="#60A5FA" stroke-opacity="0.45"/>
+  <text x="410" y="103" text-anchor="middle" fill="#E0F2FE" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">MACHINE LEARNING</text>
+  <text x="300" y="214" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="72" font-weight="800">Cine Match</text>
+  <text x="300" y="286" fill="#D6E3FF" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="500">Sistema de recomendação de filmes com similaridade textual</text>
+  <rect x="300" y="332" width="368" height="54" rx="15" fill="#0A1020" fill-opacity="0.76" stroke="#374151"/>
+  <text x="328" y="366" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Python · Streamlit · TF-IDF</text>
+  <text x="300" y="454" fill="#93C5FD" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Recomendação inteligente com experiência simples</text>
+  <text x="300" y="490" fill="#CBD5E1" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="500">Machine learning aplicado com foco em usabilidade</text>
+  <text x="300" y="564" fill="#64748B" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Portfólio de Raffael Henrique</text>
 </svg>
