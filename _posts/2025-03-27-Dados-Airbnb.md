@@ -1,7 +1,7 @@
 ---
 title: "Dados Airbnb"
 description: O Airbnb já é considerado como sendo a maior empresa hoteleira da atualidade. Ah, o detalhe é que ele não possui nenhum hotel!
-date: 2025-03-27 00:00:00 +0000
+date: 2025-03-27 00:00:00 -0300
 categories: [Análise de Dados]
 tags: [Análise]
 comments: true

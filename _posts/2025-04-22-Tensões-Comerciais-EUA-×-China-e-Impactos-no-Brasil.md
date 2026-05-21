@@ -1,7 +1,7 @@
 ---
 title: "Estresse Comercial EUA × China e Impactos no Brasil"
 description: Dashboard para análise das tensões comerciais entre EUA e China e seus efeitos no comércio brasileiro (2010-2025) desenvolvido com Power BI.
-date: 2025-04-22 00:00:00 +0800
+date: 2025-04-22 00:00:00 -0300
 categories: [Análise de Dados]
 tags: [PowerBI, Análise, Dashboard]
 comments: true

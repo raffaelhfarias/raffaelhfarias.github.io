@@ -1,7 +1,7 @@
 ---
 title: "Panorama COVID 19"
-description: O objetivo deste projeto é ¹analisar o dataset da Our World in Data sobre a COVID-19
-date: 2025-03-27 00:00:00 +0000
+description: Análise exploratória e dashboard com dados da Our World in Data para acompanhar o avanço da COVID-19 no mundo.
+date: 2025-03-27 00:00:00 -0300
 categories: [Análise de Dados]
 tags: [Análise, Dashboard]
 comments: true
@@ -10,7 +10,7 @@ image: https://raw.githubusercontent.com/raffaelhfarias/Panorama_COVID-19/refs/h
 
 # Panorama COVID-19
 
-O objetivo deste projeto é ¹analisar o dataset da Our World in Data sobre a COVID-19. Iremos extrair informações desse conjunto de dados, realizando uma análise exploratória, visualização, conclusão. ²Criaremos um dashboard para verificarmos o avanço da COVID-19 no mundo. (utilizando o plotly)
+O objetivo deste projeto é analisar o dataset da Our World in Data sobre a COVID-19, extraindo informações relevantes por meio de análise exploratória e visualização de dados. A partir disso, foi desenvolvido um dashboard em Plotly para acompanhar o avanço da pandemia no mundo.
 
 ### 🎥 Pré-visualização
 

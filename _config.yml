@@ -19,7 +19,8 @@ title: Raffael Henrique # the main title
 tagline: Data Scientist & Analyst | Python, SQL, Power BI | Machine Learning & Data Engineering | Focado em Business Intelligence e Automação. # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
-  A minimal, responsive and feature-rich Jekyll theme for technical writing.
+  Portfólio de Raffael Henrique com projetos de Ciência de Dados, Análise de Dados,
+  Machine Learning, Business Intelligence e Automação com Python, SQL e Power BI.
 
 # Fill in the protocol & hostname for your site.
 # E.g. 'https://username.github.io', note that it does not end with a '/'.
@@ -29,7 +30,7 @@ github:
   username: raffaelhfarias # change to your GitHub username
 
 twitter:
-  username: twitter_username # change to your Twitter username
+  username:
 
 social:
   # Change to your full name.
@@ -102,7 +103,7 @@ avatar: "/commons/avatar.jpg"
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
-social_preview_image: # string, local or CORS resources
+social_preview_image: "/commons/avatar.jpg"
 
 # boolean type, the global switch for TOC in posts.
 toc: true

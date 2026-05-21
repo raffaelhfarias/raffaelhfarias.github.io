@@ -1,7 +1,7 @@
 ---
 title: "Analisando a Taxa de Churn"
 description: Taxa de evasão de uma base de clientes. Em serviços como Spotify ou Netflix, ela indicaria a taxa de cancelamento de assinaturas.
-date: 2025-03-27 00:00:00 +0000
+date: 2025-03-27 00:00:00 -0300
 categories: [Análise de Dados]
 tags: [Análise]
 comments: true

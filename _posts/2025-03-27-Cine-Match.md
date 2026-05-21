@@ -1,7 +1,7 @@
 ---
 title: "Cine Match"
 description: Um sistema de recomendação de filmes baseado em inteligência artificial, que traz sugestões personalizadas para você, sem complicação e de forma prática.
-date: 2025-03-27 00:00:00 +0000
+date: 2025-03-27 00:00:00 -0300
 categories: [IA]
 tags: [Sistema de Recomendação]
 comments: true

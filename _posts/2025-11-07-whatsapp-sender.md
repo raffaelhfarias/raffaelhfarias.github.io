@@ -1,119 +1,73 @@
 ---
 title: "Extração e Envio Automático de Metas e Resultados"
-description: Sistema robusto e inteligente para automação de captura de metas, extração de dados de vendas e envio automatizado de relatórios via WhatsApp.
-date: 2025-11-07 00:00:00 +0800
+description: Automação para captura de metas, extração de dados de vendas e envio automatizado de relatórios via WhatsApp.
+date: 2025-11-07 00:00:00 -0300
 categories: [Automação]
-tags: [Python, Automation]
+tags: [Python, Automação]
 comments: true
 image: https://raw.githubusercontent.com/raffaelhfarias/automated_whatsapp_reporting/refs/heads/main/videos/whatsappsender.gif
 ---
 
+# Whatsapp Sender Report
 
-<h1 align="center">
-  <br>
-  <a href="https://raw.githubusercontent.com/raffaelhfarias/automated_whatsapp_reporting/refs/heads/main/imagens/"><img src="https://raw.githubusercontent.com/raffaelhfarias/automated_whatsapp_reporting/refs/heads/main/imagens/simpleImage.png" alt="robot" width="200"></a>
-  <br>
-  Whatsapp Sender Report
-  <br>
-</h1>
+Automação desenvolvida para capturar metas compartilhadas em grupos de WhatsApp, consolidar dados de vendas e enviar relatórios automaticamente para acompanhamento operacional.
 
-<h4 align="center">Sistema robusto e inteligente para automação de captura de metas, extração de dados de vendas e envio automatizado de relatórios via WhatsApp.</h4>
+> Repositório do projeto: [github.com/raffaelhfarias/automated_whatsapp_reporting](https://github.com/raffaelhfarias/automated_whatsapp_reporting)
+{: .prompt-info }
 
-<div align="center">
-  <img src="https://img.shields.io/badge/Python-3.x-blue?logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/Selenium-Web_Automation-red?logo=selenium&logoColor=white" alt="Selenium">
-  <img src="https://img.shields.io/badge/PyAutoGUI-GUI_Automation-yellow?logo=python&logoColor=white" alt="PyAutoGUI">
-  <img src="https://img.shields.io/badge/lxml-XML_&_HTML_Parser-green?logo=python&logoColor=white" alt="lxml">
-  <img src="https://img.shields.io/badge/undetected--chromedriver-Chrome_Automation-orange?logo=google-chrome&logoColor=white" alt="undetected-chromedriver">
-  <img src="https://img.shields.io/badge/python--dotenv-Environment_Vars-blue?logo=python&logoColor=white" alt="python-dotenv">
-  <img src="https://img.shields.io/badge/pywhatkit-WhatsApp_Automation-lightgreen?logo=whatsapp&logoColor=white" alt="pywhatkit">
-</div>
+## Visão geral
 
+O projeto foi criado para reduzir o trabalho manual envolvido na leitura de metas, coleta de indicadores e comunicação dos resultados. A solução conecta diferentes etapas do processo, desde a captura da informação até o envio final da mensagem, com foco em confiabilidade e agilidade.
 
-<p align="center">
-  <a href="#key-features">Key Features</a> •
-  <a href="#how-to-use">How To Use</a> •
-  <a href="#download">Download</a> •
-  <a href="#credits">Credits</a> •
-  <a href="#license">License</a>
-</p>
+## Principais entregas
 
-## Key Features
+- captura automática de metas enviadas por WhatsApp;
+- extração de dados de vendas a partir de sistemas internos;
+- validação e padronização dos dados coletados;
+- geração de mensagens com resultados consolidados;
+- envio automatizado de relatórios para os destinatários definidos;
+- uso de logs e flags para reduzir falhas recorrentes e facilitar o monitoramento.
 
-* Captura automática de metas em grupos WhatsApp
-  - Extração inteligente de valores de metas diárias
-* Extração de dados de vendas
-  - Integração com sistemas Loja, PEF e EUDORA
-  - Validação automática de dados
-* Envio automático de relatórios
-  - Formatação inteligente de mensagens
-  - Agendamento configurável
-* Sistema de flags inteligente
-  - Evita tentativas desnecessárias
-  - Recuperação automática de falhas
-* Logs detalhados
-  - Monitoramento completo de operações
-  - Diagnóstico rápido de problemas
-* Suporte a múltiplos ciclos
-  - Detecção automática de ciclos (C12, C13, etc.)
-* Cross-platform
-  - Windows, macOS e Linux compatível
+## Tecnologias utilizadas
 
-## How To Use
+- **Python** para a lógica principal da automação;
+- **Selenium** e **undetected-chromedriver** para automação web;
+- **PyAutoGUI** para interações complementares com interface;
+- **lxml** para tratamento e leitura de estruturas HTML/XML;
+- **python-dotenv** para configuração segura por variáveis de ambiente;
+- **pywhatkit** para apoio no envio automatizado via WhatsApp.
 
-Para clonar e executar este projeto, você precisará do [Git](https://git-scm.com) e [Python](https://python.org) (versão 3.8+) instalados no seu computador. No terminal:
+## Fluxo da solução
+
+1. leitura e identificação das metas compartilhadas;
+2. coleta dos dados necessários nos sistemas de origem;
+3. tratamento e validação das informações;
+4. montagem do relatório final;
+5. envio automatizado da mensagem para acompanhamento do time.
+
+## Resultado de negócio
+
+A automação reduz esforço operacional, aumenta a velocidade de resposta e diminui o risco de erro humano em um processo que antes exigia acompanhamento manual.
+
+## Como executar
 
 ```bash
-# Clone este repositório
-$ git clone https://github.com/seu-usuario/roboWhatsapp
-
-# Entre no diretório
-$ cd roboWhatsapp
-
-# Crie um ambiente virtual
-$ python -m venv .venv
-
-# Ative o ambiente virtual
-# Windows:
-$ .\.venv\Scripts\activate
-# Linux/macOS:
-$ source .venv/bin/activate
-
-# Instale as dependências
-$ pip install -r requirements.txt
-
-# Configure as variáveis de ambiente (copie .env.example para .env)
-$ cp .env.example .env
-# Edite .env com suas credenciais
-
-# Execute o sistema
-$ python main.py
+git clone https://github.com/raffaelhfarias/automated_whatsapp_reporting
+cd automated_whatsapp_reporting
+python -m venv .venv
 ```
 
-> **Nota**
-> Certifique-se de ter o Google Chrome instalado e configurado para automação.
+Depois disso:
 
-## Download
+- ative o ambiente virtual;
+- instale as dependências com `pip install -r requirements.txt`;
+- configure as variáveis de ambiente do projeto;
+- execute a aplicação conforme a documentação do repositório.
 
-Você pode [baixar](https://github.com/raffaelhfarias/raffaelhfarias/automated_whatsapp_reporting) a versão mais recente do RoboWhatsApp para Windows, macOS e Linux.
+## Observações
 
-## Credits
+> Para execução completa, o ambiente precisa estar preparado para automação do navegador e integração com WhatsApp.
 
-Este software utiliza os seguintes pacotes open source:
-
-- [Selenium](https://www.selenium.dev/) - Automação web
-- [undetected-chromedriver](https://github.com/ultrafunkamsterdam/undetected-chromedriver) - ChromeDriver não detectável
-- [Python](https://python.org/) - Linguagem de programação
-- [schedule](https://github.com/dbader/schedule) - Agendamento de tarefas
-- [python-dotenv](https://github.com/theskumar/python-dotenv) - Carregamento de variáveis de ambiente
-- [lxml](https://lxml.de/) - Processamento XML/HTML
-- [PyAutoGUI](https://pyautogui.readthedocs.io/) - Automação GUI
-
-## License
+## Licença
 
 MIT
-
----
-
-> GitHub [@raffaelhfarias](https://github.com/raffaelhfarias) &nbsp;&middot;&nbsp;
-> Projeto Completo [Projeto](https://github.com/raffaelhfarias/automated_whatsapp_reporting)&nbsp;&middot;&nbsp;
