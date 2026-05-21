@@ -6,7 +6,7 @@ categories: [Análise de Dados]
 tags: [Python, Dashboard, Dash]
 comments: true
 image: /assets/img/posts/covers/gasolina-brasil-cover.svg
-pin: true
+
 ---
 
 # Preço da Gasolina no Brasil

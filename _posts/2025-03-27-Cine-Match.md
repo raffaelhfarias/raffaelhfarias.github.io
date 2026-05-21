@@ -6,7 +6,7 @@ categories: [Machine Learning]
 tags: [Python, Machine Learning, Streamlit]
 comments: true
 image: /assets/img/posts/covers/cine-match-cover.svg
-pin: true
+
 ---
 
 # Cine Match

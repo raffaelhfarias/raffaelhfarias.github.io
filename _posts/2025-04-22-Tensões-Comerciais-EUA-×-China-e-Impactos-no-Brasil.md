@@ -6,7 +6,7 @@ categories: [Business Intelligence]
 tags: [Power BI, Dashboard, Comércio Exterior]
 comments: true
 image: /assets/img/posts/covers/estresse-comercial-cover.svg
-pin: true
+
 ---
 
 # Estresse Comercial EUA × China e Impactos no Brasil

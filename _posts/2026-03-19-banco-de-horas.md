@@ -6,7 +6,7 @@ categories: [Automação]
 tags: [Python, Automação]
 comments: true
 image: /assets/img/posts/covers/banco-de-horas-cover.svg
-pin: true
+
 ---
 
 # Extração de banco de horas dos colaboradores ativos
