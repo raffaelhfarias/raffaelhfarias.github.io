@@ -5,22 +5,16 @@
       <stop offset="1" stop-color="#7F1D1D"/>
     </linearGradient>
   </defs>
-
   <rect width="1200" height="630" rx="28" fill="url(#bg)"/>
-  <circle cx="980" cy="120" r="150" fill="#F97316" fill-opacity="0.10"/>
-  <circle cx="1115" cy="515" r="220" fill="#22C55E" fill-opacity="0.08"/>
-
-  <rect x="78" y="78" width="156" height="40" rx="20" fill="#1F2937" fill-opacity="0.60" stroke="#FB923C" stroke-opacity="0.45"/>
-  <text x="156" y="103" text-anchor="middle" fill="#FFEDD5" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">AUTOMAÇÃO</text>
-
-  <text x="78" y="214" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="72" font-weight="800">Metas e Resultados</text>
-  <text x="78" y="286" fill="#F3F4F6" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="500">Captura de metas, consolidação de dados e envio automatizado</text>
-
-  <rect x="78" y="332" width="402" height="54" rx="15" fill="#0F172A" fill-opacity="0.76" stroke="#374151"/>
-  <text x="106" y="366" fill="#F9FAFB" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Python · Selenium · WhatsApp</text>
-
-  <text x="78" y="454" fill="#FDBA74" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Fluxo operacional mais rápido e confiável</text>
-  <text x="78" y="490" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="500">Menos tarefas manuais e comunicação mais eficiente</text>
-
-  <text x="78" y="564" fill="#9CA3AF" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Portfólio de Raffael Henrique</text>
+  <circle cx="930" cy="118" r="150" fill="#F97316" fill-opacity="0.10"/>
+  <circle cx="1110" cy="520" r="220" fill="#22C55E" fill-opacity="0.08"/>
+  <rect x="220" y="78" width="156" height="40" rx="20" fill="#1F2937" fill-opacity="0.60" stroke="#FB923C" stroke-opacity="0.45"/>
+  <text x="298" y="103" text-anchor="middle" fill="#FFEDD5" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">AUTOMAÇÃO</text>
+  <text x="220" y="214" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="72" font-weight="800">Metas e Resultados</text>
+  <text x="220" y="286" fill="#F3F4F6" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="500">Captura de metas, consolidação de dados e envio automatizado</text>
+  <rect x="220" y="332" width="402" height="54" rx="15" fill="#0F172A" fill-opacity="0.76" stroke="#374151"/>
+  <text x="248" y="366" fill="#F9FAFB" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Python · Selenium · WhatsApp</text>
+  <text x="220" y="454" fill="#FDBA74" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Fluxo operacional mais rápido e confiável</text>
+  <text x="220" y="490" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="500">Menos tarefas manuais e comunicação mais eficiente</text>
+  <text x="220" y="564" fill="#9CA3AF" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Portfólio de Raffael Henrique</text>
 </svg>

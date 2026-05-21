@@ -5,22 +5,16 @@
       <stop offset="1" stop-color="#7C2D12"/>
     </linearGradient>
   </defs>
-
   <rect width="1200" height="630" rx="28" fill="url(#bg)"/>
-  <circle cx="985" cy="115" r="150" fill="#EA580C" fill-opacity="0.10"/>
-  <circle cx="1115" cy="520" r="220" fill="#FB7185" fill-opacity="0.08"/>
-
-  <rect x="78" y="78" width="156" height="40" rx="20" fill="#1F2937" fill-opacity="0.60" stroke="#FB923C" stroke-opacity="0.45"/>
-  <text x="156" y="103" text-anchor="middle" fill="#FFEDD5" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">AUTOMAÇÃO</text>
-
-  <text x="78" y="214" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="72" font-weight="800">Banco de Horas</text>
-  <text x="78" y="286" fill="#FDE7D8" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="500">Extração e consolidação automatizada para rotinas de RH</text>
-
-  <rect x="78" y="332" width="398" height="54" rx="15" fill="#0F172A" fill-opacity="0.76" stroke="#374151"/>
-  <text x="106" y="366" fill="#F9FAFB" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Python · Playwright · Kestra</text>
-
-  <text x="78" y="454" fill="#FDBA74" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Menos esforço manual no fechamento mensal</text>
-  <text x="78" y="490" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="500">Mais previsibilidade e confiabilidade para o processo</text>
-
-  <text x="78" y="564" fill="#9CA3AF" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Portfólio de Raffael Henrique</text>
+  <circle cx="930" cy="118" r="150" fill="#EA580C" fill-opacity="0.10"/>
+  <circle cx="1110" cy="520" r="220" fill="#FB7185" fill-opacity="0.08"/>
+  <rect x="220" y="78" width="156" height="40" rx="20" fill="#1F2937" fill-opacity="0.60" stroke="#FB923C" stroke-opacity="0.45"/>
+  <text x="298" y="103" text-anchor="middle" fill="#FFEDD5" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">AUTOMAÇÃO</text>
+  <text x="220" y="214" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="72" font-weight="800">Banco de Horas</text>
+  <text x="220" y="286" fill="#FDE7D8" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="500">Extração e consolidação automatizada para rotinas de RH</text>
+  <rect x="220" y="332" width="398" height="54" rx="15" fill="#0F172A" fill-opacity="0.76" stroke="#374151"/>
+  <text x="248" y="366" fill="#F9FAFB" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Python · Playwright · Kestra</text>
+  <text x="220" y="454" fill="#FDBA74" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Menos esforço manual no fechamento mensal</text>
+  <text x="220" y="490" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="500">Mais previsibilidade e confiabilidade para o processo</text>
+  <text x="220" y="564" fill="#9CA3AF" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Portfólio de Raffael Henrique</text>
 </svg>
