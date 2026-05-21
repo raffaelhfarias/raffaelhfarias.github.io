@@ -17,34 +17,33 @@
   <rect x="74" y="70" width="152" height="42" rx="21" fill="#172033" fill-opacity="0.58" stroke="#FB923C" stroke-opacity="0.55"/>
   <text x="150" y="97" text-anchor="middle" fill="#FFEDD5" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">AUTOMAÇÃO</text>
 
-  <text x="74" y="190" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="56" font-weight="800">Metas e Resultados</text>
-  <text x="74" y="252" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="56" font-weight="800">via WhatsApp</text>
-  <text x="74" y="308" fill="#F3F4F6" font-family="Segoe UI, Arial, sans-serif" font-size="29" font-weight="500">Captura, consolidação e envio automatizado de relatórios</text>
+  <text x="74" y="196" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="62" font-weight="800">Metas e Resultados</text>
+  <text x="74" y="258" fill="#F3F4F6" font-family="Segoe UI, Arial, sans-serif" font-size="29" font-weight="500">Relatórios automatizados com captura e envio via WhatsApp</text>
 
-  <rect x="74" y="354" width="404" height="56" rx="16" fill="#131A25" fill-opacity="0.76" stroke="#4B5563"/>
-  <text x="102" y="389" fill="#F9FAFB" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Python · Selenium · WhatsApp</text>
+  <rect x="74" y="314" width="404" height="56" rx="16" fill="#131A25" fill-opacity="0.76" stroke="#4B5563"/>
+  <text x="102" y="349" fill="#F9FAFB" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Python · Selenium · WhatsApp</text>
 
-  <text x="74" y="468" fill="#FDBA74" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Comunicação operacional com mais agilidade</text>
-  <text x="74" y="502" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="500">Menos tarefas manuais e mais confiabilidade no fluxo de resultados</text>
+  <text x="74" y="430" fill="#FDBA74" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Comunicação operacional com mais agilidade</text>
+  <text x="74" y="464" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="500">Menos tarefas manuais e mais confiabilidade no fluxo de resultados</text>
 
-  <rect x="734" y="126" width="382" height="258" rx="28" fill="#FFFFFF" fill-opacity="0.05" stroke="#FFFFFF" stroke-opacity="0.10"/>
-  <rect x="764" y="160" width="130" height="44" rx="14" fill="#F97316" fill-opacity="0.20"/>
-  <text x="829" y="188" text-anchor="middle" fill="#FFF7ED" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">Metas</text>
-  <rect x="922" y="160" width="136" height="44" rx="14" fill="#22C55E" fill-opacity="0.18"/>
-  <text x="990" y="188" text-anchor="middle" fill="#ECFDF5" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">Envio</text>
+  <rect x="742" y="136" width="362" height="240" rx="28" fill="#FFFFFF" fill-opacity="0.05" stroke="#FFFFFF" stroke-opacity="0.10"/>
+  <rect x="772" y="168" width="118" height="40" rx="14" fill="#F97316" fill-opacity="0.20"/>
+  <text x="831" y="194" text-anchor="middle" fill="#FFF7ED" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700">Metas</text>
+  <rect x="954" y="168" width="118" height="40" rx="14" fill="#22C55E" fill-opacity="0.18"/>
+  <text x="1013" y="194" text-anchor="middle" fill="#ECFDF5" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700">Envio</text>
 
-  <rect x="812" y="248" width="170" height="56" rx="16" fill="#0F172A" fill-opacity="0.72" stroke="#475569"/>
-  <text x="897" y="283" text-anchor="middle" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700">Automação</text>
+  <rect x="822" y="248" width="156" height="52" rx="16" fill="#0F172A" fill-opacity="0.72" stroke="#475569"/>
+  <text x="900" y="281" text-anchor="middle" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="700">Automação</text>
 
-  <path d="M894 204V236" stroke="#FDBA74" stroke-width="7" stroke-linecap="round"/>
-  <path d="M830 304V336" stroke="#FB923C" stroke-width="7" stroke-linecap="round"/>
-  <path d="M964 304V336" stroke="#22C55E" stroke-width="7" stroke-linecap="round"/>
-  <path d="M830 336H764" stroke="#FB923C" stroke-width="7" stroke-linecap="round"/>
-  <path d="M964 336H1032" stroke="#22C55E" stroke-width="7" stroke-linecap="round"/>
-  <rect x="716" y="316" width="96" height="42" rx="14" fill="#FB923C" fill-opacity="0.20"/>
-  <rect x="1012" y="316" width="96" height="42" rx="14" fill="#22C55E" fill-opacity="0.20"/>
-  <text x="764" y="343" text-anchor="middle" fill="#FFF7ED" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700">Dados</text>
-  <text x="1060" y="343" text-anchor="middle" fill="#ECFDF5" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700">WhatsApp</text>
+  <path d="M900 208V236" stroke="#FDBA74" stroke-width="7" stroke-linecap="round"/>
+  <path d="M842 300V330" stroke="#FB923C" stroke-width="7" stroke-linecap="round"/>
+  <path d="M958 300V330" stroke="#22C55E" stroke-width="7" stroke-linecap="round"/>
+  <path d="M842 330H778" stroke="#FB923C" stroke-width="7" stroke-linecap="round"/>
+  <path d="M958 330H1022" stroke="#22C55E" stroke-width="7" stroke-linecap="round"/>
+  <rect x="730" y="310" width="94" height="40" rx="14" fill="#FB923C" fill-opacity="0.20"/>
+  <rect x="1020" y="310" width="94" height="40" rx="14" fill="#22C55E" fill-opacity="0.20"/>
+  <text x="777" y="336" text-anchor="middle" fill="#FFF7ED" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">Dados</text>
+  <text x="1067" y="336" text-anchor="middle" fill="#ECFDF5" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">WhatsApp</text>
 
   <text x="74" y="566" fill="#9CA3AF" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Portfólio de Raffael Henrique</text>
 </svg>
