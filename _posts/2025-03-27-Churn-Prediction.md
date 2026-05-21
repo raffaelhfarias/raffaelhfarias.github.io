@@ -1,33 +1,56 @@
 ---
 title: "Analisando a Taxa de Churn"
-description: Taxa de evasão de uma base de clientes. Em serviços como Spotify ou Netflix, ela indicaria a taxa de cancelamento de assinaturas.
+description: Estudo de churn prediction para identificar risco de cancelamento e apoiar estratégias de retenção de clientes.
 date: 2025-03-27 00:00:00 -0300
-categories: [Análise de Dados]
-tags: [Análise]
+categories: [Machine Learning]
+tags: [Python, Machine Learning, Classificação]
 comments: true
 image: https://raw.githubusercontent.com/raffaelhfarias/churnPrediction/refs/heads/main/imagens/churnrate.jpg
 ---
 
 # Analisando a Taxa de Churn
 
-[![Autor](https://img.shields.io/badge/autor-rhfariasn-red.svg)](https://shields.io/)
-[![Python](https://img.shields.io/badge/python-3.7+-blue.svg)](https://shields.io/)
-[![Contributions](https://img.shields.io/badge/contributions-bem_vindo-green.svg)](https://shields.io/)
+Estudo voltado para previsão de evasão de clientes em uma base de telecomunicações, com foco em identificar padrões de cancelamento e apoiar ações de retenção.
 
-## Introdução
+> Projeto completo: [notebook no GitHub](https://github.com/raffaelhfarias/churnPrediction/blob/main/Churn_Prediction_para_uma_empresa_de_Telecomunica%C3%A7%C3%B5es.ipynb)
+{: .prompt-info }
 
-O *churn rate*, ou simplesmente *churn*, representa a taxa de evasão da sua base de clientes. Em serviços como Spotify ou Netflix, ela indicaria a taxa de cancelamento de assinaturas. A análise do *churn rate* é de extrema importância para a administração de qualquer serviço. Sua observação ao longo do tempo pode revelar problemas que devem ser resolvidos para melhorar a retenção de clientes.
+## Contexto
 
-A análise preditiva do *churn* permite identificar potenciais cancelamentos com antecedência. Isso possibilita que empresas implementem ações estratégicas para reter clientes, como ofertas personalizadas, melhoras nos serviços ou ajustes em estratégias de marketing.
+O *churn rate* representa a taxa de clientes que deixam de utilizar um produto ou serviço em um determinado período. Em negócios recorrentes, como telecom, streaming e assinaturas, essa métrica é crítica porque impacta receita, crescimento e previsibilidade do negócio.
 
-## Custo de Aquisição de Cliente (CAC)
+Além disso, reter clientes tende a ser mais eficiente do que adquirir novos. Por isso, prever cancelamentos com antecedência ajuda a direcionar campanhas, ofertas e iniciativas de relacionamento.
 
-Outro ponto essencial a ser considerado é que o Custo de Aquisição de Cliente (CAC) tende a ser mais alto do que o custo de mantê-los. Por isso, um alto *churn rate* é uma métrica negativa, indicando uma necessidade urgente de mudanças para evitar a perda contínua de receita e crescimento.
+## Objetivo do projeto
 
----
+Construir uma análise capaz de:
 
-[Link para o projeto completo](https://github.com/raffaelhfarias/churnPrediction/blob/main/Churn_Prediction_para_uma_empresa_de_Telecomunica%C3%A7%C3%B5es.ipynb)
+- entender os fatores mais associados ao cancelamento;
+- explorar o comportamento da base de clientes;
+- apoiar modelos preditivos para classificar risco de churn.
 
-## Links para me encontrarem:
-- [Medium](#)
-- [LinkedIn](#)
+## Abordagem
+
+O projeto combina análise exploratória e modelagem preditiva para investigar variáveis relevantes da base, como características contratuais, perfil de consumo e serviços contratados.
+
+A partir disso, é possível identificar sinais de risco e apoiar estratégias mais assertivas de retenção.
+
+## Valor de negócio
+
+- priorização de clientes com maior risco de evasão;
+- suporte a ações preventivas de retenção;
+- melhor entendimento dos fatores que impactam cancelamento;
+- uso de dados para reduzir perda de receita recorrente.
+
+## Tecnologias utilizadas
+
+- **Python**;
+- **Pandas** e **NumPy** para tratamento e análise dos dados;
+- bibliotecas de **machine learning** para modelagem de classificação;
+- ambiente notebook para exploração e documentação do estudo.
+
+## Contato
+
+- [GitHub](https://github.com/raffaelhfarias)
+- [LinkedIn](https://www.linkedin.com/in/raffael-henrique/)
+- [Medium](https://medium.com/@raffaelhfarias)

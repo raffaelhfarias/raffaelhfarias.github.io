@@ -1,71 +1,55 @@
 ---
 title: "Estresse Comercial EUA × China e Impactos no Brasil"
-description: Dashboard para análise das tensões comerciais entre EUA e China e seus efeitos no comércio brasileiro (2010-2025) desenvolvido com Power BI.
+description: Dashboard em Power BI para analisar tensões comerciais entre EUA e China e seus impactos sobre o comércio brasileiro.
 date: 2025-04-22 00:00:00 -0300
-categories: [Análise de Dados]
-tags: [PowerBI, Análise, Dashboard]
+categories: [Business Intelligence]
+tags: [Power BI, Dashboard, Comércio Exterior]
 comments: true
 image: https://github.com/raffaelhfarias/PowerBI_Projetos/blob/main/Exportações%20e%20Importações/imagens/1.png?raw=true
+pin: true
 ---
 
 # Análise dos Estresses Comerciais EUA × China e Impactos no Brasil
 
-Este dashboard interativo em Power BI explora as tarifas aplicadas pelos EUA e pela China desde 2010, mapeando como essas medidas alteraram fluxos de exportação e importação do Brasil, evidenciando riscos e oportunidades para o nosso país.
+Dashboard interativo em Power BI que explora como as tensões tarifárias entre EUA e China influenciam fluxos de exportação, importação e oportunidades comerciais para o Brasil.
 
-Acesse o Dashboard 👉 [Clique Aqui](https://app.powerbi.com/view?r=eyJrIjoiOWE1M2I5ZTItMjE4MS00OTQ2LTk5YzEtODEzZjljNzQwNjExIiwidCI6IjBjZDI4MTg4LTM1NWItNDQ5Ny1hNDI4LWFhYWY3YmIwOWY0MCJ9&pageName=ReportSection)
+> Acessos do projeto: [dashboard online](https://app.powerbi.com/view?r=eyJrIjoiOWE1M2I5ZTItMjE4MS00OTQ2LTk5YzEtODEzZjljNzQwNjExIiwidCI6IjBjZDI4MTg4LTM1NWItNDQ5Ny1hNDI4LWFhYWY3YmIwOWY0MCJ9&pageName=ReportSection) · [repositório](https://github.com/raffaelhfarias/PowerBI_Projetos/tree/main/Exporta%C3%A7%C3%B5es%20e%20Importa%C3%A7%C3%B5es)
 {: .prompt-info }
 
-## 🔧 Funcionalidades
+## Objetivo
 
-- **Visão Geral Tarifária:** gráfico de linhas mostrando a evolução das tarifas bilaterais (EUA → China e China → EUA, entre outros países).
-- **Fluxos Comerciais:** indicadores de exportações e importações do Brasil para cada parceiro (EUA, China e entre outros países).
-- **Análise Temporal:** slicers para selecionar períodos e comparar variações anuais e trimestrais.
-- **Mapas Interativos:** mapas coropléticos ilustrando volume de comércio por região brasileira.
-- **Simulação de Cenários:** parâmetros dinâmicos para projetar impactos de alterações tarifárias no saldo comercial.
-- **Dashboard Responsivo:** layouts adaptáveis a telas grandes e pequenas com temas claro e escuro.
+Oferecer uma leitura analítica das disputas comerciais entre EUA e China, destacando impactos no comércio exterior brasileiro e possíveis oportunidades de realocação de mercado.
 
-## 💻 Sobre o Projeto
+## Funcionalidades
 
-Desenvolvido para apoiar profissionais de comércio exterior, analistas de mercado e tomadores de decisão, este dashboard reúne dados oficiais da Secretaria de Comércio Exterior (Secex/MDIC) e de fontes internacionais de tarifas, permitindo:
+- evolução temporal das tarifas bilaterais;
+- acompanhamento de exportações e importações do Brasil por parceiro comercial;
+- filtros por período para comparação de cenários;
+- visualizações interativas para leitura regional e setorial;
+- análise do saldo comercial com foco em tendências e risco.
 
-- Avaliar o histórico e a intensidade das disputas tarifárias.
-- Identificar setores brasileiros mais expostos.
-- Visualizar oportunidades de realocação de exportações.
-- Monitorar a saúde do saldo comercial em tempo real.
+## Sobre o projeto
 
-## 👨‍💻 Tecnologias Utilizadas
+O dashboard reúne dados oficiais e visualizações pensadas para apoiar profissionais de comércio exterior, analistas de mercado e tomadores de decisão. A proposta é transformar uma pauta macroeconômica complexa em uma leitura objetiva e navegável.
 
-- Power BI Desktop (versão mais recente)
-- DAX (Data Analysis Expressions)
-- M Query (Power Query)
-- Criação de Medidas e Colunas caluladas
-- Conexão direta com Secex/MDIC via API e planilhas CSV
-- Layouts e temas customizados no Power BI Service
+## Tecnologias utilizadas
 
-## 🚀 Como Utilizar
+- **Power BI Desktop**;
+- **Power Query**;
+- **DAX**;
+- integração com dados da **Secex/MDIC** e outras fontes de apoio;
+- publicação no **Power BI Service**.
 
-Clone este repositório:
+## Valor do projeto
 
-```
-git clone https://github.com/raffaelhfarias/PowerBI_Projetos
-```
-- Abra o arquivo **.pbix** no Power BI Desktop.
-- Atualize as credenciais e conexões de dados, se necessário.
-- Publique no Power BI Service ou compartilhe localmente.
+- facilita interpretação de um cenário econômico complexo;
+- ajuda a identificar setores mais expostos e oportunidades potenciais;
+- demonstra uso de BI para análise econômica e comercial.
 
-## 🤝 Contribuições
+## Créditos
 
-Contribuições são bem-vindas! Você pode:
+Estrutura inicial inspirada em materiais de estudo da **DATAB**.
 
-- Reportar bugs abrindo uma issue.
-- Sugerir novos indicadores ou visualizações.
-- Melhorar a documentação.
-- Enviar pull requests com suas melhorias.
-
-## 📝 Licença
+## Licença
 
 Este projeto está sob a licença MIT.
-
----
-
-<p align="center">Desenvolvido por Raffael Henrique com agradecimento a DATAB pela estrutura inicial</p>

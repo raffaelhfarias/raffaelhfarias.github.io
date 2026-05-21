@@ -1,29 +1,52 @@
 ---
 title: "Dados Airbnb"
-description: O Airbnb já é considerado como sendo a maior empresa hoteleira da atualidade. Ah, o detalhe é que ele não possui nenhum hotel!
+description: Análise exploratória de dados do Airbnb em Veneza para identificar padrões de preços, oferta e contexto da hospedagem.
 date: 2025-03-27 00:00:00 -0300
 categories: [Análise de Dados]
-tags: [Análise]
+tags: [Python, Análise Exploratória, Airbnb]
 comments: true
 image: https://raw.githubusercontent.com/raffaelhfarias/Dados_Airbnb/main/imgens/Veneza_Airbnb_int.png
 ---
 
 # Analisando Dados do Airbnb
 
-[![Autor](https://img.shields.io/badge/autor-rhfariasn-red.svg)](https://shields.io/)
-[![Python](https://img.shields.io/badge/python-3.7+-blue.svg)](https://shields.io/)
-[![Contributions](https://img.shields.io/badge/contributions-bem_vindo-green.svg)](https://shields.io/)
+Estudo exploratório com dados do Airbnb em Veneza, com foco em compreender a dinâmica da oferta de hospedagens e observar padrões relevantes no conjunto de dados.
 
-## Introdução
+> Projeto completo: [notebook no GitHub](https://github.com/raffaelhfarias/Dados_Airbnb/blob/main/Analise_os_Dados_do_Airbnb_Veneza.ipynb)
+{: .prompt-info }
 
-O [Airbnb](https://www.airbnb.com.br/) já é considerado como sendo a **maior empresa hoteleira da atualidade**. Ah, o detalhe é que ele **não possui nenhum hotel**!
+## Contexto
 
-Conectando pessoas que querem viajar (e se hospedar) com anfitriões que querem alugar seus imóveis de maneira prática, o Airbnb fornece uma plataforma inovadora para tornar essa hospedagem alternativa.
+O Airbnb é uma das principais plataformas de hospedagem do mundo e gera grandes volumes de dados sobre imóveis, preços, disponibilidade e avaliações. Esse tipo de base é interessante para exercitar análise exploratória e levantamento de hipóteses.
 
-No final de 2018, a Startup fundada 10 anos atrás, já havia **hospedado mais de 300 milhões** de pessoas ao redor de todo o mundo, desafiando as redes hoteleiras tradicionais.
+## Objetivo do projeto
 
-[Link para o projeto completo](https://github.com/raffaelhfarias/Dados_Airbnb/blob/main/Analise_os_Dados_do_Airbnb_Veneza.ipynb)
+Investigar os dados da plataforma para:
 
-**Links para me acharem:**
-* [Medium](https://medium.com/@raffaelhfarias)
-* [LinkedIn](https://www.linkedin.com/in/raffael-henrique-59922520a/)
+- entender melhor a distribuição dos imóveis disponíveis;
+- observar padrões de preço e localização;
+- identificar possíveis outliers e inconsistências;
+- gerar insights iniciais a partir de uma base real.
+
+## Abordagem
+
+A análise foi conduzida em notebook, com foco em limpeza, entendimento das variáveis e visualização dos dados para apoiar interpretações sobre o mercado local.
+
+## Tecnologias utilizadas
+
+- **Python**;
+- **Pandas** para tratamento e análise dos dados;
+- bibliotecas de visualização para exploração gráfica;
+- notebook como ambiente de documentação do estudo.
+
+## Valor do projeto
+
+- aplicação prática de análise exploratória em dados reais;
+- identificação de padrões úteis para leitura de mercado;
+- exercício de limpeza, interpretação e comunicação de insights.
+
+## Contato
+
+- [GitHub](https://github.com/raffaelhfarias)
+- [LinkedIn](https://www.linkedin.com/in/raffael-henrique/)
+- [Medium](https://medium.com/@raffaelhfarias)

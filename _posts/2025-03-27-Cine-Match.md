@@ -1,65 +1,58 @@
 ---
 title: "Cine Match"
-description: Um sistema de recomendação de filmes baseado em inteligência artificial, que traz sugestões personalizadas para você, sem complicação e de forma prática.
+description: Sistema de recomendação de filmes com Python e Streamlit, baseado em similaridade textual com TF-IDF.
 date: 2025-03-27 00:00:00 -0300
-categories: [IA]
-tags: [Sistema de Recomendação]
+categories: [Machine Learning]
+tags: [Python, Machine Learning, Streamlit]
 comments: true
 image: https://raw.githubusercontent.com/raffaelhfarias/recomenda-o/refs/heads/main/Others/Screenshot%202025-04-16%20183406.png
+pin: true
 ---
 
-> Link para o Dashboard. 👉 [Clique Aqui](https://recomenda-o-j3mfxmgdwbdydzvjbhbqob.streamlit.app/)
+> Aplicação online: [abrir dashboard](https://recomenda-o-j3mfxmgdwbdydzvjbhbqob.streamlit.app/)
 {: .prompt-info }
 
-## 🌟 O que é o CineMatch?
-Um sistema de recomendação de filmes baseado em inteligência artificial, que traz sugestões personalizadas para você, sem complicação e de forma prática.
-A ideia é simples: você escolhe um filme e, automaticamente, o CineMatch traz sugestões de filmes com base no que mais combina com o que você já gosta.
+# Cine Match
 
-## 🔍 Como funciona o CineMatch?
-Escolha de um filme. A partir disso, o sistema trabalha para analisar esse filme e comparar com outros no banco de dados, identificando quais filmes têm mais semelhanças em termos de título, gêneros e descrição.
+O Cine Match é um sistema de recomendação de filmes que sugere títulos semelhantes com base em características textuais como nome, gêneros e descrição.
 
-## Etapas:
+## Objetivo
 
-1. **Coleta de dados**:
-   - Usei a API do TMDB para coletar dados de filmes populares, incluindo título, gênero, descrição, avaliação e data de lançamento.
-   - Esse processo garante que o CineMatch tenha acesso às informações mais recentes e precisas sobre os filmes.
+Criar uma experiência simples para descoberta de filmes, permitindo que o usuário escolha um título e receba recomendações relevantes de forma rápida e prática.
 
-2. **Pré-processamento dos dados**:
-   - Organizei as informações de maneira que o sistema pudesse entender de forma mais eficiente, criando um "mix" entre título, gênero e descrição de cada filme.
-   - Assim, conseguimos gerar recomendações baseadas em múltiplas características.
+## Como funciona
 
-3. **Inteligência Artificial**:
-   - Utilizamos o algoritmo TF-IDF (Term Frequency-Inverse Document Frequency) para analisar os textos dos filmes e gerar um vetor de características de cada um.
-   - Depois, comparamos esses vetores para calcular a similaridade entre os filmes, gerando recomendações baseadas na similaridade.
+O sistema utiliza dados de filmes para gerar representações textuais e calcular similaridade entre títulos. A lógica considera informações como:
 
-4. **Recomendações**:
-   - O sistema sugere filmes que têm mais a ver com o filme escolhido inicialmente.
-   - Ele garante também que não haja filmes repetidos nas sugestões, trazendo uma experiência única a cada recomendação.
+- título;
+- gêneros;
+- descrição;
+- metadados complementares da base.
 
-## 🚀 Entendendo na prática!
-1. Escolha o filme que você mais gosta.
-2. Deixe o CineMatch fazer o trabalho pesado e, em segundos, ele traz as recomendações de filmes com base nesse filme.
-3. Descubra novos filmes que você vai amar!
-É como ter um indicador de filmes pessoal, disponível sempre que você precisar.
+A partir disso, o modelo identifica quais filmes têm maior proximidade com a escolha inicial do usuário.
 
-## 💡 Por que esse projeto foi criado?
-Encontrar um sistema simples e eficaz para descobrir novos filmes sem perder tempo navegando por milhares de opções.
-**E também para motivos de estudos, projetos, enfim!**
+## Etapas do projeto
 
-## 🛠️ Tecnologias utilizadas
+1. **Coleta de dados** com a API do TMDB;
+2. **pré-processamento** e organização das informações relevantes;
+3. **vetorização textual** com TF-IDF;
+4. **cálculo de similaridade** para geração das recomendações;
+5. **interface interativa** com Streamlit para consulta em tempo real.
 
-* **Python**: A linguagem principal para o desenvolvimento do sistema.
-* **Streamlit**: Para criar uma interface simples e interativa.
-* **Sklearn**: Usado para implementar o modelo de recomendação baseado em **TF-IDF** e **cosine similarity**.
-* **API do TMDB**: A fonte de dados de filmes populares.
-* **Pandas**: Para manipulação e pré-processamento de dados.
-* **Requests**: Para fazer as requisições à API.
+## Tecnologias utilizadas
 
-## 🤝 Contribua!
-Esse projeto é só o começo! Se você tem ideias para melhorar o CineMatch, fique à vontade para contribuir.
-Sugestões, melhorias e pull requests são sempre bem-vindos.
+- **Python**;
+- **Streamlit** para a interface web;
+- **scikit-learn** para TF-IDF e similaridade por cosseno;
+- **Pandas** para manipulação dos dados;
+- **Requests** para consumo da API do TMDB.
 
-## 💬 Vamos conversar!
-Adoraria ouvir sua opinião sobre o projeto. Tem algum filme que você acha que deveria ser incluído nas recomendações?
-Ou talvez algum recurso novo que você gostaria de ver no CineMatch?
-Me envie uma mensagem no [LinkedIn](https://www.linkedin.com/in/raffael-henrique-59922520a/).
+## Valor do projeto
+
+- demonstra aplicação prática de sistema de recomendação;
+- transforma um conceito de machine learning em produto utilizável;
+- combina modelagem, tratamento de dados e interface de apresentação.
+
+## Contato
+
+Se quiser trocar ideias sobre o projeto ou sugerir melhorias, você pode me chamar no [LinkedIn](https://www.linkedin.com/in/raffael-henrique/).

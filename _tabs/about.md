@@ -4,7 +4,7 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-![Raffael Henrique](/commons/avatar.jpg){: width="220" .right .shadow }
+![](https://raw.githubusercontent.com/MicaelliMedeiros/micaellimedeiros/master/image/computer-illustration.png){: width="400" height="400" .w-50 .right}
 
 [![Autor](https://img.shields.io/badge/autor-rhfariasn-red.svg)](https://github.com/raffaelhfarias)
 [![Python](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/)

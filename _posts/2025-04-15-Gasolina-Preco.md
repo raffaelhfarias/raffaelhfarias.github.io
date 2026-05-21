@@ -1,89 +1,65 @@
 ---
 title: "Preço da Gasolina no Brasil"
-description: Dashboard para análise dos preços da gasolina no Brasil (2004-2025) feito com Python/Dash.
+description: Dashboard para análise dos preços da gasolina no Brasil entre 2004 e 2025, desenvolvido com Python e Dash.
 date: 2025-04-15 00:00:00 -0300
 categories: [Análise de Dados]
-tags: [Análise, Python, Dashboard]
+tags: [Python, Dashboard, Dash]
 comments: true
 image: https://raw.githubusercontent.com/raffaelhfarias/gasolina-preco/refs/heads/main/Others/capa.png
+pin: true
 ---
 
 # Análise de Preços da Gasolina no Brasil
 
-Dashboard para análise dos preços da gasolina no Brasil (2004-2025) feito com Python/Dash.
+Dashboard interativo para análise da evolução dos preços da gasolina no Brasil, permitindo explorar tendências históricas, comparações regionais e comportamento temporal dos valores.
 
-> Link para o Dashboard. 👉 [Clique Aqui](https://gasolina-preco.onrender.com/)
+> Acessos do projeto: [dashboard online](https://gasolina-preco.onrender.com/) · [repositório](https://github.com/raffaelhfarias/gasolina-preco)
 {: .prompt-info }
 
-## 🔧 Funções
+## Objetivo
 
-- Visualização interativa das variações de preço da gasolina por estado
-- Análise temporal com filtros por ano
-- Gráfico de animação com controles de reprodução
-- Interface responsiva com suporte a temas claro e escuro
-- Comparação de preços entre diferentes estados
-- Análise de tendências e variações mensais
+Oferecer uma visão analítica sobre a evolução dos preços da gasolina ao longo do tempo, facilitando comparações entre estados e leitura de variações por período.
 
-## 💻 Projeto
+## Funcionalidades
 
-Este dashboard foi desenvolvido para análise detalhada dos preços da gasolina no Brasil, permitindo visualizar tendências, comparar preços entre estados e acompanhar a evolução dos valores ao longo do tempo.
+- visualização interativa das variações de preço por estado;
+- análise temporal com filtros por ano;
+- gráfico animado com controles de reprodução;
+- interface responsiva com suporte a diferentes dispositivos;
+- comparação entre estados e leitura de tendências.
 
-## 👨‍💻 Tecnologias Utilizadas
+## Tecnologias utilizadas
 
-O projeto foi desenvolvido utilizando **PYTHON** e as seguintes bibliotecas:
-> - Dash (2.14.2)
-> - Dash-Bootstrap-Components (1.5.0)
-> - Dash-Bootstrap-Templates (1.1.2)
-> - Dash-Core-Components (2.0.0)
-> - Dash-HTML-Components (2.0.0)
-> - Plotly (5.19.0)
-> - Pandas (2.2.0)
+O projeto foi desenvolvido com:
 
-## 🚀 Instalação
+- **Python**;
+- **Dash**;
+- **Plotly**;
+- **Pandas**;
+- **Dash Bootstrap Components**.
 
-1. Clone este repositório
+## Como executar
+
 ```bash
 git clone https://github.com/raffaelhfarias/gasolina-preco
 ```
 
-2. Crie um ambiente virtual
-```bash
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
-```
+Depois disso:
 
-3. Instale as dependências
-```bash
-pip install -r requirements.txt
-```
+1. crie um ambiente virtual;
+2. instale as dependências com `pip install -r requirements.txt`;
+3. execute a aplicação com `python index.py`.
 
-4. Execute a aplicação
-```bash
-python index.py
-```
+## Valor do projeto
 
-## 📊 Funcionalidades
+- transforma uma base histórica em leitura visual acessível;
+- facilita comparação entre estados e períodos;
+- demonstra construção de dashboard analítico com Python.
 
-- **Análise Temporal**: Visualize a evolução dos preços ao longo dos anos
-- **Comparação entre Estados**: Compare os preços entre diferentes estados do Brasil
-- **Gráfico Animado**: Acompanhe a variação dos preços de forma dinâmica
-- **Filtros Interativos**: Personalize sua análise com diferentes filtros
-- **Design Responsivo**: Interface adaptável a diferentes dispositivos
+## Créditos
 
-## 🤝 Contribuições
+Estrutura inicial inspirada em materiais de estudo da **Asimov Academy**.
 
-Contribuições são sempre bem-vindas! Sinta-se à vontade para:
-
-1. Reportar bugs
-2. Sugerir novas funcionalidades
-3. Melhorar a documentação
-4. Enviar pull requests
-
-## 📝 Licença
+## Licença
 
 Este projeto está sob a licença MIT.
-
----
-
-<p align="center">Desenvolvido por Raffael Henrique com agradecimento a Asimov Academy pela estrutura inicial</p>
