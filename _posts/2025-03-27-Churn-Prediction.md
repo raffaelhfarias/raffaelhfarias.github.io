@@ -10,47 +10,36 @@ image: https://raw.githubusercontent.com/raffaelhfarias/churnPrediction/refs/hea
 
 # Analisando a Taxa de Churn
 
-Estudo voltado para previsão de evasão de clientes em uma base de telecomunicações, com foco em identificar padrões de cancelamento e apoiar ações de retenção.
+Projeto de machine learning voltado para prever a evasão de clientes em uma base de telecomunicações, ajudando a identificar sinais de cancelamento e apoiar estratégias de retenção com base em dados.
 
-> Projeto completo: [notebook no GitHub](https://github.com/raffaelhfarias/churnPrediction/blob/main/Churn_Prediction_para_uma_empresa_de_Telecomunica%C3%A7%C3%B5es.ipynb)
+> Acessos do projeto: [notebook no GitHub](https://github.com/raffaelhfarias/churnPrediction/blob/main/Churn_Prediction_para_uma_empresa_de_Telecomunica%C3%A7%C3%B5es.ipynb)
 {: .prompt-info }
 
 ## Contexto
 
-O *churn rate* representa a taxa de clientes que deixam de utilizar um produto ou serviço em um determinado período. Em negócios recorrentes, como telecom, streaming e assinaturas, essa métrica é crítica porque impacta receita, crescimento e previsibilidade do negócio.
+Em negócios recorrentes, perder clientes impacta diretamente receita, crescimento e previsibilidade. Por isso, entender o churn é essencial para antecipar riscos e direcionar ações mais inteligentes de relacionamento e retenção.
 
-Além disso, reter clientes tende a ser mais eficiente do que adquirir novos. Por isso, prever cancelamentos com antecedência ajuda a direcionar campanhas, ofertas e iniciativas de relacionamento.
+## O que foi desenvolvido
 
-## Objetivo do projeto
-
-Construir uma análise capaz de:
-
-- entender os fatores mais associados ao cancelamento;
-- explorar o comportamento da base de clientes;
-- apoiar modelos preditivos para classificar risco de churn.
-
-## Abordagem
-
-O projeto combina análise exploratória e modelagem preditiva para investigar variáveis relevantes da base, como características contratuais, perfil de consumo e serviços contratados.
-
-A partir disso, é possível identificar sinais de risco e apoiar estratégias mais assertivas de retenção.
-
-## Valor de negócio
-
-- priorização de clientes com maior risco de evasão;
-- suporte a ações preventivas de retenção;
-- melhor entendimento dos fatores que impactam cancelamento;
-- uso de dados para reduzir perda de receita recorrente.
+- análise exploratória da base de clientes;
+- investigação de variáveis relacionadas ao cancelamento;
+- estudo de modelagem preditiva para classificar risco de churn;
+- leitura dos fatores com maior influência no comportamento da base.
 
 ## Tecnologias utilizadas
 
-- **Python**;
-- **Pandas** e **NumPy** para tratamento e análise dos dados;
-- bibliotecas de **machine learning** para modelagem de classificação;
-- ambiente notebook para exploração e documentação do estudo.
+- **Python** para análise e modelagem;
+- **Pandas** e **NumPy** para tratamento dos dados;
+- bibliotecas de **machine learning** para classificação;
+- notebook para exploração, testes e documentação do estudo.
 
-## Contato
+## Valor do projeto
 
-- [GitHub](https://github.com/raffaelhfarias)
-- [LinkedIn](https://www.linkedin.com/in/raffael-henrique/)
-- [Medium](https://medium.com/@raffaelhfarias)
+- demonstra aplicação prática de machine learning em contexto de negócio;
+- reforça capacidade analítica para retenção de clientes;
+- conecta dados, interpretação e apoio à decisão;
+- evidencia visão orientada a problema e resultado.
+
+## Observações
+
+Este projeto foi estruturado como estudo aplicado, com foco em análise e modelagem preditiva dentro de um cenário realista de telecom.

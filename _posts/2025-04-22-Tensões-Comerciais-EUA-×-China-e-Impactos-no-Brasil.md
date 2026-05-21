@@ -9,47 +9,40 @@ image: https://github.com/raffaelhfarias/PowerBI_Projetos/blob/main/Exportaçõe
 pin: true
 ---
 
-# Análise dos Estresses Comerciais EUA × China e Impactos no Brasil
+# Estresse Comercial EUA × China e Impactos no Brasil
 
-Dashboard interativo em Power BI que explora como as tensões tarifárias entre EUA e China influenciam fluxos de exportação, importação e oportunidades comerciais para o Brasil.
+Dashboard em Power BI desenvolvido para analisar como tensões comerciais entre EUA e China influenciam exportações, importações e oportunidades para o comércio brasileiro.
 
 > Acessos do projeto: [dashboard online](https://app.powerbi.com/view?r=eyJrIjoiOWE1M2I5ZTItMjE4MS00OTQ2LTk5YzEtODEzZjljNzQwNjExIiwidCI6IjBjZDI4MTg4LTM1NWItNDQ5Ny1hNDI4LWFhYWY3YmIwOWY0MCJ9&pageName=ReportSection) · [repositório](https://github.com/raffaelhfarias/PowerBI_Projetos/tree/main/Exporta%C3%A7%C3%B5es%20e%20Importa%C3%A7%C3%B5es)
 {: .prompt-info }
 
-## Objetivo
+## Contexto
 
-Oferecer uma leitura analítica das disputas comerciais entre EUA e China, destacando impactos no comércio exterior brasileiro e possíveis oportunidades de realocação de mercado.
+Disputas comerciais entre grandes economias afetam cadeias globais, fluxo de exportações e posicionamento de mercados emergentes. Neste projeto, a proposta foi transformar esse cenário macroeconômico em uma leitura objetiva, visual e útil para análise.
 
-## Funcionalidades
+## O que foi desenvolvido
 
-- evolução temporal das tarifas bilaterais;
-- acompanhamento de exportações e importações do Brasil por parceiro comercial;
-- filtros por período para comparação de cenários;
-- visualizações interativas para leitura regional e setorial;
-- análise do saldo comercial com foco em tendências e risco.
-
-## Sobre o projeto
-
-O dashboard reúne dados oficiais e visualizações pensadas para apoiar profissionais de comércio exterior, analistas de mercado e tomadores de decisão. A proposta é transformar uma pauta macroeconômica complexa em uma leitura objetiva e navegável.
+- dashboard com acompanhamento temporal das tarifas bilaterais;
+- leitura de exportações e importações por parceiro comercial;
+- filtros para comparação de cenários e períodos;
+- visualizações orientadas a análise regional e setorial;
+- estrutura analítica para leitura do saldo comercial e exposição ao risco.
 
 ## Tecnologias utilizadas
 
-- **Power BI Desktop**;
-- **Power Query**;
-- **DAX**;
-- integração com dados da **Secex/MDIC** e outras fontes de apoio;
+- **Power BI Desktop** para modelagem e construção do dashboard;
+- **Power Query** para transformação dos dados;
+- **DAX** para medidas e indicadores analíticos;
+- dados da **Secex/MDIC** e fontes complementares;
 - publicação no **Power BI Service**.
 
 ## Valor do projeto
 
-- facilita interpretação de um cenário econômico complexo;
-- ajuda a identificar setores mais expostos e oportunidades potenciais;
-- demonstra uso de BI para análise econômica e comercial.
+- demonstra capacidade de transformar tema complexo em análise acessível;
+- reforça domínio de BI aplicado a cenário econômico;
+- destaca leitura estratégica de dados para tomada de decisão;
+- agrega profundidade analítica ao portfólio.
 
-## Créditos
+## Observações
 
-Estrutura inicial inspirada em materiais de estudo da **DATAB**.
-
-## Licença
-
-Este projeto está sob a licença MIT.
+A estrutura inicial deste case foi inspirada em materiais de estudo da **DATAB**, adaptada para refletir o recorte analítico do projeto.

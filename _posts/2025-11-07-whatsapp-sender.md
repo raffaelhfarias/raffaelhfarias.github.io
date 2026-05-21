@@ -8,66 +8,41 @@ comments: true
 image: https://raw.githubusercontent.com/raffaelhfarias/automated_whatsapp_reporting/refs/heads/main/videos/whatsappsender.gif
 ---
 
-# Whatsapp Sender Report
+# Extração e Envio Automático de Metas e Resultados
 
-Automação desenvolvida para capturar metas compartilhadas em grupos de WhatsApp, consolidar dados de vendas e enviar relatórios automaticamente para acompanhamento operacional.
+Projeto de automação criado para capturar metas compartilhadas por WhatsApp, consolidar dados de vendas e enviar relatórios automaticamente, reduzindo esforço manual em rotinas operacionais.
 
-> Repositório do projeto: [github.com/raffaelhfarias/automated_whatsapp_reporting](https://github.com/raffaelhfarias/automated_whatsapp_reporting)
+> Acessos do projeto: [repositório no GitHub](https://github.com/raffaelhfarias/automated_whatsapp_reporting)
 {: .prompt-info }
 
-## Visão geral
+## Contexto
 
-O projeto foi criado para reduzir o trabalho manual envolvido na leitura de metas, coleta de indicadores e comunicação dos resultados. A solução conecta diferentes etapas do processo, desde a captura da informação até o envio final da mensagem, com foco em confiabilidade e agilidade.
+Processos operacionais que dependem de leitura manual de metas, coleta de indicadores e envio recorrente de mensagens tendem a ser lentos e suscetíveis a erro. Este projeto foi desenvolvido para dar mais agilidade e confiabilidade a esse fluxo.
 
-## Principais entregas
+## O que foi desenvolvido
 
 - captura automática de metas enviadas por WhatsApp;
-- extração de dados de vendas a partir de sistemas internos;
-- validação e padronização dos dados coletados;
+- extração de dados de vendas em sistemas de origem;
+- validação e padronização das informações coletadas;
 - geração de mensagens com resultados consolidados;
-- envio automatizado de relatórios para os destinatários definidos;
-- uso de logs e flags para reduzir falhas recorrentes e facilitar o monitoramento.
+- envio automatizado dos relatórios para acompanhamento do time.
 
 ## Tecnologias utilizadas
 
 - **Python** para a lógica principal da automação;
 - **Selenium** e **undetected-chromedriver** para automação web;
 - **PyAutoGUI** para interações complementares com interface;
-- **lxml** para tratamento e leitura de estruturas HTML/XML;
-- **python-dotenv** para configuração segura por variáveis de ambiente;
+- **lxml** para leitura e tratamento de estruturas HTML/XML;
+- **python-dotenv** para configuração por variáveis de ambiente;
 - **pywhatkit** para apoio no envio automatizado via WhatsApp.
 
-## Fluxo da solução
+## Valor do projeto
 
-1. leitura e identificação das metas compartilhadas;
-2. coleta dos dados necessários nos sistemas de origem;
-3. tratamento e validação das informações;
-4. montagem do relatório final;
-5. envio automatizado da mensagem para acompanhamento do time.
-
-## Resultado de negócio
-
-A automação reduz esforço operacional, aumenta a velocidade de resposta e diminui o risco de erro humano em um processo que antes exigia acompanhamento manual.
-
-## Como executar
-
-```bash
-git clone https://github.com/raffaelhfarias/automated_whatsapp_reporting
-cd automated_whatsapp_reporting
-python -m venv .venv
-```
-
-Depois disso:
-
-- ative o ambiente virtual;
-- instale as dependências com `pip install -r requirements.txt`;
-- configure as variáveis de ambiente do projeto;
-- execute a aplicação conforme a documentação do repositório.
+- reduz esforço operacional em tarefas repetitivas;
+- aumenta velocidade de comunicação dos resultados;
+- diminui risco de erro humano no processo;
+- demonstra capacidade de criar automações com impacto prático no negócio.
 
 ## Observações
 
-> Para execução completa, o ambiente precisa estar preparado para automação do navegador e integração com WhatsApp.
-
-## Licença
-
-MIT
+Para execução completa, o ambiente precisa estar preparado para automação de navegador e integração com WhatsApp, conforme instruções detalhadas no repositório.

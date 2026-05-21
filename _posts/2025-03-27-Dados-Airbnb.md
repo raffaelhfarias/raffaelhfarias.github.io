@@ -8,45 +8,39 @@ comments: true
 image: https://raw.githubusercontent.com/raffaelhfarias/Dados_Airbnb/main/imgens/Veneza_Airbnb_int.png
 ---
 
-# Analisando Dados do Airbnb
+# Dados Airbnb
 
-Estudo exploratório com dados do Airbnb em Veneza, com foco em compreender a dinâmica da oferta de hospedagens e observar padrões relevantes no conjunto de dados.
+Análise exploratória construída a partir de dados do Airbnb em Veneza, com foco em entender distribuição de imóveis, comportamento de preços e padrões relevantes em uma base real de hospedagem.
 
-> Projeto completo: [notebook no GitHub](https://github.com/raffaelhfarias/Dados_Airbnb/blob/main/Analise_os_Dados_do_Airbnb_Veneza.ipynb)
+> Acessos do projeto: [notebook no GitHub](https://github.com/raffaelhfarias/Dados_Airbnb/blob/main/Analise_os_Dados_do_Airbnb_Veneza.ipynb)
 {: .prompt-info }
 
 ## Contexto
 
-O Airbnb é uma das principais plataformas de hospedagem do mundo e gera grandes volumes de dados sobre imóveis, preços, disponibilidade e avaliações. Esse tipo de base é interessante para exercitar análise exploratória e levantamento de hipóteses.
+Bases públicas e semiestruturadas como as do Airbnb são ótimas para explorar limpeza de dados, leitura de variáveis e geração de hipóteses. Neste caso, o objetivo foi analisar uma cidade turística conhecida para entender melhor a dinâmica da oferta local.
 
-## Objetivo do projeto
+## O que foi desenvolvido
 
-Investigar os dados da plataforma para:
-
-- entender melhor a distribuição dos imóveis disponíveis;
-- observar padrões de preço e localização;
-- identificar possíveis outliers e inconsistências;
-- gerar insights iniciais a partir de uma base real.
-
-## Abordagem
-
-A análise foi conduzida em notebook, com foco em limpeza, entendimento das variáveis e visualização dos dados para apoiar interpretações sobre o mercado local.
+- leitura e organização da base de dados;
+- análise exploratória das principais variáveis;
+- observação de padrões de preço e disponibilidade;
+- identificação de outliers e pontos de atenção;
+- comunicação dos principais insights em notebook.
 
 ## Tecnologias utilizadas
 
-- **Python**;
-- **Pandas** para tratamento e análise dos dados;
-- bibliotecas de visualização para exploração gráfica;
-- notebook como ambiente de documentação do estudo.
+- **Python** para análise dos dados;
+- **Pandas** para tratamento e exploração da base;
+- bibliotecas de visualização para apoiar a leitura dos resultados;
+- notebook como ambiente de documentação e análise.
 
 ## Valor do projeto
 
-- aplicação prática de análise exploratória em dados reais;
-- identificação de padrões úteis para leitura de mercado;
-- exercício de limpeza, interpretação e comunicação de insights.
+- reforça domínio de análise exploratória em dados reais;
+- demonstra cuidado com interpretação e qualidade da base;
+- evidencia capacidade de transformar dados em leitura de cenário;
+- contribui para um portfólio sólido em data analysis.
 
-## Contato
+## Observações
 
-- [GitHub](https://github.com/raffaelhfarias)
-- [LinkedIn](https://www.linkedin.com/in/raffael-henrique/)
-- [Medium](https://medium.com/@raffaelhfarias)
+Este projeto tem foco analítico e funciona como um bom exemplo de investigação inicial antes de etapas mais avançadas de modelagem.

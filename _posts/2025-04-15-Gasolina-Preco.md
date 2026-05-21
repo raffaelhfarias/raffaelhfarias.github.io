@@ -9,57 +9,40 @@ image: https://raw.githubusercontent.com/raffaelhfarias/gasolina-preco/refs/head
 pin: true
 ---
 
-# Análise de Preços da Gasolina no Brasil
+# Preço da Gasolina no Brasil
 
-Dashboard interativo para análise da evolução dos preços da gasolina no Brasil, permitindo explorar tendências históricas, comparações regionais e comportamento temporal dos valores.
+Dashboard interativo desenvolvido para analisar a evolução dos preços da gasolina no Brasil, permitindo comparar estados, observar tendências históricas e acompanhar variações ao longo do tempo.
 
 > Acessos do projeto: [dashboard online](https://gasolina-preco.onrender.com/) · [repositório](https://github.com/raffaelhfarias/gasolina-preco)
 {: .prompt-info }
 
-## Objetivo
+## Contexto
 
-Oferecer uma visão analítica sobre a evolução dos preços da gasolina ao longo do tempo, facilitando comparações entre estados e leitura de variações por período.
+Preço de combustível é um tema com forte impacto econômico e social. O projeto foi criado para organizar esse histórico de forma visual e interativa, facilitando comparações regionais e leitura de comportamento por período.
 
-## Funcionalidades
+## O que foi desenvolvido
 
-- visualização interativa das variações de preço por estado;
-- análise temporal com filtros por ano;
-- gráfico animado com controles de reprodução;
-- interface responsiva com suporte a diferentes dispositivos;
-- comparação entre estados e leitura de tendências.
+- dashboard com visualizações interativas por estado;
+- filtros temporais para análise por ano e período;
+- gráfico animado para leitura dinâmica da evolução dos preços;
+- estrutura responsiva para navegação em diferentes dispositivos;
+- exploração analítica com foco em comparação e tendência.
 
 ## Tecnologias utilizadas
 
-O projeto foi desenvolvido com:
-
-- **Python**;
-- **Dash**;
-- **Plotly**;
-- **Pandas**;
-- **Dash Bootstrap Components**.
-
-## Como executar
-
-```bash
-git clone https://github.com/raffaelhfarias/gasolina-preco
-```
-
-Depois disso:
-
-1. crie um ambiente virtual;
-2. instale as dependências com `pip install -r requirements.txt`;
-3. execute a aplicação com `python index.py`.
+- **Python** para a aplicação analítica;
+- **Dash** para a construção do dashboard;
+- **Plotly** para gráficos interativos;
+- **Pandas** para tratamento dos dados;
+- **Dash Bootstrap Components** para apoio visual da interface.
 
 ## Valor do projeto
 
-- transforma uma base histórica em leitura visual acessível;
-- facilita comparação entre estados e períodos;
-- demonstra construção de dashboard analítico com Python.
+- transforma uma base histórica em leitura visual útil;
+- facilita comparações regionais e temporais;
+- demonstra construção de dashboard analítico com Python;
+- reforça capacidade de unir dados, visualização e usabilidade.
 
-## Créditos
+## Observações
 
-Estrutura inicial inspirada em materiais de estudo da **Asimov Academy**.
-
-## Licença
-
-Este projeto está sob a licença MIT.
+A estrutura inicial do projeto foi inspirada em materiais de estudo da **Asimov Academy**, com adaptação para o contexto e a proposta deste portfólio.

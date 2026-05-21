@@ -9,50 +9,40 @@ image: https://raw.githubusercontent.com/raffaelhfarias/recomenda-o/refs/heads/m
 pin: true
 ---
 
-> Aplicação online: [abrir dashboard](https://recomenda-o-j3mfxmgdwbdydzvjbhbqob.streamlit.app/)
-{: .prompt-info }
-
 # Cine Match
 
-O Cine Match é um sistema de recomendação de filmes que sugere títulos semelhantes com base em características textuais como nome, gêneros e descrição.
+Aplicação de recomendação de filmes desenvolvida para sugerir títulos semelhantes com base em características textuais, transformando um modelo de machine learning em uma experiência simples e interativa para o usuário.
 
-## Objetivo
+> Acessos do projeto: [aplicação online](https://recomenda-o-j3mfxmgdwbdydzvjbhbqob.streamlit.app/)
+{: .prompt-info }
 
-Criar uma experiência simples para descoberta de filmes, permitindo que o usuário escolha um título e receba recomendações relevantes de forma rápida e prática.
+## Contexto
 
-## Como funciona
+Sistemas de recomendação fazem parte de muitos produtos digitais modernos. Neste projeto, a proposta foi construir uma solução capaz de recomendar filmes de forma prática, mostrando como técnicas de similaridade podem ser aplicadas em uma interface acessível.
 
-O sistema utiliza dados de filmes para gerar representações textuais e calcular similaridade entre títulos. A lógica considera informações como:
+## O que foi desenvolvido
 
-- título;
-- gêneros;
-- descrição;
-- metadados complementares da base.
-
-A partir disso, o modelo identifica quais filmes têm maior proximidade com a escolha inicial do usuário.
-
-## Etapas do projeto
-
-1. **Coleta de dados** com a API do TMDB;
-2. **pré-processamento** e organização das informações relevantes;
-3. **vetorização textual** com TF-IDF;
-4. **cálculo de similaridade** para geração das recomendações;
-5. **interface interativa** com Streamlit para consulta em tempo real.
+- coleta de dados de filmes com apoio da API do TMDB;
+- preparação das informações textuais mais relevantes;
+- vetorização com TF-IDF para representar os filmes;
+- cálculo de similaridade para gerar recomendações;
+- interface web em Streamlit para consulta em tempo real.
 
 ## Tecnologias utilizadas
 
-- **Python**;
-- **Streamlit** para a interface web;
+- **Python** para a lógica da aplicação;
 - **scikit-learn** para TF-IDF e similaridade por cosseno;
 - **Pandas** para manipulação dos dados;
-- **Requests** para consumo da API do TMDB.
+- **Streamlit** para a interface interativa;
+- **Requests** para integração com API externa.
 
 ## Valor do projeto
 
 - demonstra aplicação prática de sistema de recomendação;
-- transforma um conceito de machine learning em produto utilizável;
-- combina modelagem, tratamento de dados e interface de apresentação.
+- combina modelagem, tratamento de dados e interface de produto;
+- mostra capacidade de transformar conceito técnico em solução utilizável;
+- fortalece o portfólio em machine learning aplicado.
 
-## Contato
+## Observações
 
-Se quiser trocar ideias sobre o projeto ou sugerir melhorias, você pode me chamar no [LinkedIn](https://www.linkedin.com/in/raffael-henrique/).
+O foco deste case está em unir experiência do usuário com recomendação baseada em dados, de forma direta e fácil de explorar.

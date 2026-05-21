@@ -8,26 +8,24 @@ comments: true
 pin: true
 ---
 
-# Automação de Extração de Banco de Horas
+# Extração de banco de horas dos colaboradores ativos
 
-Projeto de automação criado para eliminar o processo manual de extração de banco de horas no portal Sólides, consolidando dados de múltiplas filiais e notificando o time responsável ao longo da execução.
+Projeto de automação criado para eliminar o processo manual de extração de banco de horas no portal Sólides, consolidando dados de múltiplas filiais e apoiando o time de RH com mais agilidade e previsibilidade.
 
-## Contexto do problema
+> Acessos do projeto: case de portfólio com foco em solução, stack e impacto de negócio.
+{: .prompt-info }
 
-O fechamento mensal do banco de horas exigia um processo repetitivo e sensível a erros: acessar o portal, navegar filial por filial, ajustar filtros de período, baixar planilhas separadas e consolidar manualmente os saldos dos colaboradores.
+## Contexto
 
-Esse fluxo consumia tempo operacional, criava gargalos no RH e aumentava o risco de inconsistências na conferência final.
+O fechamento mensal do banco de horas exigia navegação manual por empresa e filial, aplicação de filtros, download de planilhas e consolidação posterior dos dados. Esse fluxo era repetitivo, consumia tempo da equipe e aumentava o risco de erro humano.
 
-## Solução desenvolvida
+## O que foi desenvolvido
 
-A solução automatiza o processo de ponta a ponta:
-
-1. acessa o ambiente de RH em modo automatizado;
-2. autentica e navega pelos filtros necessários;
-3. processa uma filial específica ou várias filiais em sequência;
-4. gera e baixa os relatórios do período configurado;
-5. trata os dados extraídos e consolida tudo em um único arquivo final;
-6. envia notificações com o andamento e o resultado da execução.
+- automação do acesso ao ambiente de RH e navegação pelos filtros;
+- processamento de uma ou várias filiais em sequência;
+- geração e download automatizado dos relatórios;
+- tratamento e consolidação dos dados em arquivo final único;
+- envio de notificações sobre andamento e resultado da execução.
 
 ## Tecnologias utilizadas
 
@@ -35,24 +33,15 @@ A solução automatiza o processo de ponta a ponta:
 - **Playwright** para automação do fluxo web;
 - **Evolution API** para envio de notificações via WhatsApp;
 - **Kestra** para orquestração, agendamento e execução remota;
-- processamento de planilhas e geração de arquivos consolidados em **CSV**.
+- geração de arquivos consolidados em **CSV**.
 
-## Impacto gerado
+## Valor do projeto
 
-- redução significativa do tempo gasto no fechamento mensal;
-- eliminação de etapas manuais repetitivas;
-- menor risco de erro humano na consolidação;
-- maior visibilidade operacional com notificações automáticas;
-- processo mais escalável para múltiplas filiais.
+- reduz tempo operacional no fechamento mensal;
+- elimina etapas manuais repetitivas;
+- melhora confiabilidade na consolidação das informações;
+- demonstra aplicação prática de automação com impacto direto no negócio.
 
-## Valor de negócio
+## Observações
 
-Além do ganho técnico, a automação melhora a previsibilidade da rotina de RH e libera tempo da equipe para atividades analíticas e de conferência, em vez de tarefas mecânicas de extração.
-
-## Observação
-
-Este case foi publicado com foco na solução e no impacto de negócio. Se você quiser, posso depois transformar este post em um estudo de caso ainda mais completo, com arquitetura, fluxo técnico e resultados esperados.
-
-## Licença
-
-MIT
+Este post foi estruturado como case de portfólio, destacando principalmente o problema resolvido, a solução aplicada e o valor entregue ao processo.
