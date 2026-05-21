@@ -1,15 +1,26 @@
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs><linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse"><stop stop-color="#052E2B"/><stop offset="1" stop-color="#0F766E"/></linearGradient></defs>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#052E2B"/>
+      <stop offset="1" stop-color="#0F766E"/>
+    </linearGradient>
+  </defs>
   <rect width="1200" height="630" rx="28" fill="url(#bg)"/>
-  <circle cx="970" cy="120" r="150" fill="#14B8A6" fill-opacity="0.10"/>
-  <circle cx="1120" cy="520" r="220" fill="#0F766E" fill-opacity="0.10"/>
-  <rect x="300" y="78" width="200" height="40" rx="20" fill="#06211D" fill-opacity="0.60" stroke="#5EEAD4" stroke-opacity="0.45"/>
-  <text x="400" y="103" text-anchor="middle" fill="#CCFBF1" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">ANÁLISE DE DADOS</text>
-  <text x="300" y="214" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="72" font-weight="800">Dados Airbnb</text>
-  <text x="300" y="286" fill="#D1FAE5" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="500">Exploração de preços, oferta e padrões em Veneza</text>
-  <rect x="300" y="332" width="328" height="54" rx="15" fill="#04201D" fill-opacity="0.76" stroke="#285E61"/>
-  <text x="328" y="366" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Python · EDA · Insights</text>
-  <text x="300" y="454" fill="#99F6E4" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Leitura de mercado baseada em dados</text>
-  <text x="300" y="490" fill="#D1D5DB" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="500">Análise exploratória para entender comportamento da base</text>
-  <text x="300" y="564" fill="#99A1AF" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Portfólio de Raffael Henrique</text>
+  <circle cx="970" cy="120" r="180" fill="#14B8A6" fill-opacity="0.10"/>
+  <circle cx="200" cy="520" r="220" fill="#0F766E" fill-opacity="0.10"/>
+  <!-- Badge pill centrada -->
+  <rect x="490" y="78" width="220" height="40" rx="20" fill="#06211D" fill-opacity="0.60" stroke="#5EEAD4" stroke-opacity="0.45"/>
+  <text x="600" y="103" text-anchor="middle" fill="#CCFBF1" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">ANÁLISE DE DADOS</text>
+  <!-- Título principal -->
+  <text x="600" y="214" text-anchor="middle" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="72" font-weight="800">Dados Airbnb</text>
+  <!-- Subtítulo -->
+  <text x="600" y="278" text-anchor="middle" fill="#D1FAE5" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="500">Exploração de preços, oferta e padrões em Veneza</text>
+  <!-- Stack pill centralizada -->
+  <rect x="436" y="310" width="328" height="50" rx="14" fill="#04201D" fill-opacity="0.76" stroke="#285E61"/>
+  <text x="600" y="341" text-anchor="middle" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Python · EDA · Insights</text>
+  <!-- Destaques -->
+  <text x="600" y="430" text-anchor="middle" fill="#99F6E4" font-family="Segoe UI, Arial, sans-serif" font-size="21" font-weight="700">Leitura de mercado baseada em dados</text>
+  <text x="600" y="466" text-anchor="middle" fill="#D1D5DB" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="400">Análise exploratória para entender comportamento da base</text>
+  <!-- Assinatura -->
+  <text x="600" y="564" text-anchor="middle" fill="#99A1AF" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="600">Portfólio de Raffael Henrique</text>
 </svg>
