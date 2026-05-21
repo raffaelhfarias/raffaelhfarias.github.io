@@ -5,7 +5,7 @@ date: 2025-04-15 00:00:00 -0300
 categories: [Análise de Dados]
 tags: [Python, Dashboard, Dash]
 comments: true
-image: https://raw.githubusercontent.com/raffaelhfarias/gasolina-preco/refs/heads/main/Others/capa.png
+image: /assets/img/posts/covers/gasolina-brasil-cover.svg
 pin: true
 ---
 

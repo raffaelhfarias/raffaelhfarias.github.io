@@ -5,7 +5,7 @@ date: 2025-04-22 00:00:00 -0300
 categories: [Business Intelligence]
 tags: [Power BI, Dashboard, Comércio Exterior]
 comments: true
-image: https://github.com/raffaelhfarias/PowerBI_Projetos/blob/main/Exportações%20e%20Importações/imagens/1.png?raw=true
+image: /assets/img/posts/covers/estresse-comercial-cover.svg
 pin: true
 ---
 

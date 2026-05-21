@@ -1,0 +1,50 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#111827"/>
+      <stop offset="1" stop-color="#7C2D12"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#F97316"/>
+      <stop offset="1" stop-color="#FB7185"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" rx="28" fill="url(#bg)"/>
+  <circle cx="1034" cy="122" r="152" fill="#EA580C" fill-opacity="0.12"/>
+  <circle cx="1118" cy="520" r="212" fill="#FB7185" fill-opacity="0.10"/>
+
+  <rect x="74" y="70" width="152" height="42" rx="21" fill="#1F2937" fill-opacity="0.58" stroke="#FB923C" stroke-opacity="0.55"/>
+  <text x="150" y="97" text-anchor="middle" fill="#FFEDD5" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">AUTOMAÇÃO</text>
+
+  <text x="74" y="192" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="58" font-weight="800">Banco de Horas</text>
+  <text x="74" y="258" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="58" font-weight="800">dos Colaboradores</text>
+  <text x="74" y="314" fill="#FDE7D8" font-family="Segoe UI, Arial, sans-serif" font-size="29" font-weight="500">Extração e consolidação automatizada para rotina de RH</text>
+
+  <rect x="74" y="358" width="402" height="56" rx="16" fill="#131A25" fill-opacity="0.76" stroke="#4B5563"/>
+  <text x="102" y="393" fill="#F9FAFB" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Python · Playwright · Kestra</text>
+
+  <text x="74" y="468" fill="#FDBA74" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Eficiência para processos internos</text>
+  <text x="74" y="502" fill="#E5E7EB" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="500">Menos esforço manual e mais previsibilidade operacional</text>
+
+  <rect x="734" y="126" width="382" height="258" rx="28" fill="#FFFFFF" fill-opacity="0.05" stroke="#FFFFFF" stroke-opacity="0.10"/>
+  <rect x="764" y="162" width="132" height="44" rx="14" fill="#F97316" fill-opacity="0.20"/>
+  <text x="830" y="190" text-anchor="middle" fill="#FFEDD5" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">RH</text>
+  <rect x="922" y="162" width="134" height="44" rx="14" fill="#FB7185" fill-opacity="0.18"/>
+  <text x="989" y="190" text-anchor="middle" fill="#FFE4E6" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">CSV</text>
+
+  <rect x="812" y="250" width="170" height="54" rx="16" fill="#0F172A" fill-opacity="0.72" stroke="#475569"/>
+  <text x="897" y="284" text-anchor="middle" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700">Automação</text>
+
+  <path d="M896 206V238" stroke="#FDBA74" stroke-width="7" stroke-linecap="round"/>
+  <path d="M830 304V336" stroke="#FB923C" stroke-width="7" stroke-linecap="round"/>
+  <path d="M964 304V336" stroke="#FB7185" stroke-width="7" stroke-linecap="round"/>
+  <path d="M830 336H764" stroke="#FB923C" stroke-width="7" stroke-linecap="round"/>
+  <path d="M964 336H1030" stroke="#FB7185" stroke-width="7" stroke-linecap="round"/>
+  <rect x="716" y="316" width="96" height="42" rx="14" fill="#FB923C" fill-opacity="0.20"/>
+  <rect x="1012" y="316" width="96" height="42" rx="14" fill="#FB7185" fill-opacity="0.20"/>
+  <text x="764" y="343" text-anchor="middle" fill="#FFF7ED" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700">Portal</text>
+  <text x="1060" y="343" text-anchor="middle" fill="#FFF1F2" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700">Envio</text>
+
+  <text x="74" y="566" fill="#9CA3AF" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Portfólio de Raffael Henrique</text>
+</svg>

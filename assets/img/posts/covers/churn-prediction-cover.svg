@@ -1,0 +1,41 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="1" stop-color="#312E81"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#C084FC"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" rx="28" fill="url(#bg)"/>
+  <circle cx="1042" cy="128" r="156" fill="#2563EB" fill-opacity="0.12"/>
+  <circle cx="1116" cy="524" r="210" fill="#8B5CF6" fill-opacity="0.10"/>
+
+  <rect x="74" y="70" width="220" height="42" rx="21" fill="#0B1220" fill-opacity="0.58" stroke="#60A5FA" stroke-opacity="0.60"/>
+  <text x="184" y="97" text-anchor="middle" fill="#E0F2FE" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">MACHINE LEARNING</text>
+
+  <text x="74" y="198" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="60" font-weight="800">Churn Prediction</text>
+  <text x="74" y="258" fill="#D6E3FF" font-family="Segoe UI, Arial, sans-serif" font-size="29" font-weight="500">Previsão de evasão de clientes com foco em retenção e decisão</text>
+
+  <rect x="74" y="314" width="432" height="56" rx="16" fill="#0A1020" fill-opacity="0.74" stroke="#334155"/>
+  <text x="102" y="349" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Python · Classificação · ML</text>
+
+  <text x="74" y="430" fill="#93C5FD" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Análise preditiva aplicada ao negócio</text>
+  <text x="74" y="464" fill="#CBD5E1" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="500">Identificando sinais de cancelamento para orientar ações mais assertivas</text>
+
+  <rect x="744" y="126" width="370" height="252" rx="28" fill="#FFFFFF" fill-opacity="0.05" stroke="#FFFFFF" stroke-opacity="0.10"/>
+  <rect x="772" y="160" width="314" height="34" rx="12" fill="#E2E8F0" fill-opacity="0.08"/>
+  <path d="M792 322C832 290 872 298 914 270C958 241 1002 227 1040 190" stroke="url(#accent)" stroke-width="8" stroke-linecap="round"/>
+  <path d="M792 334H1070" stroke="#334155" stroke-width="3" stroke-linecap="round"/>
+  <path d="M810 334V204" stroke="#334155" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="792" cy="322" r="10" fill="#38BDF8"/>
+  <circle cx="914" cy="270" r="10" fill="#60A5FA"/>
+  <circle cx="1040" cy="190" r="10" fill="#C084FC"/>
+  <rect x="840" y="230" width="84" height="84" rx="42" fill="#38BDF8" fill-opacity="0.14"/>
+  <rect x="956" y="186" width="92" height="128" rx="18" fill="#C084FC" fill-opacity="0.16"/>
+
+  <text x="74" y="566" fill="#64748B" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Portfólio de Raffael Henrique</text>
+</svg>

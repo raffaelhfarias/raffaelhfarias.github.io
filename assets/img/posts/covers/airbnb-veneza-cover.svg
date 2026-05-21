@@ -1,0 +1,39 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#052E2B"/>
+      <stop offset="1" stop-color="#0F766E"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#2DD4BF"/>
+      <stop offset="1" stop-color="#99F6E4"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" rx="28" fill="url(#bg)"/>
+  <circle cx="1036" cy="126" r="154" fill="#14B8A6" fill-opacity="0.12"/>
+  <circle cx="1114" cy="520" r="208" fill="#0F766E" fill-opacity="0.16"/>
+
+  <rect x="74" y="70" width="200" height="42" rx="21" fill="#06211D" fill-opacity="0.58" stroke="#5EEAD4" stroke-opacity="0.60"/>
+  <text x="174" y="97" text-anchor="middle" fill="#CCFBF1" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">ANÁLISE DE DADOS</text>
+
+  <text x="74" y="194" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="60" font-weight="800">Dados Airbnb</text>
+  <text x="74" y="252" fill="#D1FAE5" font-family="Segoe UI, Arial, sans-serif" font-size="29" font-weight="500">Exploração de preços, oferta e padrões em hospedagens de Veneza</text>
+
+  <rect x="74" y="308" width="362" height="56" rx="16" fill="#04201D" fill-opacity="0.74" stroke="#285E61"/>
+  <text x="102" y="343" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Python · EDA · Insights</text>
+
+  <text x="74" y="428" fill="#99F6E4" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Leitura de mercado baseada em dados</text>
+  <text x="74" y="462" fill="#D1D5DB" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="500">Uma análise exploratória para entender distribuição e comportamento da base</text>
+
+  <rect x="736" y="126" width="380" height="252" rx="28" fill="#FFFFFF" fill-opacity="0.05" stroke="#FFFFFF" stroke-opacity="0.10"/>
+  <path d="M820 206C858 178 906 180 934 216C950 237 978 244 1005 228C1028 214 1050 214 1070 228" stroke="#5EEAD4" stroke-width="8" stroke-linecap="round"/>
+  <path d="M796 306C826 282 868 274 908 286C944 297 980 294 1014 276C1048 258 1078 262 1100 278" stroke="url(#accent)" stroke-width="8" stroke-linecap="round"/>
+  <rect x="774" y="332" width="82" height="12" rx="6" fill="#ECFDF5" fill-opacity="0.78"/>
+  <rect x="872" y="332" width="94" height="12" rx="6" fill="#D1FAE5" fill-opacity="0.58"/>
+  <rect x="984" y="332" width="76" height="12" rx="6" fill="#A7F3D0" fill-opacity="0.46"/>
+  <rect x="786" y="160" width="106" height="126" rx="20" fill="#14B8A6" fill-opacity="0.16"/>
+  <rect x="916" y="182" width="142" height="84" rx="20" fill="#99F6E4" fill-opacity="0.12"/>
+
+  <text x="74" y="566" fill="#99A1AF" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Portfólio de Raffael Henrique</text>
+</svg>

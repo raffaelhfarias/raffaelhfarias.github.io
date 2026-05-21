@@ -5,7 +5,7 @@ date: 2025-03-27 00:00:00 -0300
 categories: [Análise de Dados]
 tags: [Python, Análise Exploratória, Airbnb]
 comments: true
-image: https://raw.githubusercontent.com/raffaelhfarias/Dados_Airbnb/main/imgens/Veneza_Airbnb_int.png
+image: /assets/img/posts/covers/airbnb-veneza-cover.svg
 ---
 
 # Dados Airbnb

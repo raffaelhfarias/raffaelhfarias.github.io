@@ -1,0 +1,42 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#052E2B"/>
+      <stop offset="1" stop-color="#134E4A"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#2DD4BF"/>
+      <stop offset="1" stop-color="#FACC15"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" rx="28" fill="url(#bg)"/>
+  <circle cx="1040" cy="122" r="156" fill="#14B8A6" fill-opacity="0.14"/>
+  <circle cx="1125" cy="534" r="206" fill="#0F766E" fill-opacity="0.16"/>
+
+  <rect x="74" y="70" width="200" height="42" rx="21" fill="#05231F" fill-opacity="0.58" stroke="#5EEAD4" stroke-opacity="0.60"/>
+  <text x="174" y="97" text-anchor="middle" fill="#CCFBF1" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">ANÁLISE DE DADOS</text>
+
+  <text x="74" y="196" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="60" font-weight="800">Preço da Gasolina</text>
+  <text x="74" y="262" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="60" font-weight="800">no Brasil</text>
+  <text x="74" y="318" fill="#D1FAE5" font-family="Segoe UI, Arial, sans-serif" font-size="29" font-weight="500">Dashboard para comparar estados, períodos e tendências históricas</text>
+
+  <rect x="74" y="360" width="346" height="56" rx="16" fill="#04201D" fill-opacity="0.74" stroke="#285E61"/>
+  <text x="102" y="395" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Python · Dash · Plotly</text>
+
+  <text x="74" y="472" fill="#99F6E4" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Leitura visual de dados econômicos</text>
+  <text x="74" y="506" fill="#D1D5DB" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="500">Uma visão clara sobre preços, variações e comportamento regional</text>
+
+  <rect x="730" y="130" width="388" height="248" rx="28" fill="#FFFFFF" fill-opacity="0.05" stroke="#FFFFFF" stroke-opacity="0.10"/>
+  <rect x="760" y="165" width="326" height="152" rx="22" fill="#0F172A" fill-opacity="0.45" stroke="#2DD4BF" stroke-opacity="0.18"/>
+  <path d="M800 288L844 262L888 274L934 236L980 248L1036 202" stroke="url(#accent)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="800" cy="288" r="10" fill="#2DD4BF"/>
+  <circle cx="888" cy="274" r="10" fill="#5EEAD4"/>
+  <circle cx="980" cy="248" r="10" fill="#99F6E4"/>
+  <circle cx="1036" cy="202" r="10" fill="#FACC15"/>
+  <rect x="780" y="345" width="86" height="12" rx="6" fill="#E5E7EB" fill-opacity="0.75"/>
+  <rect x="882" y="345" width="72" height="12" rx="6" fill="#CBD5E1" fill-opacity="0.58"/>
+  <rect x="972" y="345" width="64" height="12" rx="6" fill="#CBD5E1" fill-opacity="0.42"/>
+
+  <text x="74" y="566" fill="#99A1AF" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Portfólio de Raffael Henrique</text>
+</svg>

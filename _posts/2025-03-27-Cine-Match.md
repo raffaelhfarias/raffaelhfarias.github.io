@@ -5,7 +5,7 @@ date: 2025-03-27 00:00:00 -0300
 categories: [Machine Learning]
 tags: [Python, Machine Learning, Streamlit]
 comments: true
-image: https://raw.githubusercontent.com/raffaelhfarias/recomenda-o/refs/heads/main/Others/Screenshot%202025-04-16%20183406.png
+image: /assets/img/posts/covers/cine-match-cover.svg
 pin: true
 ---
 

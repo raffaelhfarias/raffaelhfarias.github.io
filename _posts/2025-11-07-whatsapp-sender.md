@@ -5,7 +5,7 @@ date: 2025-11-07 00:00:00 -0300
 categories: [Automação]
 tags: [Python, Automação]
 comments: true
-image: https://raw.githubusercontent.com/raffaelhfarias/automated_whatsapp_reporting/refs/heads/main/videos/whatsappsender.gif
+image: /assets/img/posts/covers/whatsapp-report-cover.svg
 ---
 
 # Extração e Envio Automático de Metas e Resultados

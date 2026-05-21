@@ -5,7 +5,7 @@ date: 2025-03-27 00:00:00 -0300
 categories: [Machine Learning]
 tags: [Python, Machine Learning, Classificação]
 comments: true
-image: https://raw.githubusercontent.com/raffaelhfarias/churnPrediction/refs/heads/main/imagens/churnrate.jpg
+image: /assets/img/posts/covers/churn-prediction-cover.svg
 ---
 
 # Analisando a Taxa de Churn

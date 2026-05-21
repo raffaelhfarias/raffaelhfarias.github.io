@@ -1,0 +1,44 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1120"/>
+      <stop offset="1" stop-color="#1E1B4B"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#A78BFA"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" rx="28" fill="url(#bg)"/>
+  <circle cx="1025" cy="145" r="170" fill="#2563EB" fill-opacity="0.14"/>
+  <circle cx="1090" cy="520" r="210" fill="#8B5CF6" fill-opacity="0.10"/>
+
+  <rect x="74" y="70" width="220" height="42" rx="21" fill="#0F172A" fill-opacity="0.55" stroke="#60A5FA" stroke-opacity="0.55"/>
+  <text x="184" y="97" text-anchor="middle" fill="#E0F2FE" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">MACHINE LEARNING</text>
+
+  <text x="74" y="205" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="64" font-weight="800">Cine Match</text>
+  <text x="74" y="276" fill="#D6E3FF" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="500">Sistema de recomendação de filmes com foco em similaridade textual</text>
+
+  <rect x="74" y="328" width="410" height="56" rx="16" fill="#0A1020" fill-opacity="0.72" stroke="#334155"/>
+  <text x="102" y="363" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Python · Streamlit · TF-IDF</text>
+
+  <text x="74" y="440" fill="#93C5FD" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Recomendação inteligente</text>
+  <text x="74" y="474" fill="#CBD5E1" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="500">Transformando dados de filmes em uma experiência simples e útil</text>
+
+  <rect x="742" y="126" width="372" height="252" rx="28" fill="#FFFFFF" fill-opacity="0.05" stroke="#FFFFFF" stroke-opacity="0.10"/>
+  <rect x="770" y="158" width="316" height="36" rx="12" fill="#E2E8F0" fill-opacity="0.08"/>
+  <rect x="770" y="218" width="126" height="126" rx="20" fill="url(#accent)" fill-opacity="0.26"/>
+  <rect x="920" y="226" width="134" height="18" rx="9" fill="#F8FAFC" fill-opacity="0.82"/>
+  <rect x="920" y="259" width="110" height="14" rx="7" fill="#CBD5E1" fill-opacity="0.72"/>
+  <rect x="920" y="289" width="92" height="14" rx="7" fill="#94A3B8" fill-opacity="0.68"/>
+  <rect x="920" y="319" width="74" height="14" rx="7" fill="#94A3B8" fill-opacity="0.50"/>
+
+  <path d="M778 518C830 472 872 485 916 448C954 416 994 406 1032 370C1061 341 1095 318 1132 298" stroke="#67E8F9" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="778" cy="518" r="11" fill="#67E8F9"/>
+  <circle cx="916" cy="448" r="11" fill="#60A5FA"/>
+  <circle cx="1032" cy="370" r="11" fill="#818CF8"/>
+  <circle cx="1132" cy="298" r="11" fill="#A78BFA"/>
+
+  <text x="74" y="566" fill="#64748B" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Portfólio de Raffael Henrique</text>
+</svg>

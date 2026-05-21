@@ -1,0 +1,42 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="1" stop-color="#1E293B"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" rx="24" fill="url(#bg)"/>
+
+  <circle cx="1015" cy="145" r="160" fill="#1D4ED8" fill-opacity="0.12"/>
+  <circle cx="1120" cy="520" r="210" fill="#8B5CF6" fill-opacity="0.10"/>
+
+  <rect x="80" y="80" width="170" height="38" rx="19" fill="url(#accent)" fill-opacity="0.18" stroke="#38BDF8" stroke-opacity="0.35"/>
+  <text x="165" y="104" text-anchor="middle" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">CATEGORIA</text>
+
+  <text x="80" y="210" fill="white" font-family="Segoe UI, Arial, sans-serif" font-size="58" font-weight="700">Título do Projeto</text>
+  <text x="80" y="275" fill="white" font-family="Segoe UI, Arial, sans-serif" font-size="58" font-weight="700">em Duas Linhas</text>
+
+  <text x="80" y="340" fill="#CBD5E1" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="400">Subtítulo curto explicando a solução ou objetivo do projeto.</text>
+
+  <rect x="80" y="415" width="450" height="54" rx="14" fill="#0B1220" fill-opacity="0.75" stroke="#334155"/>
+  <text x="105" y="449" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">Python · Dash · Plotly</text>
+
+  <rect x="770" y="145" width="300" height="170" rx="20" fill="#FFFFFF" fill-opacity="0.05" stroke="#FFFFFF" stroke-opacity="0.10"/>
+  <rect x="800" y="186" width="90" height="90" rx="16" fill="#38BDF8" fill-opacity="0.18"/>
+  <rect x="910" y="186" width="120" height="18" rx="9" fill="#E2E8F0" fill-opacity="0.75"/>
+  <rect x="910" y="219" width="94" height="14" rx="7" fill="#94A3B8" fill-opacity="0.80"/>
+  <rect x="910" y="248" width="78" height="14" rx="7" fill="#94A3B8" fill-opacity="0.60"/>
+
+  <path d="M760 470C805 430 845 438 885 408C927 377 968 378 1015 330C1048 297 1084 281 1125 264" stroke="#38BDF8" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="760" cy="470" r="11" fill="#38BDF8"/>
+  <circle cx="885" cy="408" r="11" fill="#60A5FA"/>
+  <circle cx="1015" cy="330" r="11" fill="#818CF8"/>
+  <circle cx="1125" cy="264" r="11" fill="#A78BFA"/>
+
+  <text x="80" y="560" fill="#64748B" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="500">Template base para capas do portfólio</text>
+</svg>

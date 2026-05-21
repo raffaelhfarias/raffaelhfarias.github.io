@@ -5,7 +5,7 @@ date: 2025-03-27 00:00:00 -0300
 categories: [Análise de Dados]
 tags: [Python, Dashboard, Plotly]
 comments: true
-image: https://raw.githubusercontent.com/raffaelhfarias/Panorama_COVID-19/refs/heads/main/others/Screenshot%202025-04-16%20154706.png
+image: /assets/img/posts/covers/covid-dashboard-cover.svg
 ---
 
 # Panorama COVID-19
