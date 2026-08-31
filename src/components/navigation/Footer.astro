@@ -1,0 +1,66 @@
+---
+import type { Locale } from "../../i18n/locales";
+import { localizedPath } from "../../i18n/routes";
+
+const { locale } = Astro.props as { locale: Locale };
+const copy =
+  locale === "pt"
+    ? {
+        label: "Navegação do rodapé",
+        home: "Início",
+        note: "Dados, automação e engenharia aplicada.",
+      }
+    : {
+        label: "Footer navigation",
+        home: "Home",
+        note: "Data, automation, and applied engineering.",
+      };
+---
+
+<footer>
+  <div class="container footer-inner">
+    <p>{copy.note}</p>
+    <nav aria-label={copy.label}>
+      <a href={localizedPath(locale)}>{copy.home}</a>
+      <a href={localizedPath(locale, "projects")}
+        >{locale === "pt" ? "Projetos" : "Projects"}</a
+      >
+    </nav>
+    <p class="copyright">© {new Date().getFullYear()} Raffael Henrique</p>
+  </div>
+</footer>
+
+<style>
+  footer {
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+  }
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: var(--space-2);
+    align-items: center;
+    padding-block: var(--space-3);
+    font-size: 0.875rem;
+  }
+  p {
+    margin: 0;
+  }
+  nav {
+    display: flex;
+    gap: var(--space-2);
+  }
+  a {
+    font: 700 0.7rem/1 var(--font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  @media (max-width: 42rem) {
+    .footer-inner {
+      grid-template-columns: 1fr;
+    }
+    .copyright {
+      font-size: 0.75rem;
+    }
+  }
+</style>

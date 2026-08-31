@@ -1,0 +1,65 @@
+---
+import type { Locale } from "../../i18n/locales";
+import { ui } from "../../i18n/locales";
+import { localizedPath } from "../../i18n/routes";
+
+const { locale } = Astro.props as { locale: Locale };
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="signature" href={localizedPath(locale)}>Raffael Henrique</a>
+    <nav aria-label={locale === "pt" ? "Principal" : "Primary"}>
+      <a href={localizedPath(locale, "projects")}>{ui[locale].projects}</a>
+      <a href={localizedPath(locale, "about")}>{ui[locale].about}</a>
+      <a href={localizedPath(locale, "articles")}>{ui[locale].articles}</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--paper) 94%, transparent);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    min-height: 5rem;
+  }
+  .signature {
+    font: 700 clamp(1.05rem, 1rem + 0.3vw, 1.3rem)/1 var(--font-display);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+  }
+  nav a {
+    color: var(--muted);
+    font: 700 0.75rem/1.2 var(--font-mono);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+  nav a:hover {
+    color: var(--action);
+    text-decoration: underline;
+  }
+  @media (max-width: 34rem) {
+    .header-inner {
+      align-items: flex-start;
+      flex-direction: column;
+      padding-block: var(--space-2);
+    }
+    nav {
+      justify-content: flex-start;
+    }
+  }
+</style>
