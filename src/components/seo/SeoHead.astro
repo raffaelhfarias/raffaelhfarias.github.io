@@ -1,5 +1,6 @@
 ---
 import type { Locale } from "../../i18n/locales";
+import { serializeJsonLd, type JsonLd } from "./serialize-json-ld";
 
 interface Props {
   title: string;
@@ -8,7 +9,7 @@ interface Props {
   alternatePath: string;
   image: string;
   locale: Locale;
-  jsonLd: Record<string, unknown>;
+  jsonLd: JsonLd;
 }
 
 const {
@@ -45,4 +46,8 @@ const socialImage = new URL(image, origin);
 <meta property="og:url" content={canonical} />
 <meta property="og:image" content={socialImage} />
 <meta name="twitter:card" content="summary_large_image" />
-<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={serializeJsonLd(jsonLd)}
+/>

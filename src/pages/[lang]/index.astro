@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import type { JsonLd } from "../../components/seo/serialize-json-ld";
 import { isLocale, type Locale } from "../../i18n/locales";
 
 export function getStaticPaths() {
@@ -31,7 +32,7 @@ const copy =
 const canonicalPath = `/${locale}/`;
 const alternatePath = locale === "pt" ? "/en/" : "/pt/";
 const profileUrl = "https://raffaelhfarias.github.io";
-const jsonLd = {
+const jsonLd: JsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
