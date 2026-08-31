@@ -27,9 +27,41 @@ const copy =
         introduction:
           "I design and deliver reliable data and automation systems that help teams operate with greater clarity, pace, and confidence.",
       };
+
+const canonicalPath = `/${locale}/`;
+const alternatePath = locale === "pt" ? "/en/" : "/pt/";
+const profileUrl = "https://raffaelhfarias.github.io";
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      name: "Raffael Henrique",
+      jobTitle:
+        locale === "pt"
+          ? "Engenheiro de Dados e AutomaÃ§Ã£o"
+          : "Data & Automation Engineer",
+      url: `${profileUrl}${canonicalPath}`,
+    },
+    {
+      "@type": "WebSite",
+      name: "Raffael Henrique",
+      url: `${profileUrl}${canonicalPath}`,
+      inLanguage: locale === "pt" ? "pt-BR" : "en",
+    },
+  ],
+};
 ---
 
-<BaseLayout locale={locale} title={copy.title} description={copy.description}>
+<BaseLayout
+  locale={locale}
+  title={copy.title}
+  description={copy.description}
+  canonicalPath={canonicalPath}
+  alternatePath={alternatePath}
+  image="/images/social-preview.png"
+  jsonLd={jsonLd}
+>
   <section class="hero container" aria-labelledby="page-title">
     <p class="eyebrow">{copy.label}</p>
     <h1 id="page-title">{copy.heading}</h1>
