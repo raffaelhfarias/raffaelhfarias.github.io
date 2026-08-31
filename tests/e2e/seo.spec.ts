@@ -4,7 +4,7 @@ test("home exposes localized SEO metadata", async ({ page }) => {
   await page.goto("/pt/");
 
   await expect(page).toHaveTitle(
-    /Engenheiro de Dados e Automa..o.*Raffael Henrique/,
+    "Engenheiro de Dados e Automação — Raffael Henrique",
   );
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
@@ -18,9 +18,18 @@ test("home exposes localized SEO metadata", async ({ page }) => {
     "content",
     /social-preview/,
   );
-  await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(
-    1,
-  );
+  const jsonLdContent = await page
+    .locator('script[type="application/ld+json"]')
+    .textContent();
+  if (jsonLdContent === null) throw new Error("JSON-LD script is missing");
+  const jsonLd = JSON.parse(jsonLdContent) as {
+    "@graph": Array<{ "@type": string; jobTitle?: string }>;
+  };
+  expect(
+    jsonLd["@graph"].find((entry) => entry["@type"] === "Person"),
+  ).toMatchObject({
+    jobTitle: "Engenheiro de Dados e Automação",
+  });
 
   await page.goto("/en/");
   await expect(page).toHaveTitle(
@@ -46,5 +55,5 @@ test("root provides a static-host compatible Portuguese redirect", async ({
   expect(document).toContain(
     '<meta http-equiv="refresh" content="0;url=/pt/">',
   );
-  expect(document).toContain('<a href="/pt/">Continuar em portuguÃªs</a>');
+  expect(document).toContain('<a href="/pt/">Continuar em português</a>');
 });
