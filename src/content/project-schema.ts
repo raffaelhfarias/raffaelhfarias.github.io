@@ -2,7 +2,7 @@ import { z } from "astro/zod";
 
 const nonEmptyString = z.string().trim().min(1);
 
-const metricSchema = z.object({
+export const metricSchema = z.object({
   value: nonEmptyString,
   label: nonEmptyString,
   qualifier: nonEmptyString.optional(),

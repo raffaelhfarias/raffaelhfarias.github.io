@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { projectSchema } from "../../src/content/project-schema";
+import { metricSchema, projectSchema } from "../../src/content/project-schema";
 
 const baseProject = {
   locale: "pt",
@@ -27,6 +27,12 @@ const baseProject = {
 };
 
 describe("projectSchema", () => {
+  it("exports a schema for project metrics", () => {
+    const result = metricSchema.safeParse(baseProject.metrics[0]);
+
+    expect(result.success).toBe(true);
+  });
+
   it("accepts a measurable published featured project", () => {
     const result = projectSchema.safeParse(baseProject);
 
