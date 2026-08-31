@@ -11,9 +11,13 @@ _site
 # RubyGems
 *.gem
 
-# NPM dependencies
-node_modules
-package-lock.json
+# NPM dependencies and build output
+node_modules/
+.astro/
+dist/
+coverage/
+playwright-report/
+test-results/
 
 # IDE configurations
 .idea
