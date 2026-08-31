@@ -17,7 +17,9 @@ describe("Astro scaffold", () => {
       "utf8",
     );
 
-    expect(astroConfig).toContain("site: 'https://raffaelhfarias.github.io'");
-    expect(astroConfig).toContain("output: 'static'");
+    expect(astroConfig).toMatch(
+      /site:\s*["']https:\/\/raffaelhfarias\.github\.io["']/,
+    );
+    expect(astroConfig).toMatch(/output:\s*["']static["']/);
   });
 });
