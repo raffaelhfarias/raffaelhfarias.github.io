@@ -1,0 +1,46 @@
+---
+import { getCollection, render } from "astro:content";
+import CaseLayout from "../../../layouts/CaseLayout.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("projects");
+  const published = entries.filter(
+    ({ data }) =>
+      data.locale === "pt" && data.publicationStatus === "published",
+  );
+  return published.map((entry) => {
+    const alternate = entries.find(
+      ({ data }) =>
+        data.locale === "en" &&
+        data.translationKey === entry.data.translationKey,
+    );
+    const related = published
+      .filter(({ id }) => id !== entry.id)
+      .slice(0, 2)
+      .map(({ data }) => ({
+        title: data.title,
+        href: `/pt/projetos/${data.slug}/`,
+      }));
+    return {
+      params: { slug: entry.data.slug },
+      props: {
+        entry,
+        related,
+        alternatePath: alternate
+          ? `/en/projects/${alternate.data.slug}/`
+          : "/en/",
+      },
+    };
+  });
+}
+
+const { entry, related, alternatePath } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<CaseLayout
+  entry={entry}
+  locale="pt"
+  related={related}
+  alternatePath={alternatePath}><Content /></CaseLayout
+>

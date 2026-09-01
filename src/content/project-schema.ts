@@ -17,6 +17,7 @@ export const projectSchema = z
     summary: nonEmptyString,
     type: z.enum(["professional", "personal", "academic"]),
     role: nonEmptyString,
+    period: nonEmptyString,
     publishedAt: z.coerce.date(),
     featured: z.boolean().default(false),
     publicationStatus: z.enum(["draft", "published"]),

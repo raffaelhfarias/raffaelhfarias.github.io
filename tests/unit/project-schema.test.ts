@@ -10,6 +10,7 @@ const baseProject = {
   summary: "Orquestração de processos para vendas diretas.",
   type: "professional",
   role: "Desenvolvedor de automação",
+  period: "2026; ativo na aprovação",
   publishedAt: new Date("2026-08-01"),
   featured: true,
   publicationStatus: "published",
@@ -46,6 +47,18 @@ describe("projectSchema", () => {
     if (!result.success) {
       expect(result.error.issues).toContainEqual(
         expect.objectContaining({ path: ["metrics"] }),
+      );
+    }
+  });
+
+  it("requires a human-readable period for a published case", () => {
+    const { period: _period, ...projectWithoutPeriod } = baseProject;
+    const result = projectSchema.safeParse(projectWithoutPeriod);
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues).toContainEqual(
+        expect.objectContaining({ path: ["period"] }),
       );
     }
   });
