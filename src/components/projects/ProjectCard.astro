@@ -12,7 +12,7 @@ const metric = entry.data.metrics[0];
 const stackLabel = locale === "pt" ? "Tecnologias" : "Technology stack";
 ---
 
-<article class="project-card">
+<article class="project-card" data-project-slug={entry.data.slug}>
   <p class="eyebrow">{entry.data.role}</p>
   <h2><a href={href}>{entry.data.title}</a></h2>
   <p class="summary">{entry.data.summary}</p>

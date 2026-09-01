@@ -1,15 +1,10 @@
 import { z } from "astro/zod";
+import {
+  isReservedProjectSegment,
+  projectCategories,
+} from "../lib/project-taxonomy";
 
 const nonEmptyString = z.string().trim().min(1);
-const reservedProjectSegments = [
-  "all",
-  "data-engineering",
-  "automation",
-  "analytics",
-  "automacao",
-  "engenharia-de-dados",
-  "analise-de-dados",
-];
 
 export const metricSchema = z.object({
   value: nonEmptyString,
@@ -22,7 +17,7 @@ export const projectSchema = z
     locale: z.enum(["pt", "en"]),
     translationKey: nonEmptyString,
     slug: nonEmptyString.refine(
-      (slug) => !reservedProjectSegments.includes(slug),
+      (slug) => !isReservedProjectSegment(slug),
       "Project slugs cannot use reserved listing segments.",
     ),
     title: nonEmptyString,
@@ -34,7 +29,7 @@ export const projectSchema = z
     featured: z.boolean().default(false),
     publicationStatus: z.enum(["draft", "published"]),
     confidential: z.boolean().default(false),
-    category: z.enum(["data-engineering", "automation", "analytics"]),
+    category: z.enum(projectCategories),
     skills: z.array(nonEmptyString).min(1),
     stack: z.array(nonEmptyString).min(1),
     metrics: z.array(metricSchema).default([]),

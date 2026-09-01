@@ -58,6 +58,44 @@ describe("selectPublishedProjects", () => {
       selectPublishedProjects(projects, "en").map(({ data }) => data.slug),
     ).toEqual(["newer-featured", "older-featured", "newest"]);
   });
+
+  it("uses the slug as a deterministic tie-breaker for equally ranked projects", () => {
+    const projects = [
+      project({
+        slug: "zebra",
+        translationKey: "zebra",
+        featured: true,
+        publishedAt: new Date("2026-03-01"),
+      }),
+      project({
+        slug: "alpha",
+        translationKey: "alpha",
+        featured: true,
+        publishedAt: new Date("2026-03-01"),
+      }),
+      project({
+        slug: "bravo",
+        translationKey: "zulu",
+        featured: true,
+        publishedAt: new Date("2026-03-01"),
+      }),
+      project({
+        slug: "bravo",
+        translationKey: "bravo",
+        featured: true,
+        publishedAt: new Date("2026-03-01"),
+      }),
+    ];
+
+    expect(
+      selectPublishedProjects(projects, "en").map(({ data }) => data.slug),
+    ).toEqual(["alpha", "bravo", "bravo", "zebra"]);
+    expect(
+      selectPublishedProjects(projects, "en").map(
+        ({ data }) => data.translationKey,
+      ),
+    ).toEqual(["alpha", "bravo", "zulu", "zebra"]);
+  });
 });
 
 describe("findTranslation", () => {

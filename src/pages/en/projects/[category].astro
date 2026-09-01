@@ -3,17 +3,20 @@ import ProjectCard from "../../../components/projects/ProjectCard.astro";
 import ProjectFilters from "../../../components/projects/ProjectFilters.astro";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import {
+  categoryLabel,
   categoryFromSegment,
-  categorySegments,
+  categorySegment,
   getPublishedProjects,
   groupByCategory,
+} from "../../../lib/projects";
+import {
   projectCategories,
   type ProjectCategory,
-} from "../../../lib/projects";
+} from "../../../lib/project-taxonomy";
 
 export function getStaticPaths() {
   return projectCategories.map((category) => ({
-    params: { category: categorySegments.en[category] },
+    params: { category: categorySegment("en", category) },
     props: { category },
   }));
 }
@@ -23,13 +26,8 @@ const resolvedCategory = categoryFromSegment("en", Astro.params.category ?? "");
 if (resolvedCategory !== category)
   throw new Error("Invalid project category path.");
 const projects = groupByCategory(await getPublishedProjects("en"))[category];
-const labels: Record<ProjectCategory, string> = {
-  "data-engineering": "Data engineering",
-  automation: "Automation",
-  analytics: "Analytics",
-};
-const label = labels[category];
-const canonicalPath = `/en/projects/${categorySegments.en[category]}/`;
+const label = categoryLabel("en", category);
+const canonicalPath = `/en/projects/${categorySegment("en", category)}/`;
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
@@ -43,7 +41,7 @@ const jsonLd = {
   title={`${label} projects | Raffael Henrique`}
   description={`Published ${label.toLowerCase()} case studies.`}
   canonicalPath={canonicalPath}
-  alternatePath={`/pt/projetos/${categorySegments.pt[category]}/`}
+  alternatePath={`/pt/projetos/${categorySegment("pt", category)}/`}
   image="/images/social-preview.png"
   jsonLd={jsonLd}
 >

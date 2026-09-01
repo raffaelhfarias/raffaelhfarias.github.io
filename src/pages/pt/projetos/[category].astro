@@ -4,16 +4,19 @@ import ProjectFilters from "../../../components/projects/ProjectFilters.astro";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import {
   categoryFromSegment,
-  categorySegments,
+  categoryLabel,
+  categorySegment,
   getPublishedProjects,
   groupByCategory,
+} from "../../../lib/projects";
+import {
   projectCategories,
   type ProjectCategory,
-} from "../../../lib/projects";
+} from "../../../lib/project-taxonomy";
 
 export function getStaticPaths() {
   return projectCategories.map((category) => ({
-    params: { category: categorySegments.pt[category] },
+    params: { category: categorySegment("pt", category) },
     props: { category },
   }));
 }
@@ -21,15 +24,10 @@ export function getStaticPaths() {
 const { category } = Astro.props as { category: ProjectCategory };
 const resolvedCategory = categoryFromSegment("pt", Astro.params.category ?? "");
 if (resolvedCategory !== category)
-  throw new Error("Caminho de categoria invÃ¡lido.");
+  throw new Error("Caminho de categoria inválido.");
 const projects = groupByCategory(await getPublishedProjects("pt"))[category];
-const labels: Record<ProjectCategory, string> = {
-  "data-engineering": "Engenharia de dados",
-  automation: "AutomaÃ§Ã£o",
-  analytics: "AnÃ¡lise de dados",
-};
-const label = labels[category];
-const canonicalPath = `/pt/projetos/${categorySegments.pt[category]}/`;
+const label = categoryLabel("pt", category);
+const canonicalPath = `/pt/projetos/${categorySegment("pt", category)}/`;
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
@@ -43,7 +41,7 @@ const jsonLd = {
   title={`Projetos de ${label} | Raffael Henrique`}
   description={`Cases publicados de ${label.toLowerCase()}.`}
   canonicalPath={canonicalPath}
-  alternatePath={`/en/projects/${categorySegments.en[category]}/`}
+  alternatePath={`/en/projects/${categorySegment("en", category)}/`}
   image="/images/social-preview.png"
   jsonLd={jsonLd}
 >
@@ -63,7 +61,7 @@ const jsonLd = {
           ))}
         </div>
       ) : (
-        <p class="notice">Ainda nÃ£o hÃ¡ cases publicados nesta categoria.</p>
+        <p class="notice">Ainda não há cases publicados nesta categoria.</p>
       )
     }
   </section>

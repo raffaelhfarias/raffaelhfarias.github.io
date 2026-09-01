@@ -1,40 +1,18 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import type { Locale } from "../i18n/locales";
+import { projectCategories, type ProjectCategory } from "./project-taxonomy";
+
+export {
+  categoryFromSegment,
+  categoryLabel,
+  categorySegment,
+  projectCategories,
+  projectTaxonomy,
+  reservedProjectSegments,
+  type ProjectCategory,
+} from "./project-taxonomy";
 
 export type Project = CollectionEntry<"projects">;
-
-export const projectCategories = [
-  "data-engineering",
-  "automation",
-  "analytics",
-] as const;
-
-export type ProjectCategory = (typeof projectCategories)[number];
-
-export const categorySegments: Record<
-  Locale,
-  Record<ProjectCategory, string>
-> = {
-  en: {
-    "data-engineering": "data-engineering",
-    automation: "automation",
-    analytics: "analytics",
-  },
-  pt: {
-    "data-engineering": "engenharia-de-dados",
-    automation: "automacao",
-    analytics: "analise-de-dados",
-  },
-};
-
-export function categoryFromSegment(
-  locale: Locale,
-  segment: string,
-): ProjectCategory | undefined {
-  return projectCategories.find(
-    (category) => categorySegments[locale][category] === segment,
-  );
-}
 
 export function selectPublishedProjects(
   entries: Project[],
@@ -48,7 +26,9 @@ export function selectPublishedProjects(
     .sort(
       (left, right) =>
         Number(right.data.featured) - Number(left.data.featured) ||
-        right.data.publishedAt.getTime() - left.data.publishedAt.getTime(),
+        right.data.publishedAt.getTime() - left.data.publishedAt.getTime() ||
+        left.data.slug.localeCompare(right.data.slug) ||
+        left.data.translationKey.localeCompare(right.data.translationKey),
     );
 }
 
@@ -68,11 +48,9 @@ export function findTranslation(
 export function groupByCategory(
   entries: Project[],
 ): Record<ProjectCategory, Project[]> {
-  const groups: Record<ProjectCategory, Project[]> = {
-    "data-engineering": [],
-    automation: [],
-    analytics: [],
-  };
+  const groups = {} as Record<ProjectCategory, Project[]>;
+
+  for (const category of projectCategories) groups[category] = [];
 
   for (const entry of entries) {
     groups[entry.data.category].push(entry);

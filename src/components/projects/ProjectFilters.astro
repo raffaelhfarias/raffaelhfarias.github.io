@@ -1,9 +1,10 @@
 ---
 import {
-  categorySegments,
+  categoryLabel,
+  categorySegment,
   projectCategories,
   type ProjectCategory,
-} from "../../lib/projects";
+} from "../../lib/project-taxonomy";
 
 interface Props {
   locale: "pt" | "en";
@@ -11,20 +12,7 @@ interface Props {
 }
 
 const { locale, activeCategory } = Astro.props;
-const labels =
-  locale === "pt"
-    ? {
-        all: "Todos",
-        "data-engineering": "Engenharia de dados",
-        automation: "AutomaÃ§Ã£o",
-        analytics: "AnÃ¡lise de dados",
-      }
-    : {
-        all: "All projects",
-        "data-engineering": "Data engineering",
-        automation: "Automation",
-        analytics: "Analytics",
-      };
+const allLabel = locale === "pt" ? "Todos" : "All projects";
 const indexPath = locale === "pt" ? "/pt/projetos/" : "/en/projects/";
 ---
 
@@ -32,19 +20,19 @@ const indexPath = locale === "pt" ? "/pt/projetos/" : "/en/projects/";
   <ul>
     <li>
       <a href={indexPath} aria-current={!activeCategory ? "page" : undefined}>
-        {labels.all}
+        {allLabel}
       </a>
     </li>
     {
       projectCategories.map((category) => {
-        const path = `${indexPath}${categorySegments[locale][category]}/`;
+        const path = `${indexPath}${categorySegment(locale, category)}/`;
         return (
           <li>
             <a
               href={path}
               aria-current={activeCategory === category ? "page" : undefined}
             >
-              {labels[category]}
+              {categoryLabel(locale, category)}
             </a>
           </li>
         );

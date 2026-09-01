@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { metricSchema, projectSchema } from "../../src/content/project-schema";
+import { reservedProjectSegments } from "../../src/lib/project-taxonomy";
 
 const baseProject = {
   locale: "pt",
@@ -76,15 +77,7 @@ describe("projectSchema", () => {
   });
 
   it("reserves project listing segments so a case can never shadow a category route", () => {
-    for (const slug of [
-      "all",
-      "data-engineering",
-      "automation",
-      "analytics",
-      "automacao",
-      "engenharia-de-dados",
-      "analise-de-dados",
-    ]) {
+    for (const slug of reservedProjectSegments) {
       expect(projectSchema.safeParse({ ...baseProject, slug }).success).toBe(
         false,
       );
