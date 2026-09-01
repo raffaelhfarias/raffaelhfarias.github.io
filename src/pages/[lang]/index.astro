@@ -1,36 +1,284 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import ContactCta from "../../components/home/ContactCta.astro";
+import FeaturedCases from "../../components/home/FeaturedCases.astro";
+import Hero from "../../components/home/Hero.astro";
+import ImpactMetrics from "../../components/home/ImpactMetrics.astro";
+import ProfileSummary from "../../components/home/ProfileSummary.astro";
+import SkillsEvidence from "../../components/home/SkillsEvidence.astro";
+import WorkProcess from "../../components/home/WorkProcess.astro";
+import type { FeaturedProject, Metric } from "../../components/home/types";
 import type { JsonLd } from "../../components/seo/serialize-json-ld";
 import { isLocale, type Locale } from "../../i18n/locales";
+import { localizedPath } from "../../i18n/routes";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getFeaturedProjects } from "../../lib/projects";
 
 export function getStaticPaths() {
   return [{ params: { lang: "pt" } }, { params: { lang: "en" } }];
 }
-
 const candidate = Astro.params.lang ?? "";
 if (!isLocale(candidate)) throw new Error(`Unsupported locale: ${candidate}`);
 const locale: Locale = candidate;
-const copy =
-  locale === "pt"
-    ? {
-        title: "Engenheiro de Dados e Automação — Raffael Henrique",
-        description: "Pipelines e automações confiáveis.",
+const aggregateMetrics: Metric[] = [];
+const isPortuguese = locale === "pt";
+const copy = isPortuguese
+  ? {
+      title: "Engenheiro de Dados e Automação — Raffael Henrique",
+      description: "Pipelines e automações confiáveis.",
+      hero: {
+        eyebrow: "Engenheiro de Dados e Automação",
         heading: "Sistemas que transformam complexidade operacional em fluxo.",
-        label: "Engenharia editorial para operações reais",
-        introduction:
+        summary:
           "Projeto e entrego dados e automações confiáveis para que equipes operem com mais clareza, ritmo e segurança.",
-      }
-    : {
-        title: "Data & Automation Engineer — Raffael Henrique",
-        description: "Reliable data pipelines and automation.",
+        primary: {
+          label: "Explorar cases",
+          href: localizedPath(locale, "projects"),
+        },
+        secondary: {
+          label: "Ver currículo",
+          href: "/documents/raffael-henrique-curriculo.pdf",
+        },
+        availability: "Disponibilidade profissional",
+        meta: [
+          "Brasil · remoto",
+          "Português e inglês",
+          "Dados, integrações e automação",
+        ],
+      },
+      impact: {
+        eyebrow: "Evidência em preparação",
+        heading: "Impacto, com contexto",
+        emptyMessage:
+          "Indicadores agregados serão publicados quando houver evidência verificável e contexto suficiente.",
+      },
+      cases: {
+        eyebrow: "Cases selecionados",
+        heading: "Engenharia em produção",
+        emptyMessage:
+          "Os cases selecionados serão publicados com responsabilidade, contexto técnico e evidências verificáveis.",
+        stackLabel: "Tecnologias utilizadas",
+      },
+      processLabels: { eyebrow: "Método", heading: "Como trabalho" },
+      process: [
+        {
+          index: "01",
+          title: "Entender",
+          description:
+            "Alinho problema, restrições e resultado antes de automatizar.",
+        },
+        {
+          index: "02",
+          title: "Projetar",
+          description:
+            "Defino contratos, estados e integrações com fronteiras claras.",
+        },
+        {
+          index: "03",
+          title: "Operar",
+          description:
+            "Trato retries, idempotência e observabilidade como requisitos.",
+        },
+        {
+          index: "04",
+          title: "Medir",
+          description:
+            "Acompanho tempo, volume, precisão e adoção quando há evidência.",
+        },
+      ],
+      skillGroups: [
+        {
+          title: "Orquestração",
+          evidence:
+            "Fluxos planejados para estados explícitos e operação confiável.",
+          href: "#featured-cases",
+        },
+        {
+          title: "Integração",
+          evidence:
+            "Conexões entre sistemas tratadas como contratos verificáveis.",
+          href: "#featured-cases",
+        },
+        {
+          title: "Processamento de dados",
+          evidence: "Dados transformados em estruturas úteis para a operação.",
+          href: "#featured-cases",
+        },
+        {
+          title: "Confiabilidade operacional",
+          evidence:
+            "Falhas, reexecuções e visibilidade considerados no desenho.",
+          href: "#featured-cases",
+        },
+      ],
+      skillsLabels: {
+        eyebrow: "Especialidade aplicada",
+        heading: "Competências comprovadas",
+        evidenceLabel: "Ver evidência",
+      },
+      profile: {
+        eyebrow: "Perfil",
+        heading: "Engenharia aplicada a operações reais.",
+        summary:
+          "Atuo na interseção entre processos, dados e automação, com comunicação clara sobre escopo, evidências e limites.",
+      },
+      contact: {
+        eyebrow: "Contato",
+        heading: "Vamos conversar sobre o próximo sistema confiável.",
+        summary:
+          "Para oportunidades e conversas técnicas, encontre-me pelos canais abaixo.",
+        links: [
+          {
+            label: "LinkedIn",
+            href: "https://www.linkedin.com/in/raffael-henrique/",
+            external: true,
+          },
+          {
+            label: "GitHub",
+            href: "https://github.com/raffaelhfarias",
+            external: true,
+          },
+          { label: "E-mail", href: "mailto:raffaelhfarias@gmail.com" },
+          {
+            label: "Currículo",
+            href: "/documents/raffael-henrique-curriculo.pdf",
+          },
+        ],
+      },
+    }
+  : {
+      title: "Data & Automation Engineer — Raffael Henrique",
+      description: "Reliable data pipelines and automation.",
+      hero: {
+        eyebrow: "Data & Automation Engineer",
         heading: "Systems that turn operational complexity into flow.",
-        label: "Editorial engineering for real operations",
-        introduction:
+        summary:
           "I design and deliver reliable data and automation systems that help teams operate with greater clarity, pace, and confidence.",
-      };
-
+        primary: {
+          label: "Explore case studies",
+          href: localizedPath(locale, "projects"),
+        },
+        secondary: {
+          label: "View résumé",
+          href: "/documents/raffael-henrique-resume.pdf",
+        },
+        availability: "Professional availability",
+        meta: [
+          "Brazil · remote",
+          "Portuguese and English",
+          "Data, integrations, and automation",
+        ],
+      },
+      impact: {
+        eyebrow: "Evidence in preparation",
+        heading: "Impact, with context",
+        emptyMessage:
+          "Aggregate indicators will be published when verifiable evidence and sufficient context are available.",
+      },
+      cases: {
+        eyebrow: "Selected case studies",
+        heading: "Engineering in production",
+        emptyMessage:
+          "Selected case studies will be published with responsibility, technical context, and verifiable evidence.",
+        stackLabel: "Technologies used",
+      },
+      processLabels: { eyebrow: "Method", heading: "How I work" },
+      process: [
+        {
+          index: "01",
+          title: "Understand",
+          description:
+            "I align the problem, constraints, and outcome before automating.",
+        },
+        {
+          index: "02",
+          title: "Design",
+          description:
+            "I define contracts, states, and integrations with clear boundaries.",
+        },
+        {
+          index: "03",
+          title: "Operate",
+          description:
+            "Retries, idempotency, and observability are treated as requirements.",
+        },
+        {
+          index: "04",
+          title: "Measure",
+          description:
+            "I track time, volume, accuracy, and adoption when evidence is available.",
+        },
+      ],
+      skillGroups: [
+        {
+          title: "Orchestration",
+          evidence:
+            "Workflows designed for explicit state and dependable operation.",
+          href: "#featured-cases",
+        },
+        {
+          title: "Integration",
+          evidence: "System connections treated as verifiable contracts.",
+          href: "#featured-cases",
+        },
+        {
+          title: "Data processing",
+          evidence: "Data transformed into structures useful to operations.",
+          href: "#featured-cases",
+        },
+        {
+          title: "Operational reliability",
+          evidence:
+            "Failure modes, retries, and visibility considered in the design.",
+          href: "#featured-cases",
+        },
+      ],
+      skillsLabels: {
+        eyebrow: "Applied expertise",
+        heading: "Proven capabilities",
+        evidenceLabel: "View evidence",
+      },
+      profile: {
+        eyebrow: "Profile",
+        heading: "Engineering applied to real operations.",
+        summary:
+          "I work at the intersection of processes, data, and automation, communicating scope, evidence, and constraints clearly.",
+      },
+      contact: {
+        eyebrow: "Contact",
+        heading: "Let’s discuss the next reliable system.",
+        summary:
+          "For opportunities and technical conversations, find me through these channels.",
+        links: [
+          {
+            label: "LinkedIn",
+            href: "https://www.linkedin.com/in/raffael-henrique/",
+            external: true,
+          },
+          {
+            label: "GitHub",
+            href: "https://github.com/raffaelhfarias",
+            external: true,
+          },
+          { label: "Email", href: "mailto:raffaelhfarias@gmail.com" },
+          { label: "Résumé", href: "/documents/raffael-henrique-resume.pdf" },
+        ],
+      },
+    };
+const featuredEntries = await getFeaturedProjects(locale);
+const featuredProjects: FeaturedProject[] = featuredEntries.map((entry) => {
+  const metric = entry.data.metrics[0];
+  if (!metric)
+    throw new Error(`Featured project ${entry.id} is missing a metric.`);
+  return {
+    title: entry.data.title,
+    summary: entry.data.summary,
+    href: localizedPath(locale, `projects/${entry.data.slug}`),
+    stack: entry.data.stack,
+    metric,
+  };
+});
 const canonicalPath = `/${locale}/`;
-const alternatePath = locale === "pt" ? "/en/" : "/pt/";
+const alternatePath = isPortuguese ? "/en/" : "/pt/";
 const profileUrl = "https://raffaelhfarias.github.io";
 const jsonLd: JsonLd = {
   "@context": "https://schema.org",
@@ -38,17 +286,16 @@ const jsonLd: JsonLd = {
     {
       "@type": "Person",
       name: "Raffael Henrique",
-      jobTitle:
-        locale === "pt"
-          ? "Engenheiro de Dados e Automação"
-          : "Data & Automation Engineer",
+      jobTitle: isPortuguese
+        ? "Engenheiro de Dados e Automação"
+        : "Data & Automation Engineer",
       url: `${profileUrl}${canonicalPath}`,
     },
     {
       "@type": "WebSite",
       name: "Raffael Henrique",
       url: `${profileUrl}${canonicalPath}`,
-      inLanguage: locale === "pt" ? "pt-BR" : "en",
+      inLanguage: isPortuguese ? "pt-BR" : "en",
     },
   ],
 };
@@ -63,31 +310,11 @@ const jsonLd: JsonLd = {
   image="/images/social-preview.png"
   jsonLd={jsonLd}
 >
-  <section class="hero container" aria-labelledby="page-title">
-    <p class="eyebrow">{copy.label}</p>
-    <h1 id="page-title">{copy.heading}</h1>
-    <p>{copy.introduction}</p>
-  </section>
+  <Hero {...copy.hero} />
+  <ImpactMetrics metrics={aggregateMetrics} {...copy.impact} />
+  <FeaturedCases projects={featuredProjects} {...copy.cases} />
+  <WorkProcess steps={copy.process} {...copy.processLabels} />
+  <SkillsEvidence groups={copy.skillGroups} {...copy.skillsLabels} />
+  <ProfileSummary {...copy.profile} />
+  <ContactCta {...copy.contact} />
 </BaseLayout>
-
-<style>
-  .hero {
-    display: grid;
-    align-content: center;
-    min-height: clamp(28rem, 65vh, 48rem);
-    max-width: 72rem;
-    padding-block: var(--space-5);
-  }
-  h1 {
-    max-width: 16ch;
-    margin: var(--space-2) 0 var(--space-3);
-    font-size: clamp(2.8rem, 7vw, 6.5rem);
-    letter-spacing: -0.055em;
-  }
-  p:last-child {
-    max-width: 42rem;
-    margin: 0;
-    color: var(--muted);
-    font-size: clamp(1.1rem, 1rem + 0.4vw, 1.35rem);
-  }
-</style>

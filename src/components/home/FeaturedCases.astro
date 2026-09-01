@@ -1,0 +1,118 @@
+---
+import type { FeaturedProject } from "./types";
+export type { FeaturedProject } from "./types";
+interface Props {
+  projects: FeaturedProject[];
+  eyebrow: string;
+  heading: string;
+  emptyMessage: string;
+  stackLabel: string;
+}
+const { projects, eyebrow, heading, emptyMessage, stackLabel } = Astro.props;
+const featured = projects.slice(0, 3);
+---
+
+<section
+  class="section"
+  id="featured-cases"
+  data-section="featured-cases"
+  aria-labelledby="cases-title"
+>
+  <div class="container">
+    <p class="eyebrow">{eyebrow}</p><h2 id="cases-title">{heading}</h2>{
+      featured.length ? (
+        <div class="cases">
+          {featured.map((project) => (
+            <article>
+              <p class="metric">
+                <strong>{project.metric.value}</strong> {project.metric.label}
+              </p>
+              <h3>
+                <a href={project.href}>{project.title}</a>
+              </h3>
+              <p>{project.summary}</p>
+              <ul aria-label={stackLabel}>
+                {project.stack.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <p class="notice">{emptyMessage}</p>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: clamp(var(--space-5), 10vw, 8rem);
+  }
+  h2 {
+    margin: var(--space-2) 0 var(--space-4);
+    font-size: clamp(2.3rem, 5vw, 4.5rem);
+    letter-spacing: -0.05em;
+  }
+  .cases {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid var(--line);
+  }
+  article {
+    padding: var(--space-3);
+    border-right: 1px solid var(--line);
+  }
+  article:first-child {
+    padding-left: 0;
+  }
+  article:last-child {
+    border-right: 0;
+  }
+  h3 {
+    margin: var(--space-2) 0;
+    font-size: 1.6rem;
+  }
+  h3 a {
+    text-decoration-thickness: 1px;
+  }
+  article p:not(.metric),
+  .notice {
+    color: var(--muted);
+  }
+  .metric {
+    margin: 0;
+    color: var(--action);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: var(--space-2) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    padding: 0.2rem 0.45rem;
+    border: 1px solid var(--line);
+    font: 0.7rem/1.2 var(--font-mono);
+  }
+  .notice {
+    max-width: 42rem;
+    margin: 0;
+  }
+  @media (max-width: 48rem) {
+    .cases {
+      grid-template-columns: 1fr;
+    }
+    article,
+    article:first-child {
+      padding: var(--space-3) 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+  }
+</style>

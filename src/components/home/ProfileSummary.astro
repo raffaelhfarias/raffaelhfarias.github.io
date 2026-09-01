@@ -1,0 +1,41 @@
+---
+interface Props {
+  eyebrow: string;
+  heading: string;
+  summary: string;
+}
+const { eyebrow, heading, summary } = Astro.props;
+---
+
+<section
+  class="section"
+  data-section="profile-summary"
+  aria-labelledby="profile-title"
+>
+  <div class="container profile">
+    <p class="eyebrow">{eyebrow}</p><h2 id="profile-title">{heading}</h2><p>
+      {summary}
+    </p>
+  </div>
+</section>
+<style>
+  .section {
+    padding-block: var(--space-5);
+    border-block: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .profile {
+    max-width: 58rem;
+  }
+  h2 {
+    margin: var(--space-2) 0 var(--space-3);
+    font-size: clamp(2rem, 4vw, 3.6rem);
+    letter-spacing: -0.045em;
+  }
+  .profile > p:last-child {
+    max-width: 50rem;
+    margin: 0;
+    color: var(--muted);
+    font-size: 1.15rem;
+  }
+</style>

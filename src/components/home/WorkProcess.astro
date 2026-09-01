@@ -1,0 +1,85 @@
+---
+import type { ProcessStep } from "./types";
+export type { ProcessStep } from "./types";
+interface Props {
+  steps: ProcessStep[];
+  eyebrow: string;
+  heading: string;
+}
+const { steps, eyebrow, heading } = Astro.props;
+---
+
+<section
+  class="section"
+  data-section="work-process"
+  aria-labelledby="process-title"
+>
+  <div class="container">
+    <p class="eyebrow">{eyebrow}</p><h2 id="process-title">{heading}</h2><ol>
+      {
+        steps.map((step) => (
+          <li>
+            <>
+              <span>{step.index}</span>
+              <div>
+                <>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                </>
+              </div>
+            </>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+<style>
+  .section {
+    padding-block: var(--space-5);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .eyebrow {
+    color: #9db9ff;
+  }
+  h2 {
+    margin: var(--space-2) 0 var(--space-4);
+    font-size: clamp(2.3rem, 5vw, 4.5rem);
+    letter-spacing: -0.05em;
+  }
+  ol {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    padding-top: var(--space-2);
+    border-top: 1px solid #625f58;
+  }
+  span {
+    color: #9db9ff;
+    font: 700 0.75rem/1 var(--font-mono);
+  }
+  h3 {
+    margin: var(--space-2) 0 0.5rem;
+    font-size: 1.25rem;
+  }
+  p {
+    margin: 0;
+    color: #d6d0c3;
+  }
+  @media (max-width: 48rem) {
+    ol {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 28rem) {
+    ol {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
