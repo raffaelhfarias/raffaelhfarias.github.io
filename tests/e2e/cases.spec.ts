@@ -33,3 +33,18 @@ test("featured case proves responsibility, architecture, reliability, and impact
     ),
   ).toBe(true);
 });
+
+for (const { locale, path } of [
+  { locale: "Portuguese", path: "/pt/projetos/venda-direta/" },
+  { locale: "English", path: "/en/projects/direct-sales/" },
+]) {
+  test(`${locale} public case excludes internal editorial notes`, async ({
+    page,
+  }) => {
+    await page.goto(path);
+
+    await expect(page.locator("main")).not.toContainText(
+      /pacote|source packet|approved source/i,
+    );
+  });
+}
