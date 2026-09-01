@@ -1,19 +1,16 @@
 ---
 import { getCollection, render } from "astro:content";
 import CaseLayout from "../../../layouts/CaseLayout.astro";
+import {
+  findTranslation,
+  selectPublishedProjects,
+} from "../../../lib/projects";
 
 export async function getStaticPaths() {
   const entries = await getCollection("projects");
-  const published = entries.filter(
-    ({ data }) =>
-      data.locale === "en" && data.publicationStatus === "published",
-  );
+  const published = selectPublishedProjects(entries, "en");
   return published.map((entry) => {
-    const alternate = entries.find(
-      ({ data }) =>
-        data.locale === "pt" &&
-        data.translationKey === entry.data.translationKey,
-    );
+    const alternate = findTranslation(entries, entry.data.translationKey, "pt");
     const related = published
       .filter(({ id }) => id !== entry.id)
       .slice(0, 2)

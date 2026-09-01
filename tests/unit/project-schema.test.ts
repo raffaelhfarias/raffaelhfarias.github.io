@@ -15,6 +15,7 @@ const baseProject = {
   featured: true,
   publicationStatus: "published",
   confidential: true,
+  category: "automation",
   skills: ["orchestration"],
   stack: ["Python", "Kestra"],
   cover: "/images/projects/direct-sales.webp",
@@ -72,5 +73,21 @@ describe("projectSchema", () => {
     });
 
     expect(result.success).toBe(true);
+  });
+
+  it("reserves project listing segments so a case can never shadow a category route", () => {
+    for (const slug of [
+      "all",
+      "data-engineering",
+      "automation",
+      "analytics",
+      "automacao",
+      "engenharia-de-dados",
+      "analise-de-dados",
+    ]) {
+      expect(projectSchema.safeParse({ ...baseProject, slug }).success).toBe(
+        false,
+      );
+    }
   });
 });
