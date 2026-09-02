@@ -1,0 +1,60 @@
+---
+import "../styles/global.css";
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>404 — Página não encontrada</title>
+  </head>
+  <body>
+    <main class="container error-page">
+      <p class="eyebrow">Página não encontrada · Page not found</p>
+      <h1>404</h1>
+      <p>
+        O endereço não existe ou foi movido. The address does not exist or has
+        moved.
+      </p>
+      <nav aria-label="Recovery">
+        <a href="/pt/">Início</a>
+        <a href="/pt/projetos/">Projetos</a>
+        <a href="/en/">Home</a>
+        <a href="/en/projects/">Projects</a>
+      </nav>
+    </main>
+  </body>
+</html>
+
+<style>
+  .error-page {
+    display: grid;
+    align-content: center;
+    min-height: 100vh;
+    padding-block: var(--space-5);
+  }
+  h1 {
+    margin: var(--space-2) 0;
+    font-size: clamp(6rem, 22vw, 16rem);
+    line-height: 0.8;
+    letter-spacing: -0.08em;
+  }
+  p {
+    max-width: 42rem;
+    color: var(--muted);
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+  nav a {
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+</style>
