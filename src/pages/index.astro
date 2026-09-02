@@ -10,5 +10,10 @@ const destination = "/pt/";
     <link rel="canonical" href="https://raffaelhfarias.github.io/pt/" />
     <title>Raffael Henrique — Engenheiro de Dados e Automação</title>
   </head>
-  <body><a href={destination}>Continuar em português</a></body>
+  <body>
+    <script is:inline>
+      window.location.replace("/pt/");
+    </script>
+    <a href={destination}>Continuar em português</a>
+  </body>
 </html>

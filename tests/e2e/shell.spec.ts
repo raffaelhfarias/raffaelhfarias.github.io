@@ -27,17 +27,16 @@ test("language switch preserves the equivalent public route", async ({
   );
 });
 
-test("header offers a tailored resume request without a generic PDF", async ({
-  page,
-}) => {
-  await page.goto("/pt/");
-  await expect(
-    page.locator("header").getByRole("link", {
-      name: "Curr\u00edculo sob medida",
-      exact: true,
-    }),
-  ).toHaveAttribute("href", /mailto:.*subject=/);
-  await expect(page.locator('header a[href^="/cv/"]')).toHaveCount(0);
+test("header omits the redundant tailored resume action", async ({ page }) => {
+  for (const [path, label] of [
+    ["/pt/", "Curr\u00edculo sob medida"],
+    ["/en/", "Tailored r\u00e9sum\u00e9"],
+  ] as const) {
+    await page.goto(path);
+    await expect(
+      page.locator("header").getByRole("link", { name: label, exact: true }),
+    ).toHaveCount(0);
+  }
 });
 
 test("Portuguese-only articles omit the unavailable language switch", async ({

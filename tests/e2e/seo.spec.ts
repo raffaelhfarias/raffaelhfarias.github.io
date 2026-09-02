@@ -55,5 +55,6 @@ test("root provides a static-host compatible Portuguese redirect", async ({
   expect(document).toContain(
     '<meta http-equiv="refresh" content="0;url=/pt/">',
   );
+  expect(document).toContain('window.location.replace("/pt/")');
   expect(document).toContain('<a href="/pt/">Continuar em português</a>');
 });

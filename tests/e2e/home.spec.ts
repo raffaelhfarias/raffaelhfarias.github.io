@@ -18,8 +18,10 @@ test("home tells the recruiter story in the approved order", async ({
     main.getByRole("link", { name: "Solicitar currículo" }),
   ).toHaveAttribute("href", /mailto:.*subject=/);
   await expect(
-    main.getByRole("link", { name: "Currículo sob medida", exact: true }),
-  ).toHaveAttribute("href", /mailto:.*subject=/);
+    main
+      .locator('[data-section="contact"]')
+      .getByRole("link", { name: "Currículo sob medida", exact: true }),
+  ).toHaveCount(0);
   await expect(main.locator('[data-section="hero"]')).toBeVisible();
   await expect(
     main.getByRole("heading", { name: "Engenharia em produção" }),
@@ -103,8 +105,10 @@ test("English home is localized and preserves the approved section order", async
     main.getByRole("link", { name: "Request tailored résumé" }),
   ).toHaveAttribute("href", /mailto:.*subject=/);
   await expect(
-    main.getByRole("link", { name: "Tailored résumé", exact: true }),
-  ).toHaveAttribute("href", /mailto:.*subject=/);
+    main
+      .locator('[data-section="contact"]')
+      .getByRole("link", { name: "Tailored résumé", exact: true }),
+  ).toHaveCount(0);
   await expect(main.getByRole("link", { name: "View evidence" })).toHaveCount(
     4,
   );
@@ -154,4 +158,38 @@ test("English home is localized and preserves the approved section order", async
         document.documentElement.clientWidth,
     ),
   ).toBe(true);
+});
+
+test("home uses compact responsive typography and vertical rhythm", async ({
+  page,
+}) => {
+  await page.goto("/pt/");
+
+  const visualRhythm = await page.getByRole("main").evaluate((element) => {
+    const hero = element.querySelector<HTMLElement>('[data-section="hero"]');
+    const heading = hero?.querySelector<HTMLElement>("h1");
+    const actions = hero?.querySelector<HTMLElement>(".hero-actions");
+    const sectionPaddings = Array.from(
+      element.querySelectorAll<HTMLElement>("[data-section]"),
+      (section) => parseFloat(getComputedStyle(section).paddingTop),
+    );
+
+    if (!heading || !actions) throw new Error("Hero structure is missing");
+
+    return {
+      viewportWidth: window.innerWidth,
+      headingSize: parseFloat(getComputedStyle(heading).fontSize),
+      headingMarginBottom: parseFloat(getComputedStyle(heading).marginBottom),
+      actionsMarginTop: parseFloat(getComputedStyle(actions).marginTop),
+      maximumSectionPadding: Math.max(...sectionPaddings),
+    };
+  });
+  const compact = visualRhythm.viewportWidth <= 768;
+
+  expect(visualRhythm.headingSize).toBeLessThanOrEqual(compact ? 40 : 76);
+  expect(visualRhythm.headingMarginBottom).toBeLessThanOrEqual(16);
+  expect(visualRhythm.actionsMarginTop).toBeLessThanOrEqual(24);
+  expect(visualRhythm.maximumSectionPadding).toBeLessThanOrEqual(
+    compact ? 48 : 80,
+  );
 });
