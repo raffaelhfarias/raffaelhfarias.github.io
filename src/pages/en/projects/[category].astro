@@ -1,0 +1,89 @@
+---
+import ProjectCard from "../../../components/projects/ProjectCard.astro";
+import ProjectFilters from "../../../components/projects/ProjectFilters.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import {
+  categoryLabel,
+  categoryFromSegment,
+  categorySegment,
+  getPublishedProjects,
+  groupByCategory,
+} from "../../../lib/projects";
+import {
+  projectCategories,
+  type ProjectCategory,
+} from "../../../lib/project-taxonomy";
+
+export function getStaticPaths() {
+  return projectCategories.map((category) => ({
+    params: { category: categorySegment("en", category) },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.props as { category: ProjectCategory };
+const resolvedCategory = categoryFromSegment("en", Astro.params.category ?? "");
+if (resolvedCategory !== category)
+  throw new Error("Invalid project category path.");
+const projects = groupByCategory(await getPublishedProjects("en"))[category];
+const label = categoryLabel("en", category);
+const canonicalPath = `/en/projects/${categorySegment("en", category)}/`;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: `${label} projects | Raffael Henrique`,
+  url: `https://raffaelhfarias.github.io${canonicalPath}`,
+};
+---
+
+<BaseLayout
+  locale="en"
+  title={`${label} projects | Raffael Henrique`}
+  description={`Published ${label.toLowerCase()} case studies.`}
+  canonicalPath={canonicalPath}
+  alternatePath={`/pt/projetos/${categorySegment("pt", category)}/`}
+  image="/images/social-preview.png"
+  jsonLd={jsonLd}
+>
+  <section class="container projects" aria-labelledby="projects-title">
+    <p class="eyebrow">Selected work</p>
+    <h1 id="projects-title">{label}</h1>
+    <ProjectFilters locale="en" activeCategory={category} />
+    {
+      projects.length ? (
+        <div class="grid">
+          {projects.map((entry) => (
+            <ProjectCard
+              entry={entry}
+              href={`/en/projects/${entry.data.slug}/`}
+              locale="en"
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="notice">No published case studies match this category yet.</p>
+      )
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .projects {
+    padding-block: clamp(var(--space-4), 9vw, 7rem);
+  }
+  h1 {
+    margin: var(--space-1) 0 var(--space-3);
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    letter-spacing: -0.06em;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: var(--space-1);
+    margin-top: var(--space-3);
+  }
+  .notice {
+    color: var(--muted);
+    margin-top: var(--space-3);
+  }
+</style>

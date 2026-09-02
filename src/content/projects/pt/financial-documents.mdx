@@ -1,0 +1,66 @@
+---
+locale: pt
+translationKey: financial-documents
+slug: documentos-financeiros
+title: Documentos financeiros
+summary: Transformação de documentos financeiros em dados estruturados para uma rotina administrativa.
+type: professional
+role: Engenheiro de Dados e Automação
+period: Desenvolvido ao longo de meses em 2026; ativo na aprovação.
+publishedAt: 2026-09-01
+featured: true
+publicationStatus: published
+confidential: true
+category: analytics
+skills: [Orquestração, Processamento de dados, Integração]
+stack: [Kestra, Python, Mensageria, PDF, XLSX]
+metrics:
+  - value: 2 formatos
+    label: PDF para XLSX
+    qualifier: Escopo da transformação; ganho de tempo confirmado apenas qualitativamente, sem medição histórica.
+cover: /images/social-preview.png
+ogImage: /images/social-preview.png
+---
+
+import ArchitectureDiagram from "../../../components/cases/ArchitectureDiagram.astro";
+
+## Minha responsabilidade
+
+Conduzi o subfluxo ponta a ponta: problema, desenho, implementação, testes, deploy, operação e manutenção. Não publico documentos, remetentes, mensagens, valores ou identificadores.
+
+## Arquitetura
+
+<ArchitectureDiagram
+  label="Diagrama sanitizado da transformação de PDF em XLSX"
+  descriptionHeading="Fluxo descrito sem depender do diagrama"
+  nodes={[
+    { id: "request", label: "Solicitante" },
+    { id: "message", label: "Mensageria" },
+    { id: "kestra", label: "Kestra" },
+    { id: "python", label: "Python" },
+    { id: "xlsx", label: "XLSX" },
+  ]}
+  edges={[
+    { from: "request", to: "message", label: "envia PDF" },
+    { from: "message", to: "kestra", label: "encaminha documento" },
+    { from: "kestra", to: "python", label: "orquestra extração" },
+    { from: "python", to: "xlsx", label: "gera planilha" },
+    { from: "xlsx", to: "message", label: "devolve arquivo" },
+  ]}
+/>
+
+## Decisões técnicas
+
+O fluxo manteve entrada e devolução no mesmo canal e usou Kestra para orquestrar a extração em Python e a geração do XLSX. Isso preserva um caminho operacional simples sem expor o conteúdo do PDF.
+
+## Confiabilidade
+
+O processo retorna uma mensagem clara ao usuário em caso de erro. Não há medição histórica publicável para retries, timeout, idempotência, validação, retenção, controle de acesso, alertas ou falhas parciais.
+
+## Resultados
+
+A evidência verificável é a transformação entre dois formatos: PDF para XLSX. O ganho de tempo foi confirmado qualitativamente, mas não foi medido historicamente e não é quantificado aqui.
+
+## Aprendizados
+
+Converter um documento em uma estrutura útil exige tratar o fluxo de entrega como parte do produto. A versão pública preserva essa lição sem expor documentos financeiros, dados pessoais ou mensagens.

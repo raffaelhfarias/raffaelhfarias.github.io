@@ -1,0 +1,10 @@
+node_modules/
+.astro/
+dist/
+.superpowers/
+docs/
+_posts/
+_tabs/
+_data/
+assets/
+commons/

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">Raffael Henrique — Data &amp; Automation Engineer</title>
+  <desc id="description">Editorial Engineering social card in warm paper, black ink, and cobalt blue.</desc>
+  <rect width="1200" height="630" fill="#f4f1e9" />
+  <rect x="72" y="72" width="12" height="486" fill="#164dcc" />
+  <path d="M120 160H1128M120 482H1128" stroke="#d6d0c3" stroke-width="2" />
+  <text x="120" y="132" fill="#164dcc" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="5">EDITORIAL ENGINEERING</text>
+  <text x="120" y="272" fill="#171717" font-family="Georgia, serif" font-size="84" font-weight="700">Raffael Henrique</text>
+  <text x="120" y="356" fill="#171717" font-family="Arial, sans-serif" font-size="40">Data &amp; Automation Engineer</text>
+  <text x="120" y="436" fill="#625f58" font-family="Arial, sans-serif" font-size="28">Reliable systems for real operations.</text>
+  <text x="120" y="530" fill="#171717" font-family="monospace" font-size="20">DATA · ORCHESTRATION · AUTOMATION</text>
+</svg>

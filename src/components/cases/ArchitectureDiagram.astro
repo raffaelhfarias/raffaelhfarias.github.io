@@ -1,0 +1,109 @@
+---
+interface ArchitectureNode {
+  id: string;
+  label: string;
+}
+interface ArchitectureEdge {
+  from: string;
+  to: string;
+  label?: string;
+}
+interface Props {
+  nodes: ArchitectureNode[];
+  edges: ArchitectureEdge[];
+  label: string;
+  descriptionHeading: string;
+}
+
+const { nodes, edges, label, descriptionHeading } = Astro.props;
+const nodeLabels = new Map(nodes.map((node) => [node.id, node.label]));
+---
+
+<figure class="architecture-diagram">
+  <figcaption>{label}</figcaption>
+  <div class="diagram-grid" role="img" aria-label={label}>
+    {
+      nodes.map((node) => (
+        <div class="node">
+          <span>{node.label}</span>
+        </div>
+      ))
+    }
+  </div>
+  <div class="diagram-edges" aria-hidden="true">
+    {
+      edges.map((edge) => (
+        <span>
+          {nodeLabels.get(edge.from)} → {nodeLabels.get(edge.to)}
+        </span>
+      ))
+    }
+  </div>
+  <section class="textual-flow" aria-labelledby="architecture-flow-title">
+    <h3 id="architecture-flow-title">{descriptionHeading}</h3>
+    <ol>
+      {
+        edges.map((edge) => (
+          <li>
+            <strong>{nodeLabels.get(edge.from)}</strong> →{" "}
+            <strong>{nodeLabels.get(edge.to)}</strong>
+            {edge.label && `: ${edge.label}`}
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+</figure>
+
+<style>
+  .architecture-diagram {
+    display: grid;
+    gap: var(--space-2);
+    margin: var(--space-3) 0 var(--space-4);
+    padding: var(--space-3);
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+  figcaption,
+  h3 {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  .diagram-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: var(--space-1);
+  }
+  .node {
+    display: grid;
+    min-height: 4.5rem;
+    place-items: center;
+    padding: var(--space-2);
+    border: 1px solid var(--action);
+    color: var(--action);
+    background: var(--paper);
+    font: 700 0.75rem/1.3 var(--font-mono);
+    text-align: center;
+  }
+  .diagram-edges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    color: var(--muted);
+    font: 0.7rem/1.3 var(--font-mono);
+  }
+  .diagram-edges span {
+    padding: 0.35rem 0.5rem;
+    border-left: 2px solid var(--line);
+  }
+  .textual-flow {
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--line);
+  }
+  ol {
+    display: grid;
+    gap: var(--space-1);
+    margin: var(--space-2) 0 0;
+    padding-left: 1.25rem;
+  }
+</style>

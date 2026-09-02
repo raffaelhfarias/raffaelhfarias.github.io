@@ -1,0 +1,155 @@
+---
+import { getCollection } from "astro:content";
+
+import type { Locale } from "../../i18n/locales";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const { locale } = Astro.props as { locale: Locale };
+const articles = (await getCollection("articles"))
+  .filter(
+    ({ data }) =>
+      data.locale === locale && data.publicationStatus === "published",
+  )
+  .sort(
+    (a, b) =>
+      b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf() ||
+      a.data.slug.localeCompare(b.data.slug),
+  );
+const isPortuguese = locale === "pt";
+const canonicalPath = isPortuguese ? "/pt/artigos/" : "/en/articles/";
+const alternatePath = isPortuguese ? "/en/articles/" : "/pt/artigos/";
+const copy = isPortuguese
+  ? {
+      title: "Artigos — Raffael Henrique",
+      description:
+        "Análises e estudos aplicados a dados, automação e engenharia.",
+      heading: "Artigos",
+      introduction:
+        "Arquivo editorial de análises, experimentos e aprendizados técnicos.",
+      empty: "Nenhum artigo publicado neste idioma.",
+    }
+  : {
+      title: "Articles — Raffael Henrique",
+      description:
+        "Analysis and applied studies in data, automation, and engineering.",
+      heading: "Articles",
+      introduction:
+        "Editorial archive of analysis, experiments, and engineering lessons.",
+      empty: "Portuguese-only articles are not duplicated here.",
+    };
+---
+
+<BaseLayout
+  {locale}
+  title={copy.title}
+  description={copy.description}
+  {canonicalPath}
+  {alternatePath}
+  image="/images/social-preview.png"
+  jsonLd={{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: copy.heading,
+  }}
+>
+  <section class="container archive">
+    <header>
+      <p class="eyebrow">Editorial</p><h1>{copy.heading}</h1><p>
+        {copy.introduction}
+      </p>
+    </header>
+    {
+      articles.length === 0 ? (
+        <p class="empty">{copy.empty}</p>
+      ) : (
+        <ol class="article-list">
+          {articles.map((article) => (
+            <li>
+              <article>
+                <p class="date">
+                  <time datetime={article.data.publishedAt.toISOString()}>
+                    {article.data.publishedAt.toLocaleDateString(
+                      locale === "pt" ? "pt-BR" : "en",
+                      {
+                        year: "numeric",
+                        month: "short",
+                        day: "2-digit",
+                        timeZone: "UTC",
+                      },
+                    )}
+                  </time>
+                </p>
+                <h2>
+                  <a href={`${canonicalPath}${article.data.slug}/`}>
+                    {article.data.title}
+                  </a>
+                </h2>
+                <p>{article.data.description}</p>
+                <ul
+                  class="tags"
+                  aria-label={locale === "pt" ? "Tópicos" : "Topics"}
+                >
+                  {article.data.tags.map((tag) => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
+              </article>
+            </li>
+          ))}
+        </ol>
+      )
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .archive {
+    padding-block: var(--space-5);
+  }
+  header {
+    max-width: 48rem;
+    margin-bottom: var(--space-5);
+  }
+  h1 {
+    margin: var(--space-2) 0;
+    font-size: clamp(3rem, 7vw, 6rem);
+    letter-spacing: -0.05em;
+  }
+  header > p:last-child,
+  article > p {
+    color: var(--muted);
+  }
+  .article-list {
+    display: grid;
+    gap: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+  .article-list > li {
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--line);
+  }
+  .date {
+    font: 700 0.75rem/1 var(--font-mono);
+    text-transform: uppercase;
+  }
+  h2 {
+    margin: var(--space-1) 0;
+    font-size: clamp(1.6rem, 3vw, 2.5rem);
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    padding: 0;
+    list-style: none;
+    font: 700 0.72rem/1 var(--font-mono);
+    text-transform: uppercase;
+  }
+  .empty {
+    padding: var(--space-4);
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+</style>

@@ -1,0 +1,72 @@
+@import './tokens.css';
+
+* {
+  box-sizing: border-box;
+}
+html {
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--font-body);
+  text-rendering: optimizeLegibility;
+}
+body {
+  margin: 0;
+  min-width: 20rem;
+  line-height: 1.6;
+}
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+a {
+  color: inherit;
+  text-underline-offset: 0.18em;
+}
+:focus-visible {
+  outline: 3px solid var(--action);
+  outline-offset: 3px;
+}
+.container {
+  width: min(calc(100% - 2rem), var(--content));
+  margin-inline: auto;
+}
+.eyebrow {
+  color: var(--action);
+  font: 700 0.75rem/1 var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.skip-link {
+  position: fixed;
+  z-index: 10;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--action-contrast);
+  background: var(--action);
+  transform: translateY(-160%);
+  transition: transform 0.16s ease;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+main {
+  min-height: 60vh;
+}
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  line-height: 1.05;
+  text-wrap: balance;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}

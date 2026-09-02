@@ -1,0 +1,18 @@
+:root {
+  --paper: #f4f1e9;
+  --surface: #fffdf8;
+  --ink: #171717;
+  --muted: #625f58;
+  --line: #d6d0c3;
+  --action: #164dcc;
+  --action-contrast: #ffffff;
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-body: Inter, Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', Consolas, monospace;
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+  --content: 72rem;
+}

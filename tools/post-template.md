@@ -14,7 +14,7 @@ image: https://url-da-imagem
 Resumo de abertura em 1 parágrafo curto. A ideia é explicar rapidamente o que o projeto faz, qual problema resolve e por que ele é relevante no portfólio.
 
 > Acessos do projeto: [dashboard/repositório/notebook](#) · [outro link](#)
-{: .prompt-info }
+> {: .prompt-info }
 
 ## Contexto
 

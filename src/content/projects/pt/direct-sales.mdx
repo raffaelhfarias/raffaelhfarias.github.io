@@ -1,0 +1,65 @@
+---
+locale: pt
+translationKey: direct-sales
+slug: venda-direta
+title: Venda direta
+summary: Coleta resiliente de resultados em ambiente protegido por autenticação de dois fatores.
+type: professional
+role: Engenheiro de Dados e Automação
+period: Desenvolvido ao longo de meses em 2026; ativo na aprovação.
+publishedAt: 2026-09-01
+featured: true
+publicationStatus: published
+confidential: true
+category: automation
+skills: [Orquestração, Automação de navegador, Integração]
+stack: [Kestra, Python, Playwright, Browserless, TOTP/2FA]
+metrics:
+  - value: 1 hora
+    label: cadência de renovação de cookies
+    qualifier: Cadência operacional de autenticação, não uma medida de impacto.
+cover: /images/social-preview.png
+ogImage: /images/social-preview.png
+---
+
+import ArchitectureDiagram from "../../../components/cases/ArchitectureDiagram.astro";
+
+## Minha responsabilidade
+
+Conduzi a solução ponta a ponta: entendimento do problema, desenho do fluxo, implementação, testes, deploy, operação e manutenção. O case omite o cliente, o portal, os dados coletados e qualquer estado de sessão.
+
+## Arquitetura
+
+<ArchitectureDiagram
+  label="Diagrama sanitizado da coleta de venda direta"
+  descriptionHeading="Fluxo descrito sem depender do diagrama"
+  nodes={[
+    { id: "kestra", label: "Kestra" },
+    { id: "python", label: "Python" },
+    { id: "browserless", label: "Browserless" },
+    { id: "portal", label: "Portal anonimizado" },
+    { id: "delivery", label: "Mensageria" },
+  ]}
+  edges={[
+    { from: "kestra", to: "python", label: "orquestra execução" },
+    { from: "python", to: "browserless", label: "usa Playwright por CDP" },
+    { from: "browserless", to: "portal", label: "login com TOTP/2FA" },
+    { from: "python", to: "delivery", label: "entrega resultados" },
+  ]}
+/>
+
+## Decisões técnicas
+
+Separei a renovação de autenticação da execução completa. Python coordenou extração, consolidação e entrega; Playwright conectou-se remotamente ao Browserless. O estado de sessão foi reaproveitado sem expor seu conteúdo.
+
+## Confiabilidade
+
+A renovação periódica e o reaproveitamento do estado reduzem a dependência de uma nova autenticação em cada execução. Não publico métricas de disponibilidade, taxa de sucesso, retries, backoff, timeout, idempotência ou alertas porque elas não possuem medição histórica ou publicável.
+
+## Resultados
+
+A evidência quantificável publicável é a renovação de cookies em cadência de 1 hora. Ela descreve uma rotina operacional, não prova economia de tempo, disponibilidade ou impacto de negócio.
+
+## Aprendizados
+
+Autenticação é parte do desenho operacional, não um detalhe de implementação. Preservar limites de evidência é tão importante quanto preservar o acesso: este relato não revela portal, credenciais, identificadores ou dados coletados.

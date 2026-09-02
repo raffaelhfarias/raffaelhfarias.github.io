@@ -1,0 +1,65 @@
+---
+locale: en
+translationKey: direct-sales
+slug: direct-sales
+title: Direct sales
+summary: Resilient result collection in an environment protected by two-factor authentication.
+type: professional
+role: Data & Automation Engineer
+period: Developed over several months in 2026; active at approval.
+publishedAt: 2026-09-01
+featured: true
+publicationStatus: published
+confidential: true
+category: automation
+skills: [Orchestration, Browser automation, Integration]
+stack: [Kestra, Python, Playwright, Browserless, TOTP/2FA]
+metrics:
+  - value: 1 hour
+    label: cookie-refresh cadence
+    qualifier: Authentication operating cadence, not an impact measure.
+cover: /images/social-preview.png
+ogImage: /images/social-preview.png
+---
+
+import ArchitectureDiagram from "../../../components/cases/ArchitectureDiagram.astro";
+
+## My responsibility
+
+I owned the solution end to end: problem framing, workflow design, implementation, testing, deployment, operation, and maintenance. The client, portal, collected data, and session state remain intentionally undisclosed.
+
+## Architecture
+
+<ArchitectureDiagram
+  label="Sanitized direct-sales collection diagram"
+  descriptionHeading="Flow explained without relying on the diagram"
+  nodes={[
+    { id: "kestra", label: "Kestra" },
+    { id: "python", label: "Python" },
+    { id: "browserless", label: "Browserless" },
+    { id: "portal", label: "Anonymous portal" },
+    { id: "delivery", label: "Messaging integration" },
+  ]}
+  edges={[
+    { from: "kestra", to: "python", label: "orchestrates execution" },
+    { from: "python", to: "browserless", label: "uses Playwright over CDP" },
+    { from: "browserless", to: "portal", label: "signs in with TOTP/2FA" },
+    { from: "python", to: "delivery", label: "delivers results" },
+  ]}
+/>
+
+## Technical decisions
+
+Authentication refresh is separated from the full run. Python coordinates extraction, consolidation, and delivery, while Playwright connects remotely to Browserless. Session state is reused without disclosing its contents.
+
+## Reliability
+
+Scheduled renewal and state reuse reduce dependence on a fresh sign-in for every run. This case deliberately does not claim availability, success-rate, retry, backoff, timeout, idempotency, or alerting metrics because they have no historical or publishable measurement.
+
+## Results
+
+The publishable numeric evidence is a 1-hour cookie-refresh cadence. It describes an operational routine; it is not evidence of time saved, availability, or business impact.
+
+## Learnings
+
+Authentication belongs in the operating design, not as an implementation afterthought. Evidence limits matter too: this account contains no portal details, credentials, identifiers, or collected data.

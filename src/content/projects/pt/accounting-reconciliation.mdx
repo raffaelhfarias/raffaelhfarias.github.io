@@ -1,0 +1,65 @@
+---
+locale: pt
+translationKey: accounting-reconciliation
+slug: conciliacao-contabil
+title: Conciliação contábil
+summary: Pipeline de coleta e consolidação para apoiar a conciliação de dados financeiros.
+type: professional
+role: Engenheiro de Dados e Automação
+period: Desenvolvido ao longo de meses em 2026; ativo na aprovação.
+publishedAt: 2026-09-01
+featured: true
+publicationStatus: published
+confidential: true
+category: data-engineering
+skills: [Orquestração, Integração, Processamento de dados]
+stack: [Kestra, Python, Playwright, Browserless]
+metrics:
+  - value: 3 etapas
+    label: coleta, normalização e consolidação
+    qualifier: Estrutura do pipeline; ganho de tempo confirmado apenas qualitativamente, sem medição histórica.
+cover: /images/social-preview.png
+ogImage: /images/social-preview.png
+---
+
+import ArchitectureDiagram from "../../../components/cases/ArchitectureDiagram.astro";
+
+## Minha responsabilidade
+
+Conduzi o pipeline ponta a ponta, da definição do problema à manutenção em operação. As fontes, valores, títulos e destino interno foram anonimizados neste case.
+
+## Arquitetura
+
+<ArchitectureDiagram
+  label="Diagrama sanitizado do pipeline de conciliação"
+  descriptionHeading="Fluxo descrito sem depender do diagrama"
+  nodes={[
+    { id: "sources", label: "Fontes anonimizadas" },
+    { id: "browser", label: "Playwright + Browserless" },
+    { id: "kestra", label: "Kestra" },
+    { id: "python", label: "Python" },
+    { id: "output", label: "Saída consolidada" },
+  ]}
+  edges={[
+    { from: "sources", to: "browser", label: "coleta" },
+    { from: "browser", to: "kestra", label: "entrega dados coletados" },
+    { from: "kestra", to: "python", label: "orquestra normalização" },
+    { from: "python", to: "output", label: "consolida para conciliação" },
+  ]}
+/>
+
+## Decisões técnicas
+
+Usei componentes reutilizáveis para normalização, separação entre componentes, páginas e regras de negócio, e Page Object Model para manter a automação navegável. Logging estruturado tornou o diagnóstico parte do fluxo.
+
+## Confiabilidade
+
+Browserless, logging estruturado e modularidade foram escolhas confirmadas para resiliência e manutenção. Não há medição histórica publicável para retries, backoff, timeout, idempotência, deduplicação, completude, alertas ou falhas parciais.
+
+## Resultados
+
+O pipeline tem três etapas verificadas: coleta, normalização e consolidação. O ganho de tempo para a atividade foi confirmado qualitativamente, mas não existe medição histórica que permita quantificá-lo.
+
+## Aprendizados
+
+Uma conciliação confiável começa com contratos claros entre coleta e transformação. A descrição pública precisa manter a mesma disciplina: mostra o fluxo sem revelar origens, dados financeiros ou destinos internos.

@@ -1,0 +1,65 @@
+---
+locale: en
+translationKey: accounting-reconciliation
+slug: accounting-reconciliation
+title: Accounting reconciliation
+summary: A collection and consolidation pipeline that supports financial reconciliation.
+type: professional
+role: Data & Automation Engineer
+period: Developed over several months in 2026; active at approval.
+publishedAt: 2026-09-01
+featured: true
+publicationStatus: published
+confidential: true
+category: data-engineering
+skills: [Orchestration, Integration, Data processing]
+stack: [Kestra, Python, Playwright, Browserless]
+metrics:
+  - value: 3 stages
+    label: collection, normalization, and consolidation
+    qualifier: Pipeline structure; time savings are qualitative only, with no historical measurement.
+cover: /images/social-preview.png
+ogImage: /images/social-preview.png
+---
+
+import ArchitectureDiagram from "../../../components/cases/ArchitectureDiagram.astro";
+
+## My responsibility
+
+I owned this pipeline from problem definition through deployment, operation, and maintenance. Sources, values, records, and the internal destination are anonymized in this account.
+
+## Architecture
+
+<ArchitectureDiagram
+  label="Sanitized accounting-reconciliation pipeline diagram"
+  descriptionHeading="Flow explained without relying on the diagram"
+  nodes={[
+    { id: "sources", label: "Anonymous sources" },
+    { id: "browser", label: "Playwright + Browserless" },
+    { id: "kestra", label: "Kestra" },
+    { id: "python", label: "Python" },
+    { id: "output", label: "Consolidated output" },
+  ]}
+  edges={[
+    { from: "sources", to: "browser", label: "collection" },
+    { from: "browser", to: "kestra", label: "returns collected data" },
+    { from: "kestra", to: "python", label: "orchestrates normalization" },
+    { from: "python", to: "output", label: "consolidates for reconciliation" },
+  ]}
+/>
+
+## Technical decisions
+
+Reusable normalization components, a separation between components, pages, and business rules, and the Page Object Model kept browser automation navigable. Structured logging made diagnosis part of the workflow.
+
+## Reliability
+
+Browserless, structured logging, and modularity are confirmed resilience and maintenance choices. There is no publishable historical measurement for retries, backoff, timeout, idempotency, deduplication, completeness, alerting, or partial failures.
+
+## Results
+
+The pipeline has three verified stages: collection, normalization, and consolidation. Time savings were confirmed qualitatively for the activity, but no historical measurement supports a number.
+
+## Learnings
+
+Reliable reconciliation begins with clear contracts between collection and transformation. The public description follows the same discipline: it shows the flow without exposing financial sources, data, or internal destinations.

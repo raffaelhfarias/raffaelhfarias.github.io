@@ -1,0 +1,81 @@
+---
+import type { SkillGroup } from "./types";
+export type { SkillGroup } from "./types";
+interface Props {
+  groups: SkillGroup[];
+  eyebrow: string;
+  heading: string;
+  evidenceLabel: string;
+}
+const { groups, eyebrow, heading, evidenceLabel } = Astro.props;
+---
+
+<section
+  class="section"
+  data-section="skills-evidence"
+  aria-labelledby="skills-title"
+>
+  <div class="container">
+    <p class="eyebrow">{eyebrow}</p><h2 id="skills-title">{heading}</h2><ul>
+      {
+        groups.map((group) => (
+          <li>
+            <>
+              <h3>{group.title}</h3>
+              <p>{group.evidence}</p>
+              <a href={group.href}>
+                {evidenceLabel} <span aria-hidden="true">→</span>
+              </a>
+            </>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+<style>
+  .section {
+    padding-block: var(--space-5);
+  }
+  h2 {
+    margin: var(--space-2) 0 var(--space-4);
+    font-size: clamp(2.3rem, 5vw, 4.5rem);
+    letter-spacing: -0.05em;
+  }
+  ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+  li {
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--line);
+  }
+  li:nth-child(odd) {
+    border-right: 1px solid var(--line);
+  }
+  h3 {
+    margin: 0;
+    font-size: 1.35rem;
+  }
+  p {
+    color: var(--muted);
+  }
+  a {
+    color: var(--action);
+    font: 700 0.75rem/1 var(--font-mono);
+    text-transform: uppercase;
+  }
+  @media (max-width: 42rem) {
+    ul {
+      grid-template-columns: 1fr;
+    }
+    li:nth-child(odd) {
+      border-right: 0;
+    }
+  }
+</style>

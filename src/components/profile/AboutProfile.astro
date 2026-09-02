@@ -1,0 +1,258 @@
+---
+import { Image } from "astro:assets";
+
+import portrait from "../../assets/profile/raffael-henrique.webp";
+import type { Locale } from "../../i18n/locales";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const { locale } = Astro.props as { locale: Locale };
+const isPortuguese = locale === "pt";
+const resumeHref = isPortuguese
+  ? "mailto:raffaelhfarias@gmail.com?subject=Curr%C3%ADculo%20para%20oportunidade"
+  : "mailto:raffaelhfarias@gmail.com?subject=Role-specific%20r%C3%A9sum%C3%A9";
+const copy = isPortuguese
+  ? {
+      title: "Sobre — Raffael Henrique",
+      description:
+        "Perfil profissional de Raffael Henrique, Engenheiro de Dados e Automação.",
+      eyebrow: "Sobre",
+      heading: "Engenharia de dados aplicada a operações reais",
+      introduction:
+        "Construo pipelines, integrações e automações que transformam processos frágeis em fluxos observáveis e sustentáveis.",
+      portraitAlt: "Retrato de Raffael Henrique",
+      principlesTitle: "Princípios de trabalho",
+      principles: [
+        "Entender o processo antes de automatizá-lo.",
+        "Tratar confiabilidade e observabilidade como requisitos.",
+        "Comunicar resultados com contexto, limites e evidências.",
+      ],
+      capabilitiesTitle: "Competências com evidência",
+      capabilities: [
+        {
+          label: "Orquestração e autenticação resiliente",
+          href: "/pt/projetos/venda-direta/",
+        },
+        {
+          label: "Pipelines e conciliação",
+          href: "/pt/projetos/conciliacao-contabil/",
+        },
+        {
+          label: "Documentos para dados estruturados",
+          href: "/pt/projetos/documentos-financeiros/",
+        },
+      ],
+      trajectoryTitle: "Trajetória",
+      trajectory: [
+        {
+          title: "Dados e análise",
+          description:
+            "Base em análise exploratória, visualização e modelagem aplicada.",
+        },
+        {
+          title: "Automação operacional",
+          description:
+            "Evolução para integrações, navegação automatizada e rotinas confiáveis.",
+        },
+        {
+          title: "Engenharia de dados",
+          description:
+            "Foco atual em orquestração, contratos, observabilidade e operação.",
+        },
+      ],
+      educationTitle: "Formação",
+      education:
+        "Ciência da Computação, com especialização em Ciência de Dados pela EBAC.",
+      contactLabel: "Contatos profissionais",
+      resumeLabel: "Solicitar currículo para a vaga",
+    }
+  : {
+      title: "About — Raffael Henrique",
+      description:
+        "Professional profile of Raffael Henrique, Data & Automation Engineer.",
+      eyebrow: "About",
+      heading: "Data engineering applied to real operations",
+      introduction:
+        "I build pipelines, integrations, and automations that turn fragile processes into observable, maintainable workflows.",
+      portraitAlt: "Portrait of Raffael Henrique",
+      principlesTitle: "Operating principles",
+      principles: [
+        "Understand the process before automating it.",
+        "Treat reliability and observability as requirements.",
+        "Communicate outcomes with context, constraints, and evidence.",
+      ],
+      capabilitiesTitle: "Evidence-linked capabilities",
+      capabilities: [
+        {
+          label: "Orchestration and resilient authentication",
+          href: "/en/projects/direct-sales/",
+        },
+        {
+          label: "Pipelines and reconciliation",
+          href: "/en/projects/accounting-reconciliation/",
+        },
+        {
+          label: "Documents to structured data",
+          href: "/en/projects/financial-documents/",
+        },
+      ],
+      trajectoryTitle: "Career trajectory",
+      trajectory: [
+        {
+          title: "Data and analytics",
+          description:
+            "A foundation in exploratory analysis, visualization, and applied modeling.",
+        },
+        {
+          title: "Operational automation",
+          description:
+            "Progression into integrations, browser automation, and reliable routines.",
+        },
+        {
+          title: "Data engineering",
+          description:
+            "Current focus on orchestration, contracts, observability, and operations.",
+        },
+      ],
+      educationTitle: "Education",
+      education:
+        "Computer Science, with a Data Science specialization from EBAC.",
+      contactLabel: "Professional contacts",
+      resumeLabel: "Request a role-specific résumé",
+    };
+const canonicalPath = isPortuguese ? "/pt/sobre/" : "/en/about/";
+const alternatePath = isPortuguese ? "/en/about/" : "/pt/sobre/";
+---
+
+<BaseLayout
+  {locale}
+  title={copy.title}
+  description={copy.description}
+  {canonicalPath}
+  {alternatePath}
+  image="/images/social-preview.png"
+  jsonLd={{
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    name: copy.title,
+  }}
+>
+  <article class="container profile">
+    <header>
+      <p class="eyebrow">{copy.eyebrow}</p>
+      <h1>{copy.heading}</h1>
+      <p class="introduction">{copy.introduction}</p>
+    </header>
+    <Image
+      class="portrait"
+      src={portrait}
+      alt={copy.portraitAlt}
+      widths={[320, 640]}
+      sizes="(max-width: 48rem) 80vw, 24rem"
+    />
+    <section aria-labelledby="principles">
+      <h2 id="principles">{copy.principlesTitle}</h2>
+      <ul>{copy.principles.map((item) => <li>{item}</li>)}</ul>
+    </section>
+    <section aria-labelledby="capabilities">
+      <h2 id="capabilities">{copy.capabilitiesTitle}</h2>
+      <ul>
+        {
+          copy.capabilities.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+    <section aria-labelledby="trajectory">
+      <h2 id="trajectory">{copy.trajectoryTitle}</h2>
+      <ol>
+        {
+          copy.trajectory.map((item) => (
+            <li>
+              <>
+                <strong>{item.title}</strong>
+                <p>{item.description}</p>
+              </>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+    <section aria-labelledby="education">
+      <h2 id="education">{copy.educationTitle}</h2>
+      <p>{copy.education}</p>
+    </section>
+    <nav aria-label={copy.contactLabel} class="contacts">
+      <a
+        href="https://github.com/raffaelhfarias"
+        target="_blank"
+        rel="noreferrer">GitHub</a
+      >
+      <a
+        href="https://www.linkedin.com/in/raffael-henrique/"
+        target="_blank"
+        rel="noreferrer">LinkedIn</a
+      >
+      <a href="mailto:raffaelhfarias@gmail.com">E-mail</a>
+      <a class="button" href={resumeHref}>{copy.resumeLabel}</a>
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .profile {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 24rem);
+    gap: var(--space-5);
+    padding-block: var(--space-5);
+  }
+  header {
+    align-self: center;
+  }
+  h1 {
+    max-width: 15ch;
+    margin: var(--space-2) 0;
+    font-size: clamp(2.5rem, 6vw, 5.5rem);
+    letter-spacing: -0.05em;
+  }
+  .introduction {
+    max-width: 42rem;
+    color: var(--muted);
+    font-size: 1.2rem;
+  }
+  .portrait {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border: 1px solid var(--line);
+  }
+  section,
+  .contacts {
+    grid-column: 1 / -1;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+  section ul,
+  section ol {
+    display: grid;
+    gap: var(--space-2);
+    padding-left: 1.25rem;
+  }
+  .contacts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  @media (max-width: 48rem) {
+    .profile {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+    .portrait {
+      max-width: 24rem;
+    }
+  }
+</style>

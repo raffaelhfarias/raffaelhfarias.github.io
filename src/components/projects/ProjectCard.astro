@@ -1,0 +1,68 @@
+---
+import type { Project } from "../../lib/projects";
+
+interface Props {
+  entry: Project;
+  href: string;
+  locale: "pt" | "en";
+}
+
+const { entry, href, locale } = Astro.props;
+const metric = entry.data.metrics[0];
+const stackLabel = locale === "pt" ? "Tecnologias" : "Technology stack";
+---
+
+<article class="project-card" data-project-slug={entry.data.slug}>
+  <p class="eyebrow">{entry.data.role}</p>
+  <h2><a href={href}>{entry.data.title}</a></h2>
+  <p class="summary">{entry.data.summary}</p>
+  {
+    metric && (
+      <p class="metric" data-metric>
+        <strong>{metric.value}</strong> {metric.label}
+      </p>
+    )
+  }
+  <ul aria-label={stackLabel}>
+    {entry.data.stack.map((item) => <li>{item}</li>)}
+  </ul>
+</article>
+
+<style>
+  .project-card {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    padding: var(--space-3);
+    border: 1px solid var(--line);
+  }
+  h2 {
+    margin: var(--space-1) 0;
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    letter-spacing: -0.04em;
+  }
+  .summary {
+    margin: 0;
+    color: var(--muted);
+  }
+  .metric {
+    margin: var(--space-2) 0 0;
+    color: var(--action);
+    font: 0.8rem/1.4 var(--font-mono);
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: var(--space-2) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    padding: 0.2rem 0.45rem;
+    border: 1px solid var(--line);
+    font: 0.7rem/1.2 var(--font-mono);
+  }
+</style>

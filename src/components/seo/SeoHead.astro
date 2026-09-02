@@ -1,0 +1,57 @@
+---
+import type { Locale } from "../../i18n/locales";
+import { serializeJsonLd, type JsonLd } from "./serialize-json-ld";
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  alternatePath?: string;
+  image: string;
+  locale: Locale;
+  jsonLd: JsonLd;
+}
+
+const {
+  title,
+  description,
+  canonicalPath,
+  alternatePath,
+  image,
+  locale,
+  jsonLd,
+} = Astro.props;
+const origin = Astro.site ?? new URL("https://raffaelhfarias.github.io");
+const canonical = new URL(canonicalPath, origin);
+const alternate = alternatePath ? new URL(alternatePath, origin) : undefined;
+const socialImage = new URL(image, origin);
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{
+  alternate && (
+    <link
+      rel="alternate"
+      hreflang={locale === "pt" ? "en" : "pt-BR"}
+      href={alternate}
+    />
+  )
+}
+<link
+  rel="alternate"
+  hreflang={locale === "pt" ? "pt-BR" : "en"}
+  href={canonical}
+/>
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={socialImage} />
+<meta name="twitter:card" content="summary_large_image" />
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={serializeJsonLd(jsonLd)}
+/>

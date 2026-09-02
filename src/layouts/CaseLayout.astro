@@ -1,0 +1,154 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+import ImpactMetrics from "../components/cases/ImpactMetrics.astro";
+import type { JsonLd } from "../components/seo/serialize-json-ld";
+import BaseLayout from "./BaseLayout.astro";
+
+interface RelatedCase {
+  title: string;
+  href: string;
+}
+interface Props {
+  entry: CollectionEntry<"projects">;
+  locale: "pt" | "en";
+  alternatePath: string;
+  related: RelatedCase[];
+}
+
+const { entry, locale, alternatePath, related } = Astro.props;
+const isPortuguese = locale === "pt";
+const canonicalPath = isPortuguese
+  ? `/pt/projetos/${entry.data.slug}/`
+  : `/en/projects/${entry.data.slug}/`;
+const copy = isPortuguese
+  ? {
+      period: "Período",
+      related: "Cases relacionados",
+      relatedLead: "Continue explorando a prática de engenharia aplicada.",
+      titleSuffix: "Case de engenharia",
+    }
+  : {
+      period: "Timeframe",
+      related: "Related case studies",
+      relatedLead: "Explore more examples of applied engineering.",
+      titleSuffix: "Engineering case study",
+    };
+const jsonLd: JsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  name: entry.data.title,
+  description: entry.data.summary,
+  inLanguage: isPortuguese ? "pt-BR" : "en",
+  url: `https://raffaelhfarias.github.io${canonicalPath}`,
+};
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${entry.data.title} — ${copy.titleSuffix} | Raffael Henrique`}
+  description={entry.data.summary}
+  canonicalPath={canonicalPath}
+  alternatePath={alternatePath}
+  image={entry.data.ogImage ?? entry.data.cover}
+  jsonLd={jsonLd}
+>
+  <article>
+    <header class="case-header container">
+      <p class="eyebrow">{entry.data.role}</p>
+      <h1>{entry.data.title}</h1>
+      <p class="summary">{entry.data.summary}</p>
+      <dl class="case-meta">
+        <div><dt>{copy.period}</dt><dd>{entry.data.period}</dd></div>
+      </dl>
+      <ImpactMetrics metrics={entry.data.metrics} locale={locale} />
+    </header>
+    <div class="case-body container"><slot /></div>
+    {
+      related.length > 0 && (
+        <aside class="related container" aria-labelledby="related-title">
+          <p class="eyebrow">{copy.related}</p>
+          <h2 id="related-title">{copy.relatedLead}</h2>
+          <ul>
+            {related.map((item) => (
+              <li>
+                <a href={item.href}>{item.title}</a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .case-header,
+  .case-body,
+  .related {
+    width: min(calc(100% - 2rem), 52rem);
+    margin-inline: auto;
+  }
+  .case-header {
+    padding-block: clamp(var(--space-4), 9vw, 7rem) var(--space-4);
+  }
+  h1 {
+    max-width: 13ch;
+    margin: var(--space-2) 0;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    letter-spacing: -0.06em;
+  }
+  .summary {
+    max-width: 44rem;
+    margin: 0;
+    color: var(--muted);
+    font-size: clamp(1.15rem, 2vw, 1.4rem);
+  }
+  .case-meta {
+    margin: var(--space-3) 0 0;
+  }
+  dt {
+    color: var(--muted);
+    font: 700 0.7rem/1 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  dd {
+    margin: 0.35rem 0 0;
+  }
+  .case-body {
+    padding-bottom: var(--space-5);
+  }
+  .case-body :global(h2) {
+    margin-top: var(--space-5);
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.04em;
+  }
+  .case-body :global(p),
+  .case-body :global(li) {
+    max-width: 44rem;
+  }
+  .related {
+    margin-bottom: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+  }
+  .related h2 {
+    margin: var(--space-2) 0;
+    font-size: clamp(1.6rem, 4vw, 2.5rem);
+  }
+  .related ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: var(--space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .related a {
+    display: block;
+    padding: var(--space-2);
+    border: 1px solid var(--line);
+    font-weight: 700;
+  }
+</style>

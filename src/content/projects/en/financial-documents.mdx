@@ -1,0 +1,66 @@
+---
+locale: en
+translationKey: financial-documents
+slug: financial-documents
+title: Financial documents
+summary: Transforming financial documents into structured data for an administrative workflow.
+type: professional
+role: Data & Automation Engineer
+period: Developed over several months in 2026; active at approval.
+publishedAt: 2026-09-01
+featured: true
+publicationStatus: published
+confidential: true
+category: analytics
+skills: [Orchestration, Data processing, Integration]
+stack: [Kestra, Python, Messaging integration, PDF, XLSX]
+metrics:
+  - value: 2 formats
+    label: PDF to XLSX
+    qualifier: Transformation scope; time savings are qualitative only, with no historical measurement.
+cover: /images/social-preview.png
+ogImage: /images/social-preview.png
+---
+
+import ArchitectureDiagram from "../../../components/cases/ArchitectureDiagram.astro";
+
+## My responsibility
+
+I owned the sub-workflow end to end: problem framing, design, implementation, testing, deployment, operation, and maintenance. Documents, senders, messages, values, and identifiers are not published.
+
+## Architecture
+
+<ArchitectureDiagram
+  label="Sanitized PDF-to-XLSX transformation diagram"
+  descriptionHeading="Flow explained without relying on the diagram"
+  nodes={[
+    { id: "request", label: "Requester" },
+    { id: "message", label: "Messaging integration" },
+    { id: "kestra", label: "Kestra" },
+    { id: "python", label: "Python" },
+    { id: "xlsx", label: "XLSX" },
+  ]}
+  edges={[
+    { from: "request", to: "message", label: "sends PDF" },
+    { from: "message", to: "kestra", label: "forwards document" },
+    { from: "kestra", to: "python", label: "orchestrates extraction" },
+    { from: "python", to: "xlsx", label: "creates spreadsheet" },
+    { from: "xlsx", to: "message", label: "returns file" },
+  ]}
+/>
+
+## Technical decisions
+
+The workflow keeps intake and delivery in the same channel and uses Kestra to orchestrate Python extraction and XLSX generation. That provides a simple operating path without exposing PDF contents.
+
+## Reliability
+
+The process returns a clear user message when an error occurs. There is no publishable historical measurement for retries, timeout, idempotency, validation, retention, access control, alerting, or partial failures.
+
+## Results
+
+The verified evidence is a transformation across two formats: PDF to XLSX. Time savings were confirmed qualitatively, but were not historically measured and are not quantified here.
+
+## Learnings
+
+Turning a document into useful structured data means treating delivery as part of the product. This public version preserves that lesson without exposing financial documents, personal data, or messages.

@@ -1,0 +1,73 @@
+---
+import ProjectCard from "../../../components/projects/ProjectCard.astro";
+import ProjectFilters from "../../../components/projects/ProjectFilters.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getPublishedProjects } from "../../../lib/projects";
+
+const projects = await getPublishedProjects("en");
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Projects | Raffael Henrique",
+  url: "https://raffaelhfarias.github.io/en/projects/",
+};
+---
+
+<BaseLayout
+  locale="en"
+  title="Projects | Raffael Henrique"
+  description="Selected data engineering, automation, and analytics case studies."
+  canonicalPath="/en/projects/"
+  alternatePath="/pt/projetos/"
+  image="/images/social-preview.png"
+  jsonLd={jsonLd}
+>
+  <section class="container projects" aria-labelledby="projects-title">
+    <p class="eyebrow">Selected work</p>
+    <h1 id="projects-title">Projects</h1>
+    <p class="lead">
+      Published case studies with the evidence that can be shared.
+    </p>
+    <ProjectFilters locale="en" />
+    {
+      projects.length ? (
+        <div class="grid">
+          {projects.map((entry) => (
+            <ProjectCard
+              entry={entry}
+              href={`/en/projects/${entry.data.slug}/`}
+              locale="en"
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="notice">No project case studies are published yet.</p>
+      )
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .projects {
+    padding-block: clamp(var(--space-4), 9vw, 7rem);
+  }
+  h1 {
+    margin: var(--space-1) 0;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    letter-spacing: -0.06em;
+  }
+  .lead,
+  .notice {
+    max-width: 42rem;
+    color: var(--muted);
+  }
+  nav {
+    margin-top: var(--space-3);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: var(--space-1);
+    margin-top: var(--space-3);
+  }
+</style>
