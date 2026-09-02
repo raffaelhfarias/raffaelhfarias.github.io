@@ -17,6 +17,7 @@ A ideia não é criar peças extravagantes, mas capas limpas, bonitas e consiste
 ## Estrutura recomendada
 
 ### 1. Capas de posts
+
 Usadas no campo `image:` do front matter.
 
 **Pasta:** `assets/img/posts/covers/`
@@ -24,6 +25,7 @@ Usadas no campo `image:` do front matter.
 **Função:** aparecer na home, cards, listagens e previews.
 
 ### 2. Imagens de preview
+
 Usadas dentro do conteúdo do post.
 
 **Pasta:** `assets/img/posts/previews/`
@@ -31,6 +33,7 @@ Usadas dentro do conteúdo do post.
 **Função:** exibir dashboard, GIF, tela da aplicação ou resultado do projeto.
 
 ### 3. Imagens institucionais do site
+
 Usadas para social preview, banners ou peças gerais.
 
 **Pasta:** `assets/img/site/`
@@ -38,11 +41,13 @@ Usadas para social preview, banners ou peças gerais.
 ## Dimensões padrão
 
 ### Capa de post
+
 - `1200 x 630 px`
 - proporção `1.91:1`
 - ideal para cards, Open Graph e compartilhamento
 
 ### Preview interno do post
+
 - largura livre, mas preferencialmente exportado com boa nitidez
 - screenshots devem ser cortadas para remover áreas desnecessárias
 
@@ -59,15 +64,18 @@ Cada capa deve ter:
 ## Hierarquia textual
 
 ### Título
+
 - curto e forte
 - até 2 linhas
 - maior destaque visual da peça
 
 ### Subtítulo
+
 - 1 linha, no máximo 2
 - explicar o tipo de solução ou o valor entregue
 
 ### Stack
+
 - exemplo: `Python · Dash · Plotly`
 - exemplo: `Python · Playwright · Kestra`
 - exemplo: `Power BI · DAX · Power Query`
@@ -75,21 +83,25 @@ Cada capa deve ter:
 ## Paleta recomendada por categoria
 
 ### Análise de Dados
+
 - base: verde petróleo / teal
 - apoio: cinza escuro / branco
 - sensação: clareza analítica
 
 ### Machine Learning
+
 - base: azul escuro / roxo
 - apoio: azul claro / branco
 - sensação: inteligência, modelagem, tecnologia
 
 ### Business Intelligence
+
 - base: dourado queimado / grafite
 - apoio: cinza claro / branco
 - sensação: executivo, estratégico, corporativo
 
 ### Automação
+
 - base: vermelho queimado / laranja escuro / azul acinzentado
 - apoio: branco / grafite
 - sensação: fluxo, processo, eficiência
@@ -128,9 +140,11 @@ Usar sempre `kebab-case`:
 ## Estrutura sugerida por projeto
 
 ### Capa
+
 Imagem criada para o portfólio, com identidade visual única.
 
 ### Preview interno
+
 Imagem real do projeto: dashboard, notebook, automação, tela ou GIF.
 
 ## Processo recomendado para novos posts
