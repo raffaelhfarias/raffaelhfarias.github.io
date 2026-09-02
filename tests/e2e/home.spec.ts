@@ -214,3 +214,21 @@ test("desktop hero heading is composed in three lines", async ({
     expect(lineCount).toBe(3);
   }
 });
+
+test("profile summary shares the standard content frame", async ({ page }) => {
+  await page.goto("/pt/");
+
+  const offsets = await page.evaluate(() => {
+    const profile = document.querySelector<HTMLElement>("#profile-title");
+    const contact = document.querySelector<HTMLElement>("#contact-title");
+    if (!profile || !contact) throw new Error("Home sections are missing");
+    return {
+      profileLeft: profile.getBoundingClientRect().left,
+      contactLeft: contact.getBoundingClientRect().left,
+    };
+  });
+
+  expect(
+    Math.abs(offsets.profileLeft - offsets.contactLeft),
+  ).toBeLessThanOrEqual(1);
+});
