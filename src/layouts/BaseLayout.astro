@@ -47,7 +47,7 @@ const {
     <a class="skip-link" href="#main-content"
       >{locale === "pt" ? "Ir para o conteúdo" : "Skip to content"}</a
     >
-    <Header locale={locale} />
+    <Header locale={locale} alternatePath={alternatePath} />
     <main id="main-content"><slot /></main>
     <Footer locale={locale} />
   </body>

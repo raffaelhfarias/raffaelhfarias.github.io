@@ -55,7 +55,7 @@ describe("validateProductionContent", () => {
     expect(validateProductionContent(await fixture())).toEqual([]);
   });
 
-  test.each(["TODO", "TBD", "XX h", "[DEMO]"])(
+  test.each(["TODO", "TBD", "XX h", "[DEMO]", "evid\u00c3\u00aancia"])(
     "rejects the marker %s",
     async (marker) => {
       const workspace = await fixture();

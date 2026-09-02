@@ -11,7 +11,7 @@ publicationStatus: published
 
 Dashboard interativo desenvolvido para analisar a evolução dos preços da gasolina no Brasil, permitindo comparar estados, observar tendências históricas e acompanhar variações ao longo do tempo.
 
-> Acessos do projeto: [dashboard online](https://gasolina-preco.onrender.com/) · [repositório](https://github.com/raffaelhfarias/gasolina-preco)
+> Acesso do projeto: [repositório](https://github.com/raffaelhfarias/gasolina-preco)
 
 ## Contexto
 

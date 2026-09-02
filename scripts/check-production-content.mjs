@@ -2,8 +2,22 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { extname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-const roots = ["src/content", "src/data", "src/pages"];
-const forbidden = [/\bTODO\b/, /\bTBD\b/, /\bXX\s*(?:h|%|k)\b/i, /\[DEMO\]/];
+const roots = [
+  "src/components",
+  "src/content",
+  "src/data",
+  "src/i18n",
+  "src/layouts",
+  "src/lib",
+  "src/pages",
+];
+const forbidden = [
+  /\bTODO\b/,
+  /\bTBD\b/,
+  /\bXX\s*(?:h|%|k)\b/i,
+  /\[DEMO\]/,
+  /\u00c3[\u0080-\u00bf]|\u00c2[\u0080-\u00bf]|\u00e2[\u0080-\u20ac]/,
+];
 const requiredFiles = [
   "src/assets/profile/raffael-henrique.webp",
   "public/images/social-preview.png",

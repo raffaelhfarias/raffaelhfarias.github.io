@@ -93,3 +93,11 @@ Descrição sanitizada e diagrama editorial PDF → extração → XLSX → devo
 
 - A resposta `8h → 30min` foi fornecida exclusivamente como **exemplo fictício de validação**. Ela não é uma métrica real, não é publicável e não pode aparecer em frontmatter, MDX, páginas ou saída de produção.
 - Para ganhos de tempo de conciliação e documentos financeiros, só é permitido declarar confirmação qualitativa, sem medição histórica.
+
+## Status final de lançamento
+
+- Retrato aprovado pelo proprietário, convertido para `src/assets/profile/raffael-henrique.webp` e publicado nas páginas Sobre e About.
+- Currículos continuam sob demanda e adaptados por vaga; nenhum PDF genérico deve ser publicado ou vinculado.
+- Os três cases bilíngues foram publicados somente com as evidências e os qualificadores aprovados neste documento.
+- O exemplo fictício `8h → 30min` permanece restrito a este pacote de fontes e proibido na saída pública.
+- A publicação do novo workflow depende da revisão do preview e da aprovação explícita do proprietário.

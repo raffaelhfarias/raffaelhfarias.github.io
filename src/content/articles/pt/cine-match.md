@@ -11,8 +11,6 @@ publicationStatus: published
 
 Aplicação de recomendação de filmes desenvolvida para sugerir títulos semelhantes com base em características textuais, transformando um modelo de machine learning em uma experiência simples e interativa para o usuário.
 
-> Acessos do projeto: [aplicação online](https://recomenda-o-j3mfxmgdwbdydzvjbhbqob.streamlit.app/)
-
 ## Contexto
 
 Sistemas de recomendação fazem parte de muitos produtos digitais modernos. Neste projeto, a proposta foi construir uma solução capaz de recomendar filmes de forma prática, mostrando como técnicas de similaridade podem ser aplicadas em uma interface acessível.

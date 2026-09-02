@@ -11,7 +11,7 @@ publicationStatus: published
 
 Projeto de análise de dados e visualização criado a partir do dataset da Our World in Data para acompanhar a evolução da COVID-19 no mundo por meio de um dashboard interativo.
 
-> Acessos do projeto: [dashboard online](https://covid19-dash.onrender.com/) · [notebook](https://colab.research.google.com/drive/1UTG6dyJXNHOkpBinbCETV0N5maYDtkqi?usp=sharing) · [artigo no LinkedIn](https://www.linkedin.com/pulse/panorama-da-covid-19-mundo-usando-dados-raffael-henrique/)
+> Acessos do projeto: [notebook](https://colab.research.google.com/drive/1UTG6dyJXNHOkpBinbCETV0N5maYDtkqi?usp=sharing) · [artigo no LinkedIn](https://www.linkedin.com/pulse/panorama-da-covid-19-mundo-usando-dados-raffael-henrique/)
 
 ## Contexto
 
@@ -42,4 +42,4 @@ Durante a pandemia, dados atualizados e bem visualizados se tornaram fundamentai
 
 ## Observações
 
-![Dashboard COVID-19](https://media3.giphy.com/media/0bqlsi3a3uOD52Fbgd/giphy.gif?cid=790b761120972c9004f22e84160dbf0433cfb8acb78751fd&rid=giphy.gif&ct=g)
+O notebook preserva a análise reproduzível e as visualizações do projeto.
