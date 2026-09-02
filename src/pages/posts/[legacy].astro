@@ -1,0 +1,14 @@
+---
+import CompatibilityPage from "../../components/seo/CompatibilityPage.astro";
+import { legacyRoutes } from "../../data/legacy-routes";
+
+export function getStaticPaths() {
+  return Object.entries(legacyRoutes).map(([legacy, destination]) => ({
+    params: { legacy },
+    props: { destination },
+  }));
+}
+const { destination } = Astro.props as { destination: string };
+---
+
+<CompatibilityPage {destination} />
