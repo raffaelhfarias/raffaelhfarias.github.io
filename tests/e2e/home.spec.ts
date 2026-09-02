@@ -15,11 +15,11 @@ test("home tells the recruiter story in the approved order", async ({
     main.getByRole("link", { name: "Explorar cases" }),
   ).toHaveAttribute("href", "/pt/projetos/");
   await expect(
-    main.getByRole("link", { name: "Ver currículo" }),
-  ).toHaveAttribute("href", "/cv/raffael-henrique-pt.pdf");
+    main.getByRole("link", { name: "Solicitar currículo" }),
+  ).toHaveAttribute("href", /mailto:.*subject=/);
   await expect(
-    main.getByRole("link", { name: "Currículo", exact: true }),
-  ).toHaveAttribute("href", "/cv/raffael-henrique-pt.pdf");
+    main.getByRole("link", { name: "Currículo sob medida", exact: true }),
+  ).toHaveAttribute("href", /mailto:.*subject=/);
   await expect(main.locator('[data-section="hero"]')).toBeVisible();
   await expect(
     main.getByRole("heading", { name: "Engenharia em produção" }),
@@ -99,13 +99,12 @@ test("English home is localized and preserves the approved section order", async
   await expect(
     main.getByRole("heading", { name: "Proven capabilities" }),
   ).toBeVisible();
-  await expect(main.getByRole("link", { name: "View résumé" })).toHaveAttribute(
-    "href",
-    "/cv/raffael-henrique-en.pdf",
-  );
   await expect(
-    main.getByRole("link", { name: "Résumé", exact: true }),
-  ).toHaveAttribute("href", "/cv/raffael-henrique-en.pdf");
+    main.getByRole("link", { name: "Request tailored résumé" }),
+  ).toHaveAttribute("href", /mailto:.*subject=/);
+  await expect(
+    main.getByRole("link", { name: "Tailored résumé", exact: true }),
+  ).toHaveAttribute("href", /mailto:.*subject=/);
   await expect(main.getByRole("link", { name: "View evidence" })).toHaveCount(
     4,
   );

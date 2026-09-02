@@ -1,0 +1,36 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+
+import ArticleLayout from "../../../layouts/ArticleLayout.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection(
+    "articles",
+    ({ data }) =>
+      data.locale === "pt" && data.publicationStatus === "published",
+  );
+  return entries.map((entry) => ({
+    params: { slug: entry.data.slug },
+    props: { entry },
+  }));
+}
+const { entry } = Astro.props as { entry: CollectionEntry<"articles"> };
+const entries = await getCollection("articles");
+const translation = entries.find(
+  ({ data }) =>
+    data.translationKey === entry.data.translationKey &&
+    data.locale === "en" &&
+    data.publicationStatus === "published",
+);
+const { Content } = await render(entry);
+---
+
+<ArticleLayout
+  entry={entry}
+  locale="pt"
+  alternatePath={translation
+    ? `/en/articles/${translation.data.slug}/`
+    : undefined}
+>
+  <Content />
+</ArticleLayout>

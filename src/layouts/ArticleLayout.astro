@@ -1,0 +1,87 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+import type { Locale } from "../i18n/locales";
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  entry: CollectionEntry<"articles">;
+  locale: Locale;
+  alternatePath?: string;
+}
+const { entry, locale, alternatePath } = Astro.props;
+const basePath = locale === "pt" ? "/pt/artigos/" : "/en/articles/";
+const canonicalPath = `${basePath}${entry.data.slug}/`;
+---
+
+<BaseLayout
+  {locale}
+  title={`${entry.data.title} — Raffael Henrique`}
+  description={entry.data.description}
+  {canonicalPath}
+  {alternatePath}
+  image="/images/social-preview.png"
+  jsonLd={{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: entry.data.title,
+    datePublished: entry.data.publishedAt.toISOString(),
+    inLanguage: locale === "pt" ? "pt-BR" : "en",
+  }}
+>
+  <article class="container article-page">
+    <header>
+      <p class="eyebrow">{locale === "pt" ? "Artigo" : "Article"}</p>
+      <h1>{entry.data.title}</h1>
+      <p class="lead">{entry.data.description}</p>
+      <time datetime={entry.data.publishedAt.toISOString()}
+        >{
+          entry.data.publishedAt.toLocaleDateString(
+            locale === "pt" ? "pt-BR" : "en",
+            { year: "numeric", month: "long", day: "2-digit", timeZone: "UTC" },
+          )
+        }</time
+      >
+    </header>
+    <div class="prose"><slot /></div>
+  </article>
+</BaseLayout>
+
+<style>
+  .article-page {
+    max-width: 58rem;
+    padding-block: var(--space-5);
+  }
+  header {
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--line);
+  }
+  h1 {
+    margin: var(--space-2) 0;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: -0.045em;
+  }
+  .lead {
+    color: var(--muted);
+    font-size: 1.2rem;
+  }
+  time {
+    font: 700 0.75rem/1 var(--font-mono);
+    text-transform: uppercase;
+  }
+  .prose {
+    padding-top: var(--space-4);
+  }
+  .prose :global(h2) {
+    margin-top: var(--space-5);
+    font-size: 2rem;
+  }
+  .prose :global(img) {
+    margin-block: var(--space-3);
+  }
+  .prose :global(a) {
+    color: var(--action);
+    text-decoration-thickness: 0.12em;
+    text-underline-offset: 0.18em;
+  }
+</style>

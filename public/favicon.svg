@@ -1,0 +1,13 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 64 64"
+  role="img"
+  aria-label="Monograma RH"
+>
+  <rect width="64" height="64" rx="8" fill="#171717" />
+  <path
+    d="M14 48V16h14c8 0 13 4 13 11 0 5-3 8-7 10l9 11H32l-7-10h-2v10H14Zm9-18h5c3 0 5-1 5-4s-2-4-5-4h-5v8Z"
+    fill="#f4f1e9"
+  />
+  <path d="M42 16h8v32h-8V16Z" fill="#164dcc" />
+</svg>

@@ -6,7 +6,7 @@ interface Props {
   title: string;
   description: string;
   canonicalPath: string;
-  alternatePath: string;
+  alternatePath?: string;
   image: string;
   locale: Locale;
   jsonLd: JsonLd;
@@ -23,18 +23,22 @@ const {
 } = Astro.props;
 const origin = Astro.site ?? new URL("https://raffaelhfarias.github.io");
 const canonical = new URL(canonicalPath, origin);
-const alternate = new URL(alternatePath, origin);
+const alternate = alternatePath ? new URL(alternatePath, origin) : undefined;
 const socialImage = new URL(image, origin);
 ---
 
 <title>{title}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
-<link
-  rel="alternate"
-  hreflang={locale === "pt" ? "en" : "pt-BR"}
-  href={alternate}
-/>
+{
+  alternate && (
+    <link
+      rel="alternate"
+      hreflang={locale === "pt" ? "en" : "pt-BR"}
+      href={alternate}
+    />
+  )
+}
 <link
   rel="alternate"
   hreflang={locale === "pt" ? "pt-BR" : "en"}
