@@ -22,4 +22,18 @@ describe("Astro scaffold", () => {
     );
     expect(astroConfig).toMatch(/output:\s*["']static["']/);
   });
+
+  it("keeps every installed lockfile package versioned for npm ci", async () => {
+    const lockfile = JSON.parse(
+      await readFile(`${rootDirectory}/package-lock.json`, "utf8"),
+    ) as {
+      packages: Record<string, { link?: boolean; version?: string }>;
+    };
+
+    const invalidPackages = Object.entries(lockfile.packages)
+      .filter(([path, metadata]) => path && !metadata.link && !metadata.version)
+      .map(([path]) => path);
+
+    expect(invalidPackages).toEqual([]);
+  });
 });
