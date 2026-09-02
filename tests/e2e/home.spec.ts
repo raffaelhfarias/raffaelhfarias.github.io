@@ -193,3 +193,24 @@ test("home uses compact responsive typography and vertical rhythm", async ({
     compact ? 48 : 80,
   );
 });
+
+test("desktop hero heading is composed in three lines", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop", "Desktop-only composition");
+  for (const path of ["/pt/", "/en/"]) {
+    await page.goto(path);
+
+    const lineCount = await page
+      .getByRole("heading", { level: 1 })
+      .evaluate((heading) => {
+        const range = document.createRange();
+        range.selectNodeContents(heading);
+        return new Set(
+          Array.from(range.getClientRects(), (rect) => Math.round(rect.top)),
+        ).size;
+      });
+
+    expect(lineCount).toBe(3);
+  }
+});

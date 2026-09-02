@@ -16,7 +16,16 @@ const { eyebrow, heading, summary, primary, secondary, availability, meta } =
   <div class="container hero-grid">
     <div>
       <p class="eyebrow">{eyebrow}</p>
-      <h1 id="home-title">{heading}</h1>
+      <h1 id="home-title">
+        {
+          heading.split("\n").map((line, index) => (
+            <>
+              {index > 0 && <br />}
+              {line}
+            </>
+          ))
+        }
+      </h1>
       <p class="hero-summary">{summary}</p>
       <div class="hero-actions">
         <a class="button" href={primary.href}>{primary.label}</a><a
@@ -44,9 +53,9 @@ const { eyebrow, heading, summary, primary, secondary, availability, meta } =
     align-items: end;
   }
   h1 {
-    max-width: 14ch;
+    max-width: 100%;
     margin: var(--space-1) 0 var(--space-2);
-    font-size: clamp(2.5rem, 5vw, 4.75rem);
+    font-size: clamp(2.5rem, 4.2vw, 4rem);
     letter-spacing: -0.055em;
   }
   .hero-summary {
