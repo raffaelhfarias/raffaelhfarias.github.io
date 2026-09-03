@@ -24,6 +24,21 @@ test("home tells the recruiter story in the approved order", async ({
   ).toHaveCount(0);
   await expect(main.locator('[data-section="hero"]')).toBeVisible();
   await expect(
+    main.getByRole("heading", { name: "Ferramentas que sustentam a entrega." }),
+  ).toBeVisible();
+  await expect(
+    main
+      .locator('[data-section="engineering-stack"]')
+      .getByText("Docker", { exact: true })
+      .first(),
+  ).toBeVisible();
+  await expect(
+    main
+      .locator('[data-section="engineering-stack"]')
+      .getByText("Em aprofundamento", { exact: true })
+      .first(),
+  ).toBeVisible();
+  await expect(
     main.getByRole("heading", { name: "Engenharia em produção" }),
   ).toBeVisible();
   await expect(
@@ -67,7 +82,7 @@ test("home tells the recruiter story in the approved order", async ({
       ),
   ).toEqual([
     "hero",
-    "impact-metrics",
+    "engineering-stack",
     "featured-cases",
     "work-process",
     "skills-evidence",
@@ -96,6 +111,21 @@ test("English home is localized and preserves the approved section order", async
   ).toBeVisible();
   await expect(
     main.getByRole("heading", { name: "Engineering in production" }),
+  ).toBeVisible();
+  await expect(
+    main.getByRole("heading", { name: "Tools that sustain delivery." }),
+  ).toBeVisible();
+  await expect(
+    main
+      .locator('[data-section="engineering-stack"]')
+      .getByText("Docker", { exact: true })
+      .first(),
+  ).toBeVisible();
+  await expect(
+    main
+      .locator('[data-section="engineering-stack"]')
+      .getByText("In progress", { exact: true })
+      .first(),
   ).toBeVisible();
   await expect(main.getByRole("heading", { name: "How I work" })).toBeVisible();
   await expect(
@@ -144,7 +174,7 @@ test("English home is localized and preserves the approved section order", async
       ),
   ).toEqual([
     "hero",
-    "impact-metrics",
+    "engineering-stack",
     "featured-cases",
     "work-process",
     "skills-evidence",
@@ -213,6 +243,17 @@ test("desktop hero heading is composed in three lines", async ({
 
     expect(lineCount).toBe(3);
   }
+});
+
+test("engineering stack remains visible with reduced motion", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/pt/");
+
+  const track = page.locator('[data-section="engineering-stack"] .stack-track');
+  await expect(track).toBeVisible();
+  await expect(track).toHaveCSS("animation-name", "none");
 });
 
 test("profile summary shares the standard content frame", async ({ page }) => {

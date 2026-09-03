@@ -1,10 +1,6 @@
 export type ToolStatus = "confirmed" | "in-depth";
 export type ToolGroupSlug =
-  | "data"
-  | "automation"
-  | "integration"
-  | "infrastructure"
-  | "cloud";
+  "data" | "automation" | "integration" | "infrastructure" | "cloud";
 
 export interface EngineeringTool {
   slug: string;
@@ -20,7 +16,9 @@ export interface EngineeringToolGroup {
   tools: EngineeringTool[];
 }
 
-const sharedGroups = {
+type SharedTool = Omit<EngineeringTool, "role">;
+
+const sharedGroups: Record<ToolGroupSlug, SharedTool[]> = {
   data: [
     {
       slug: "python",
@@ -103,18 +101,16 @@ const sharedGroups = {
       status: "in-depth",
     },
   ],
-} as const;
+};
 
-type SharedTool = (typeof sharedGroups)[keyof typeof sharedGroups][number];
-
-function withRole(
-  tool: SharedTool,
-  role: string,
-): EngineeringTool {
+function withRole(tool: SharedTool, role: string): EngineeringTool {
   return { ...tool, role };
 }
 
-export const engineeringToolGroups: Record<"pt" | "en", EngineeringToolGroup[]> = {
+export const engineeringToolGroups: Record<
+  "pt" | "en",
+  EngineeringToolGroup[]
+> = {
   pt: [
     {
       slug: "data",
@@ -180,7 +176,10 @@ export const engineeringToolGroups: Record<"pt" | "en", EngineeringToolGroup[]> 
       title: "Integrations and messaging",
       tools: [
         withRole(sharedGroups.integration[0], "Report delivery"),
-        withRole(sharedGroups.integration[1], "Service integration"),
+        withRole(
+          { ...sharedGroups.integration[1], name: "REST and webhooks" },
+          "Service integration",
+        ),
       ],
     },
     {

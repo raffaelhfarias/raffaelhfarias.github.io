@@ -23,11 +23,7 @@ const repeatedGroups = [...groups, ...groups];
     <p class="intro">{intro}</p>
   </div>
 
-  <div
-    class="stack-viewport"
-    tabindex="0"
-    aria-label={heading}
-  >
+  <div class="stack-viewport" tabindex="0" aria-label={heading}>
     <div class="stack-track">
       {
         repeatedGroups.map((group, groupIndex) => (
@@ -39,14 +35,17 @@ const repeatedGroups = [...groups, ...groups];
             <ul>
               {group.tools.map((tool) => (
                 <li class:list={{ "is-in-depth": tool.status === "in-depth" }}>
-                  <img src={tool.logo} alt={`${tool.name} mark`} width="36" height="36" />
+                  <img
+                    src={tool.logo}
+                    alt={`${tool.name} mark`}
+                    width="36"
+                    height="36"
+                  />
                   <span class="tool-copy">
                     <strong>{tool.name}</strong>
                     {tool.status !== "in-depth" && <span>{tool.role}</span>}
                   </span>
-                  {tool.status === "in-depth" && (
-                    <small>{tool.role}</small>
-                  )}
+                  {tool.status === "in-depth" && <small>{tool.role}</small>}
                 </li>
               ))}
             </ul>
