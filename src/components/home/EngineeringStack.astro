@@ -1,0 +1,177 @@
+---
+import type { EngineeringToolGroup } from "./engineering-stack";
+
+interface Props {
+  groups: EngineeringToolGroup[];
+  eyebrow: string;
+  heading: string;
+  intro: string;
+}
+
+const { groups, eyebrow, heading, intro } = Astro.props;
+const repeatedGroups = [...groups, ...groups];
+---
+
+<section
+  class="section"
+  data-section="engineering-stack"
+  aria-labelledby="engineering-stack-title"
+>
+  <div class="container">
+    <p class="eyebrow">{eyebrow}</p>
+    <h2 id="engineering-stack-title">{heading}</h2>
+    <p class="intro">{intro}</p>
+  </div>
+
+  <div class="stack-viewport" tabindex="0" aria-label={heading}>
+    <div class="stack-track">
+      {
+        repeatedGroups.map((group, groupIndex) => (
+          <div
+            class="stack-group"
+            aria-hidden={groupIndex >= groups.length ? "true" : undefined}
+          >
+            <span class="group-label">{group.title}</span>
+            <ul>
+              {group.tools.map((tool) => (
+                <li class:list={{ "is-in-depth": tool.status === "in-depth" }}>
+                  <img
+                    src={tool.logo}
+                    alt={`${tool.name} mark`}
+                    width="36"
+                    height="36"
+                  />
+                  <span class="tool-copy">
+                    <strong>{tool.name}</strong>
+                    {tool.status !== "in-depth" && <span>{tool.role}</span>}
+                  </span>
+                  {tool.status === "in-depth" && <small>{tool.role}</small>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: 3rem;
+    border-block: 1px solid var(--line);
+    background: var(--surface);
+  }
+  h2 {
+    max-width: 42rem;
+    margin: var(--space-2) 0 0;
+    font-size: clamp(2.2rem, 5vw, 4.2rem);
+    letter-spacing: -0.05em;
+  }
+  .intro {
+    max-width: 42rem;
+    margin: var(--space-2) 0 var(--space-3);
+    color: var(--muted);
+  }
+  .stack-viewport {
+    width: 100%;
+    overflow: hidden;
+    border-block: 1px solid var(--line);
+  }
+  .stack-track {
+    display: flex;
+    width: max-content;
+    animation: stack-scroll 55s linear infinite;
+  }
+  .stack-viewport:hover .stack-track,
+  .stack-viewport:focus-within .stack-track {
+    animation-play-state: paused;
+  }
+  .stack-group {
+    display: flex;
+    align-items: stretch;
+    gap: 0.7rem;
+    padding: 0.8rem 1rem;
+    border-right: 1px solid var(--line);
+  }
+  .group-label {
+    align-self: center;
+    max-width: 6.5rem;
+    color: var(--action);
+    font: 700 0.65rem/1.2 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  ul {
+    display: flex;
+    gap: 0.65rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    display: flex;
+    min-width: 11rem;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--line);
+    background: var(--paper);
+  }
+  li.is-in-depth {
+    border-color: var(--action);
+  }
+  img {
+    flex: 0 0 auto;
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+  .tool-copy {
+    display: grid;
+    gap: 0.1rem;
+  }
+  strong {
+    font: 700 0.85rem/1.1 var(--font-mono);
+  }
+  .tool-copy span {
+    color: var(--muted);
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+  small {
+    margin-left: auto;
+    color: var(--action);
+    font: 700 0.6rem/1 var(--font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  @keyframes stack-scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @media (max-width: 42rem) {
+    .section {
+      padding-block: 2.5rem;
+    }
+    .stack-track {
+      animation-duration: 42s;
+    }
+    .stack-group {
+      gap: 0.5rem;
+      padding-inline: 0.7rem;
+    }
+    .group-label {
+      max-width: 5rem;
+      font-size: 0.58rem;
+    }
+    li {
+      min-width: 9.5rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stack-track {
+      animation: none;
+    }
+  }
+</style>

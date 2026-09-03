@@ -174,7 +174,7 @@ Cada arquivo deve ser um SVG 48×48, monocromático, com `currentColor`, sem scr
 
 - [ ] **Step 2: Validar que os arquivos existem e não dependem de rede**
 
-Run: `rg -n "https?://|<script|<foreignObject" public/images/tools`
+Run: `rg -n "(href|src)=\"https?://|<script|<foreignObject" public/images/tools`
 
 Expected: nenhuma ocorrência.
 

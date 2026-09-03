@@ -1,12 +1,13 @@
 ---
 import ContactCta from "../../components/home/ContactCta.astro";
+import EngineeringStack from "../../components/home/EngineeringStack.astro";
 import FeaturedCases from "../../components/home/FeaturedCases.astro";
 import Hero from "../../components/home/Hero.astro";
-import ImpactMetrics from "../../components/home/ImpactMetrics.astro";
 import ProfileSummary from "../../components/home/ProfileSummary.astro";
 import SkillsEvidence from "../../components/home/SkillsEvidence.astro";
 import WorkProcess from "../../components/home/WorkProcess.astro";
-import type { FeaturedProject, Metric } from "../../components/home/types";
+import { engineeringToolGroups } from "../../components/home/engineering-stack";
+import type { FeaturedProject } from "../../components/home/types";
 import type { JsonLd } from "../../components/seo/serialize-json-ld";
 import { isLocale, type Locale } from "../../i18n/locales";
 import { localizedPath } from "../../i18n/routes";
@@ -19,7 +20,6 @@ export function getStaticPaths() {
 const candidate = Astro.params.lang ?? "";
 if (!isLocale(candidate)) throw new Error(`Unsupported locale: ${candidate}`);
 const locale: Locale = candidate;
-const aggregateMetrics: Metric[] = [];
 const isPortuguese = locale === "pt";
 const copy = isPortuguese
   ? {
@@ -46,11 +46,10 @@ const copy = isPortuguese
           "Dados, integrações e automação",
         ],
       },
-      impact: {
-        eyebrow: "Evidência em preparação",
-        heading: "Impacto, com contexto",
-        emptyMessage:
-          "Indicadores agregados serão publicados quando houver evidência verificável e contexto suficiente.",
+      stack: {
+        eyebrow: "Stack de engenharia",
+        heading: "Ferramentas que sustentam a entrega.",
+        intro: "Dados, automação e infraestrutura conectados ao problema real.",
       },
       cases: {
         eyebrow: "Cases selecionados",
@@ -165,11 +164,11 @@ const copy = isPortuguese
           "Data, integrations, and automation",
         ],
       },
-      impact: {
-        eyebrow: "Evidence in preparation",
-        heading: "Impact, with context",
-        emptyMessage:
-          "Aggregate indicators will be published when verifiable evidence and sufficient context are available.",
+      stack: {
+        eyebrow: "Engineering stack",
+        heading: "Tools that sustain delivery.",
+        intro:
+          "Data, automation, and infrastructure connected to the real problem.",
       },
       cases: {
         eyebrow: "Selected case studies",
@@ -307,7 +306,7 @@ const jsonLd: JsonLd = {
   jsonLd={jsonLd}
 >
   <Hero {...copy.hero} />
-  <ImpactMetrics metrics={aggregateMetrics} {...copy.impact} />
+  <EngineeringStack groups={engineeringToolGroups[locale]} {...copy.stack} />
   <FeaturedCases projects={featuredProjects} {...copy.cases} />
   <WorkProcess steps={copy.process} {...copy.processLabels} />
   <SkillsEvidence groups={copy.skillGroups} {...copy.skillsLabels} />
