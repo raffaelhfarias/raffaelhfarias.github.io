@@ -6,7 +6,8 @@ export interface EngineeringTool {
   slug: string;
   name: string;
   role: string;
-  logo: string;
+  logo?: string;
+  mark?: string;
   status: ToolStatus;
 }
 
@@ -23,13 +24,13 @@ const sharedGroups: Record<ToolGroupSlug, SharedTool[]> = {
     {
       slug: "python",
       name: "Python",
-      logo: "/images/tools/python.svg",
+      logo: "/assets/img/stacks/python.svg",
       status: "confirmed",
     },
     {
       slug: "sql",
       name: "SQL",
-      logo: "/images/tools/sql.svg",
+      logo: "/assets/img/stacks/azure-sql-server.svg",
       status: "confirmed",
     },
   ],
@@ -37,19 +38,19 @@ const sharedGroups: Record<ToolGroupSlug, SharedTool[]> = {
     {
       slug: "kestra",
       name: "Kestra",
-      logo: "/images/tools/kestra.svg",
+      logo: "/assets/img/stacks/kestra.svg",
       status: "confirmed",
     },
     {
       slug: "playwright",
       name: "Playwright",
-      logo: "/images/tools/playwright.svg",
+      logo: "/assets/img/stacks/playwright.svg",
       status: "confirmed",
     },
     {
       slug: "browserless",
       name: "Browserless",
-      logo: "/images/tools/browserless.svg",
+      logo: "/assets/img/stacks/browserless-light.svg",
       status: "confirmed",
     },
   ],
@@ -57,13 +58,13 @@ const sharedGroups: Record<ToolGroupSlug, SharedTool[]> = {
     {
       slug: "evolution-api",
       name: "Evolution API",
-      logo: "/images/tools/evolution-api.svg",
+      mark: "EA",
       status: "confirmed",
     },
     {
       slug: "rest-webhooks",
       name: "REST e webhooks",
-      logo: "/images/tools/rest-webhooks.svg",
+      logo: "/assets/img/stacks/webhookd.svg",
       status: "confirmed",
     },
   ],
@@ -71,25 +72,25 @@ const sharedGroups: Record<ToolGroupSlug, SharedTool[]> = {
     {
       slug: "docker",
       name: "Docker",
-      logo: "/images/tools/docker.svg",
+      logo: "/assets/img/stacks/docker.svg",
       status: "confirmed",
     },
     {
       slug: "linux",
       name: "Linux",
-      logo: "/images/tools/linux.svg",
+      logo: "/assets/img/stacks/linux.svg",
       status: "confirmed",
     },
     {
       slug: "coolify",
       name: "Coolify",
-      logo: "/images/tools/coolify.svg",
+      logo: "/assets/img/stacks/coolify.svg",
       status: "confirmed",
     },
     {
       slug: "git",
       name: "Git",
-      logo: "/images/tools/git.svg",
+      logo: "/assets/img/stacks/git.svg",
       status: "confirmed",
     },
   ],
@@ -97,7 +98,7 @@ const sharedGroups: Record<ToolGroupSlug, SharedTool[]> = {
     {
       slug: "azure",
       name: "Azure",
-      logo: "/images/tools/azure.svg",
+      logo: "/assets/img/stacks/azure-color.svg",
       status: "in-depth",
     },
   ],

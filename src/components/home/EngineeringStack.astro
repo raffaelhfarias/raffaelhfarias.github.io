@@ -35,12 +35,18 @@ const repeatedGroups = [...groups, ...groups];
             <ul>
               {group.tools.map((tool) => (
                 <li class:list={{ "is-in-depth": tool.status === "in-depth" }}>
-                  <img
-                    src={tool.logo}
-                    alt={`${tool.name} mark`}
-                    width="36"
-                    height="36"
-                  />
+                  {tool.logo ? (
+                    <img
+                      src={tool.logo}
+                      alt={`${tool.name} mark`}
+                      width="36"
+                      height="36"
+                    />
+                  ) : (
+                    <span class="tool-mark" aria-hidden="true">
+                      {tool.mark}
+                    </span>
+                  )}
                   <span class="tool-copy">
                     <strong>{tool.name}</strong>
                     {tool.status !== "in-depth" && <span>{tool.role}</span>}
@@ -125,6 +131,16 @@ const repeatedGroups = [...groups, ...groups];
     flex: 0 0 auto;
     width: 2.25rem;
     height: 2.25rem;
+  }
+  .tool-mark {
+    display: grid;
+    width: 2.25rem;
+    height: 2.25rem;
+    flex: 0 0 auto;
+    place-items: center;
+    color: var(--paper);
+    background: var(--action);
+    font: 700 0.75rem/1 var(--font-mono);
   }
   .tool-copy {
     display: grid;

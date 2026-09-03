@@ -26,8 +26,23 @@ describe("engineeringToolGroups", () => {
       for (const tool of group.tools) {
         expect(tool.name.length).toBeGreaterThan(0);
         expect(tool.role.length).toBeGreaterThan(0);
-        expect(tool.logo.length).toBeGreaterThan(0);
+        expect((tool.logo ?? tool.mark)?.length).toBeGreaterThan(0);
       }
     }
+  });
+
+  it("usa os ícones fornecidos pelo proprietário e reserva EA para Evolution API", () => {
+    const tools = engineeringToolGroups.pt.flatMap((group) => group.tools);
+    const findTool = (slug: string) => tools.find((tool) => tool.slug === slug);
+
+    expect(findTool("python")?.logo).toBe("/assets/img/stacks/python.svg");
+    expect(findTool("sql")?.logo).toBe(
+      "/assets/img/stacks/azure-sql-server.svg",
+    );
+    expect(findTool("rest-webhooks")?.logo).toBe(
+      "/assets/img/stacks/webhookd.svg",
+    );
+    expect(findTool("evolution-api")?.logo).toBeUndefined();
+    expect(findTool("evolution-api")?.mark).toBe("EA");
   });
 });
