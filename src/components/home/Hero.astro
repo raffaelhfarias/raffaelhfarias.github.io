@@ -5,11 +5,14 @@ interface Props {
   summary: string;
   primary: { label: string; href: string };
   secondary: { label: string; href: string };
-  availability: string;
-  meta: string[];
+  visual: {
+    label: string;
+    status: string;
+    steps: string[];
+    footer: string;
+  };
 }
-const { eyebrow, heading, summary, primary, secondary, availability, meta } =
-  Astro.props;
+const { eyebrow, heading, summary, primary, secondary, visual } = Astro.props;
 ---
 
 <section class="hero" data-section="hero" aria-labelledby="home-title">
@@ -34,10 +37,30 @@ const { eyebrow, heading, summary, primary, secondary, availability, meta } =
         >
       </div>
     </div>
-    <aside aria-label={availability}>
-      <strong>{availability}</strong><ul>
-        {meta.map((item) => <li>{item}</li>)}
-      </ul>
+    <aside class="hero-visual" aria-label={visual.label}>
+      <header class="visual-header">
+        <span>{visual.label}</span>
+        <span class="visual-status">
+          <i aria-hidden="true"></i>
+          {visual.status}
+        </span>
+      </header>
+      <ol class="workflow">
+        {
+          visual.steps.map((step, index) => (
+            <li>
+              <span class="workflow-node" aria-hidden="true">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <span>{step}</span>
+            </li>
+          ))
+        }
+      </ol>
+      <footer class="visual-footer">
+        <span>KESTRA / RUN</span>
+        <span>{visual.footer}</span>
+      </footer>
     </aside>
   </div>
 </section>
@@ -48,9 +71,9 @@ const { eyebrow, heading, summary, primary, secondary, availability, meta } =
   }
   .hero-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(15rem, 20rem);
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 22rem);
     gap: clamp(var(--space-2), 4vw, var(--space-4));
-    align-items: end;
+    align-items: center;
   }
   h1 {
     max-width: 100%;
@@ -87,19 +110,106 @@ const { eyebrow, heading, summary, primary, secondary, availability, meta } =
     background: transparent;
     border: 1px solid var(--line);
   }
-  aside {
+  .hero-visual {
+    display: grid;
+    min-height: 22rem;
+    align-content: space-between;
     padding: var(--space-3);
-    border-top: 3px solid var(--action);
-    background: var(--surface);
+    overflow: hidden;
+    color: var(--paper);
+    background: var(--ink);
+    border-block: 3px solid var(--action);
   }
-  aside strong {
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
+  .visual-header,
+  .visual-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-2);
+    font: 700 0.68rem/1.2 var(--font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
-  ul {
-    margin: var(--space-2) 0 0;
-    padding-left: 1.1rem;
-    color: var(--muted);
+  .visual-header {
+    color: var(--line);
+  }
+  .visual-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--paper);
+  }
+  .visual-status i {
+    display: block;
+    width: 0.45rem;
+    height: 0.45rem;
+    background: var(--action);
+    animation: status-pulse 1.8s ease-in-out infinite;
+  }
+  .workflow {
+    position: relative;
+    display: grid;
+    gap: var(--space-3);
+    margin: var(--space-4) 0;
+    padding: 0;
+    list-style: none;
+  }
+  .workflow::before {
+    position: absolute;
+    top: 1.5rem;
+    bottom: 1.5rem;
+    left: 1rem;
+    width: 1px;
+    background: var(--action);
+    content: "";
+  }
+  .workflow li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--paper);
+    font-size: 1.05rem;
+  }
+  .workflow-node {
+    display: grid;
+    z-index: 1;
+    width: 2rem;
+    height: 2rem;
+    flex: 0 0 auto;
+    place-items: center;
+    color: var(--paper);
+    background: var(--ink);
+    border: 1px solid var(--action);
+    font: 700 0.68rem/1 var(--font-mono);
+  }
+  .workflow li:nth-child(2) .workflow-node {
+    animation-delay: 0.35s;
+  }
+  .workflow li:nth-child(3) .workflow-node {
+    animation-delay: 0.7s;
+  }
+  .visual-footer {
+    padding-top: var(--space-2);
+    color: var(--line);
+    border-top: 1px solid var(--muted);
+  }
+  @keyframes status-pulse {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  @keyframes node-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+    50% {
+      box-shadow: 0 0 0 0.25rem rgb(22 77 204 / 18%);
+    }
   }
   @media (max-width: 48rem) {
     .hero-grid {
@@ -107,6 +217,14 @@ const { eyebrow, heading, summary, primary, secondary, availability, meta } =
     }
     h1 {
       max-width: 16ch;
+    }
+    .hero-visual {
+      min-height: 18rem;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .workflow-node {
+      animation: node-pulse 1.8s ease-in-out infinite;
     }
   }
 </style>

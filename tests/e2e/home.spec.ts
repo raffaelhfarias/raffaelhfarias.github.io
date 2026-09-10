@@ -17,6 +17,11 @@ test("home tells the recruiter story in the approved order", async ({
   await expect(
     main.getByRole("link", { name: "Solicitar currículo" }),
   ).toHaveAttribute("href", /mailto:.*subject=/);
+  await expect(
+    main.getByRole("complementary", {
+      name: "Kestra / execução de workflow",
+    }),
+  ).toBeVisible();
   await expect(main.locator('[data-section="hero"]')).toBeVisible();
   await expect(
     main.getByRole("heading", { name: "Ferramentas que sustentam a entrega." }),
@@ -85,6 +90,11 @@ test("English home is localized and preserves the approved section order", async
   await expect(
     main.getByRole("link", { name: "Request tailored résumé" }),
   ).toHaveAttribute("href", /mailto:.*subject=/);
+  await expect(
+    main.getByRole("complementary", {
+      name: "Kestra / workflow execution",
+    }),
+  ).toBeVisible();
   expect(
     await main
       .locator("[data-section]")

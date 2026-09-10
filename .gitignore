@@ -33,3 +33,4 @@ _sass/vendors
 assets/js/dist
 .superpowers/
 .worktrees/
+.opencode/
