@@ -41,54 +41,13 @@ test("home tells the recruiter story in the approved order", async ({
   await expect(
     main.getByRole("heading", { name: "Engenharia em produção" }),
   ).toBeVisible();
-  await expect(
-    main.getByRole("heading", { name: "Como trabalho" }),
-  ).toBeVisible();
-  await expect(
-    main.getByRole("heading", { name: "Competências comprovadas" }),
-  ).toBeVisible();
-  await expect(main.getByRole("link", { name: "Ver evidência" })).toHaveCount(
-    4,
-  );
-  await expect(
-    main
-      .getByRole("heading", { name: "Orquestração" })
-      .locator("..")
-      .getByRole("link"),
-  ).toHaveAttribute("href", "/pt/projetos/venda-direta/");
-  await expect(
-    main
-      .getByRole("heading", { name: "Integração" })
-      .locator("..")
-      .getByRole("link"),
-  ).toHaveAttribute("href", "/pt/projetos/conciliacao-contabil/");
-  await expect(
-    main
-      .getByRole("heading", { name: "Processamento de dados" })
-      .locator("..")
-      .getByRole("link"),
-  ).toHaveAttribute("href", "/pt/projetos/documentos-financeiros/");
-  await expect(
-    main
-      .getByRole("heading", { name: "Confiabilidade operacional" })
-      .locator("..")
-      .getByRole("link"),
-  ).toHaveAttribute("href", "/pt/projetos/venda-direta/");
   expect(
     await main
       .locator("[data-section]")
       .evaluateAll((sections) =>
         sections.map((section) => section.getAttribute("data-section")),
       ),
-  ).toEqual([
-    "hero",
-    "engineering-stack",
-    "featured-cases",
-    "work-process",
-    "skills-evidence",
-    "profile-summary",
-    "contact",
-  ]);
+  ).toEqual(["hero", "engineering-stack", "featured-cases", "contact"]);
   expect(
     await page.evaluate(
       () =>
@@ -127,10 +86,6 @@ test("English home is localized and preserves the approved section order", async
       .getByText("In progress", { exact: true })
       .first(),
   ).toBeVisible();
-  await expect(main.getByRole("heading", { name: "How I work" })).toBeVisible();
-  await expect(
-    main.getByRole("heading", { name: "Proven capabilities" }),
-  ).toBeVisible();
   await expect(
     main.getByRole("link", { name: "Request tailored résumé" }),
   ).toHaveAttribute("href", /mailto:.*subject=/);
@@ -139,48 +94,13 @@ test("English home is localized and preserves the approved section order", async
       .locator('[data-section="contact"]')
       .getByRole("link", { name: "Tailored résumé", exact: true }),
   ).toHaveCount(0);
-  await expect(main.getByRole("link", { name: "View evidence" })).toHaveCount(
-    4,
-  );
-  await expect(
-    main
-      .getByRole("heading", { name: "Orchestration" })
-      .locator("..")
-      .getByRole("link"),
-  ).toHaveAttribute("href", "/en/projects/direct-sales/");
-  await expect(
-    main
-      .getByRole("heading", { name: "Integration" })
-      .locator("..")
-      .getByRole("link"),
-  ).toHaveAttribute("href", "/en/projects/accounting-reconciliation/");
-  await expect(
-    main
-      .getByRole("heading", { name: "Data processing" })
-      .locator("..")
-      .getByRole("link"),
-  ).toHaveAttribute("href", "/en/projects/financial-documents/");
-  await expect(
-    main
-      .getByRole("heading", { name: "Operational reliability" })
-      .locator("..")
-      .getByRole("link"),
-  ).toHaveAttribute("href", "/en/projects/direct-sales/");
   expect(
     await main
       .locator("[data-section]")
       .evaluateAll((sections) =>
         sections.map((section) => section.getAttribute("data-section")),
       ),
-  ).toEqual([
-    "hero",
-    "engineering-stack",
-    "featured-cases",
-    "work-process",
-    "skills-evidence",
-    "profile-summary",
-    "contact",
-  ]);
+  ).toEqual(["hero", "engineering-stack", "featured-cases", "contact"]);
   expect(
     await page.evaluate(
       () =>
@@ -254,22 +174,4 @@ test("engineering stack remains visible with reduced motion", async ({
   const track = page.locator('[data-section="engineering-stack"] .stack-track');
   await expect(track).toBeVisible();
   await expect(track).toHaveCSS("animation-name", "none");
-});
-
-test("profile summary shares the standard content frame", async ({ page }) => {
-  await page.goto("/pt/");
-
-  const offsets = await page.evaluate(() => {
-    const profile = document.querySelector<HTMLElement>("#profile-title");
-    const contact = document.querySelector<HTMLElement>("#contact-title");
-    if (!profile || !contact) throw new Error("Home sections are missing");
-    return {
-      profileLeft: profile.getBoundingClientRect().left,
-      contactLeft: contact.getBoundingClientRect().left,
-    };
-  });
-
-  expect(
-    Math.abs(offsets.profileLeft - offsets.contactLeft),
-  ).toBeLessThanOrEqual(1);
 });
