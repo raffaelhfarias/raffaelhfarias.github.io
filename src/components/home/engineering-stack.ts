@@ -58,7 +58,7 @@ const sharedGroups: Record<ToolGroupSlug, SharedTool[]> = {
     {
       slug: "evolution-api",
       name: "Evolution API",
-      mark: "EA",
+      logo: "/assets/img/stacks/evo-api.svg",
       status: "confirmed",
     },
     {

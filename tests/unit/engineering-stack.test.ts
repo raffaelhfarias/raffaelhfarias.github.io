@@ -31,7 +31,7 @@ describe("engineeringToolGroups", () => {
     }
   });
 
-  it("usa os ícones fornecidos pelo proprietário e reserva EA para Evolution API", () => {
+  it("usa os ícones fornecidos pelo proprietário", () => {
     const tools = engineeringToolGroups.pt.flatMap((group) => group.tools);
     const findTool = (slug: string) => tools.find((tool) => tool.slug === slug);
 
@@ -42,7 +42,8 @@ describe("engineeringToolGroups", () => {
     expect(findTool("rest-webhooks")?.logo).toBe(
       "/assets/img/stacks/webhookd.svg",
     );
-    expect(findTool("evolution-api")?.logo).toBeUndefined();
-    expect(findTool("evolution-api")?.mark).toBe("EA");
+    expect(findTool("evolution-api")?.logo).toBe(
+      "/assets/img/stacks/evo-api.svg",
+    );
   });
 });

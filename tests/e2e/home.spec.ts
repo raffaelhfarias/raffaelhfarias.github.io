@@ -27,6 +27,7 @@ test("home tells the recruiter story in the approved order", async ({
       .getByText("Docker", { exact: true })
       .first(),
   ).toBeVisible();
+  await expect(main.getByAltText("Evolution API mark").first()).toBeVisible();
   await expect(
     main
       .locator('[data-section="engineering-stack"]')
