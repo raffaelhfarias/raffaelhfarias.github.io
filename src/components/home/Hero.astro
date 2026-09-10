@@ -8,7 +8,15 @@ interface Props {
   visual: {
     label: string;
     status: string;
-    steps: string[];
+    description: string;
+    nodes: {
+      input: { label: string; detail: string };
+      trigger: { label: string; detail: string };
+      context: { label: string; detail: string };
+      transform: { label: string; detail: string };
+      output: { label: string; detail: string };
+      error: { label: string; detail: string };
+    };
     footer: string;
   };
 }
@@ -45,18 +53,48 @@ const { eyebrow, heading, summary, primary, secondary, visual } = Astro.props;
           {visual.status}
         </span>
       </header>
-      <ol class="workflow">
-        {
-          visual.steps.map((step, index) => (
-            <li>
-              <span class="workflow-node" aria-hidden="true">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <span>{step}</span>
-            </li>
-          ))
-        }
-      </ol>
+      <div class="topology" aria-hidden="true">
+        <svg viewBox="0 0 360 300" role="presentation">
+          <path class="flow-path" d="M82 143H96V40H112"></path>
+          <path class="flow-path" d="M192 60V78M192 118V136M192 176V194"></path>
+          <path class="flow-path flow-path-error" d="M272 214H282V254"></path>
+          <circle class="flow-pulse pulse-one" cx="192" cy="69" r="3"></circle>
+          <circle class="flow-pulse pulse-two" cx="192" cy="127" r="3"></circle>
+          <circle class="flow-pulse pulse-three" cx="192" cy="185" r="3"
+          ></circle>
+          <g class="topology-node topology-input">
+            <rect x="10" y="118" width="72" height="50"></rect>
+            <text x="20" y="138">{visual.nodes.input.label}</text>
+            <text x="20" y="154">{visual.nodes.input.detail}</text>
+          </g>
+          <g class="topology-node">
+            <rect x="112" y="20" width="160" height="40"></rect>
+            <text x="124" y="38">{visual.nodes.trigger.label}</text>
+            <text x="124" y="51">{visual.nodes.trigger.detail}</text>
+          </g>
+          <g class="topology-node">
+            <rect x="112" y="78" width="160" height="40"></rect>
+            <text x="124" y="96">{visual.nodes.transform.label}</text>
+            <text x="124" y="109">{visual.nodes.transform.detail}</text>
+          </g>
+          <g class="topology-node">
+            <rect x="112" y="136" width="160" height="40"></rect>
+            <text x="124" y="154">{visual.nodes.transform.label}</text>
+            <text x="124" y="167">{visual.nodes.transform.detail}</text>
+          </g>
+          <g class="topology-node">
+            <rect x="112" y="194" width="160" height="40"></rect>
+            <text x="124" y="212">{visual.nodes.output.label}</text>
+            <text x="124" y="225">{visual.nodes.output.detail}</text>
+          </g>
+          <g class="topology-node topology-error">
+            <rect x="282" y="234" width="68" height="40"></rect>
+            <text x="290" y="252">{visual.nodes.error.label}</text>
+            <text x="290" y="265">{visual.nodes.error.detail}</text>
+          </g>
+        </svg>
+      </div>
+      <p class="visual-description">{visual.description}</p>
       <footer class="visual-footer">
         <span>KESTRA / RUN</span>
         <span>{visual.footer}</span>
@@ -145,48 +183,89 @@ const { eyebrow, heading, summary, primary, secondary, visual } = Astro.props;
     background: var(--action);
     animation: status-pulse 1.8s ease-in-out infinite;
   }
-  .workflow {
-    position: relative;
-    display: grid;
-    gap: var(--space-3);
-    margin: var(--space-4) 0;
-    padding: 0;
-    list-style: none;
+  .topology {
+    margin: var(--space-2) -0.5rem;
   }
-  .workflow::before {
-    position: absolute;
-    top: 1.5rem;
-    bottom: 1.5rem;
-    left: 1rem;
-    width: 1px;
-    background: var(--action);
-    content: "";
+  .topology svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
   }
-  .workflow li {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    color: var(--paper);
-    font-size: 1.05rem;
+  .flow-path {
+    fill: none;
+    stroke: var(--action);
+    stroke-width: 1;
+    stroke-dasharray: 5 6;
+    animation: flow-dash 1.8s linear infinite;
   }
-  .workflow-node {
-    display: grid;
-    z-index: 1;
-    width: 2rem;
-    height: 2rem;
-    flex: 0 0 auto;
-    place-items: center;
-    color: var(--paper);
-    background: var(--ink);
-    border: 1px solid var(--action);
-    font: 700 0.68rem/1 var(--font-mono);
+  .flow-path-error {
+    stroke: var(--line);
+    animation-delay: 0.8s;
   }
-  .workflow li:nth-child(2) .workflow-node {
+  .flow-pulse {
+    fill: var(--action);
+    animation: flow-pulse 1.8s ease-in-out infinite;
+  }
+  .pulse-two {
     animation-delay: 0.35s;
   }
-  .workflow li:nth-child(3) .workflow-node {
+  .pulse-three {
     animation-delay: 0.7s;
+  }
+  .topology-node rect {
+    fill: var(--paper);
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+  .topology-node text {
+    fill: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 0.04em;
+  }
+  .topology-node text + text {
+    fill: var(--muted);
+    font-size: 7px;
+    letter-spacing: 0;
+  }
+  .topology-input rect {
+    fill: var(--action);
+    stroke: var(--action);
+  }
+  .topology-input text,
+  .topology-input text + text {
+    fill: var(--action-contrast);
+  }
+  .topology-error rect {
+    fill: transparent;
+    stroke: var(--line);
+    stroke-dasharray: 3 3;
+  }
+  .visual-description {
+    max-width: 25rem;
+    margin: 0 0 var(--space-2);
+    color: var(--line);
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+  @keyframes flow-dash {
+    to {
+      stroke-dashoffset: -22;
+    }
+  }
+  @keyframes flow-pulse {
+    0%,
+    100% {
+      opacity: 0.25;
+      transform: scale(0.75);
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.4);
+    }
   }
   .visual-footer {
     padding-top: var(--space-2);
@@ -202,15 +281,6 @@ const { eyebrow, heading, summary, primary, secondary, visual } = Astro.props;
       opacity: 1;
     }
   }
-  @keyframes node-pulse {
-    0%,
-    100% {
-      box-shadow: 0 0 0 0 transparent;
-    }
-    50% {
-      box-shadow: 0 0 0 0.25rem rgb(22 77 204 / 18%);
-    }
-  }
   @media (max-width: 48rem) {
     .hero-grid {
       grid-template-columns: 1fr;
@@ -220,11 +290,6 @@ const { eyebrow, heading, summary, primary, secondary, visual } = Astro.props;
     }
     .hero-visual {
       min-height: 18rem;
-    }
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .workflow-node {
-      animation: node-pulse 1.8s ease-in-out infinite;
     }
   }
 </style>

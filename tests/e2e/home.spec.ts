@@ -19,7 +19,7 @@ test("home tells the recruiter story in the approved order", async ({
   ).toHaveAttribute("href", /mailto:.*subject=/);
   await expect(
     main.getByRole("complementary", {
-      name: "Kestra / execução de workflow",
+      name: "Kestra / topologia do fluxo",
     }),
   ).toBeVisible();
   await expect(main.locator('[data-section="hero"]')).toBeVisible();
@@ -92,7 +92,7 @@ test("English home is localized and preserves the approved section order", async
   ).toHaveAttribute("href", /mailto:.*subject=/);
   await expect(
     main.getByRole("complementary", {
-      name: "Kestra / workflow execution",
+      name: "Kestra / workflow topology",
     }),
   ).toBeVisible();
   expect(
