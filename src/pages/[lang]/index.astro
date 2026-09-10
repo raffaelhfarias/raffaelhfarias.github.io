@@ -1,5 +1,4 @@
 ---
-import ContactCta from "../../components/home/ContactCta.astro";
 import EngineeringStack from "../../components/home/EngineeringStack.astro";
 import FeaturedCases from "../../components/home/FeaturedCases.astro";
 import Hero from "../../components/home/Hero.astro";
@@ -55,25 +54,6 @@ const copy = isPortuguese
           "Os cases selecionados serão publicados com responsabilidade, contexto técnico e evidências verificáveis.",
         stackLabel: "Tecnologias utilizadas",
       },
-      contact: {
-        eyebrow: "Contato",
-        heading: "Vamos conversar sobre o próximo sistema confiável.",
-        summary:
-          "Para oportunidades e conversas técnicas, encontre-me pelos canais abaixo.",
-        links: [
-          {
-            label: "LinkedIn",
-            href: "https://www.linkedin.com/in/raffael-henrique/",
-            external: true,
-          },
-          {
-            label: "GitHub",
-            href: "https://github.com/raffaelhfarias",
-            external: true,
-          },
-          { label: "E-mail", href: "mailto:raffaelhfarias@gmail.com" },
-        ],
-      },
     }
   : {
       title: "Data & Automation Engineer — Raffael Henrique",
@@ -110,25 +90,6 @@ const copy = isPortuguese
         emptyMessage:
           "Selected case studies will be published with responsibility, technical context, and verifiable evidence.",
         stackLabel: "Technologies used",
-      },
-      contact: {
-        eyebrow: "Contact",
-        heading: "Let’s discuss the next reliable system.",
-        summary:
-          "For opportunities and technical conversations, find me through these channels.",
-        links: [
-          {
-            label: "LinkedIn",
-            href: "https://www.linkedin.com/in/raffael-henrique/",
-            external: true,
-          },
-          {
-            label: "GitHub",
-            href: "https://github.com/raffaelhfarias",
-            external: true,
-          },
-          { label: "Email", href: "mailto:raffaelhfarias@gmail.com" },
-        ],
       },
     };
 const featuredEntries = await getFeaturedProjects(locale);
@@ -180,5 +141,4 @@ const jsonLd: JsonLd = {
   <Hero {...copy.hero} />
   <EngineeringStack groups={engineeringToolGroups[locale]} {...copy.stack} />
   <FeaturedCases projects={featuredProjects} {...copy.cases} />
-  <ContactCta {...copy.contact} />
 </BaseLayout>

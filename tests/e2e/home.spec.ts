@@ -17,11 +17,6 @@ test("home tells the recruiter story in the approved order", async ({
   await expect(
     main.getByRole("link", { name: "Solicitar currículo" }),
   ).toHaveAttribute("href", /mailto:.*subject=/);
-  await expect(
-    main
-      .locator('[data-section="contact"]')
-      .getByRole("link", { name: "Currículo sob medida", exact: true }),
-  ).toHaveCount(0);
   await expect(main.locator('[data-section="hero"]')).toBeVisible();
   await expect(
     main.getByRole("heading", { name: "Ferramentas que sustentam a entrega." }),
@@ -47,7 +42,7 @@ test("home tells the recruiter story in the approved order", async ({
       .evaluateAll((sections) =>
         sections.map((section) => section.getAttribute("data-section")),
       ),
-  ).toEqual(["hero", "engineering-stack", "featured-cases", "contact"]);
+  ).toEqual(["hero", "engineering-stack", "featured-cases"]);
   expect(
     await page.evaluate(
       () =>
@@ -89,18 +84,13 @@ test("English home is localized and preserves the approved section order", async
   await expect(
     main.getByRole("link", { name: "Request tailored résumé" }),
   ).toHaveAttribute("href", /mailto:.*subject=/);
-  await expect(
-    main
-      .locator('[data-section="contact"]')
-      .getByRole("link", { name: "Tailored résumé", exact: true }),
-  ).toHaveCount(0);
   expect(
     await main
       .locator("[data-section]")
       .evaluateAll((sections) =>
         sections.map((section) => section.getAttribute("data-section")),
       ),
-  ).toEqual(["hero", "engineering-stack", "featured-cases", "contact"]);
+  ).toEqual(["hero", "engineering-stack", "featured-cases"]);
   expect(
     await page.evaluate(
       () =>
