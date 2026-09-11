@@ -17,7 +17,6 @@ interface Props {
       output: { label: string; detail: string };
       error: { label: string; detail: string };
     };
-    footer: string;
   };
 }
 const { eyebrow, heading, summary, primary, secondary, visual } = Astro.props;
@@ -79,8 +78,8 @@ const { eyebrow, heading, summary, primary, secondary, visual } = Astro.props;
           </g>
           <g class="topology-node">
             <rect x="112" y="136" width="160" height="40"></rect>
-            <text x="124" y="154">{visual.nodes.transform.label}</text>
-            <text x="124" y="167">{visual.nodes.transform.detail}</text>
+            <text x="124" y="154">{visual.nodes.context.label}</text>
+            <text x="124" y="167">{visual.nodes.context.detail}</text>
           </g>
           <g class="topology-node">
             <rect x="112" y="194" width="160" height="40"></rect>
@@ -95,10 +94,6 @@ const { eyebrow, heading, summary, primary, secondary, visual } = Astro.props;
         </svg>
       </div>
       <p class="visual-description">{visual.description}</p>
-      <footer class="visual-footer">
-        <span>KESTRA / RUN</span>
-        <span>{visual.footer}</span>
-      </footer>
     </aside>
   </div>
 </section>
@@ -156,10 +151,9 @@ const { eyebrow, heading, summary, primary, secondary, visual } = Astro.props;
     overflow: hidden;
     color: var(--paper);
     background: var(--ink);
-    border-block: 3px solid var(--action);
+    border: 0;
   }
-  .visual-header,
-  .visual-footer {
+  .visual-header {
     display: flex;
     justify-content: space-between;
     gap: var(--space-2);
@@ -266,11 +260,6 @@ const { eyebrow, heading, summary, primary, secondary, visual } = Astro.props;
       opacity: 1;
       transform: scale(1.4);
     }
-  }
-  .visual-footer {
-    padding-top: var(--space-2);
-    color: var(--line);
-    border-top: 1px solid var(--muted);
   }
   @keyframes status-pulse {
     0%,

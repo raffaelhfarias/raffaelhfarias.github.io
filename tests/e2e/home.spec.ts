@@ -176,3 +176,21 @@ test("engineering stack remains visible with reduced motion", async ({
   await expect(track).toBeVisible();
   await expect(track).toHaveCSS("animation-name", "none");
 });
+
+test("hero topology uses context and removes the extra frame chrome", async ({
+  page,
+}) => {
+  await page.goto("/pt/");
+
+  const visual = page.locator('[data-section="hero"] .hero-visual');
+  const topologyText = await visual.locator(".topology text").allTextContents();
+
+  expect(topologyText).toContain("CONTEXTO");
+  expect(topologyText).toContain("período + empresas");
+  expect(topologyText.filter((text) => text === "extrair_dados")).toHaveLength(
+    1,
+  );
+  await expect(visual.locator(".visual-footer")).toHaveCount(0);
+  await expect(visual).toHaveCSS("border-top-width", "0px");
+  await expect(visual).toHaveCSS("border-bottom-width", "0px");
+});
