@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f6f8fa" />
+    <meta
+      name="description"
+      content="Portfólio pessoal de Raffael Henrique, engenheiro de dados."
+    />
+    <title>Raffael Henrique — Portfólio</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script>
+      document.documentElement.dataset.theme =
+        localStorage.getItem("portfolio-theme") || "light";
+    </script>
+    <script src="js/script.js" defer></script>
+    <script src="js/tech-stack.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <a class="site-brand" href="index.html" aria-label="Página inicial">
+        rhfariasn
+      </a>
+      <button
+        class="theme-toggle"
+        type="button"
+        aria-label="Ativar tema escuro"
+        aria-pressed="false"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3v2m0 14v2M3 12h2m14 0h2m-3.36-6.64-1.42 1.42M6.78 17.22l-1.42 1.42m0-13.28 1.42 1.42m10.44 10.44 1.42 1.42" />
+          <circle cx="12" cy="12" r="4" />
+        </svg>
+      </button>
+    </header>
+
+    <div class="page-shell">
+      <aside class="profile-sidebar" aria-label="Perfil">
+        <img class="avatar" src="assets/profile/profile.jpg" alt="Raffael Henrique" />
+        <h1>Raffael Henrique</h1>
+        <p class="username">@raffaelhfarias</p>
+        <p class="profile-copy">
+          Conecto dados, automação e IA para transformar processos manuais em soluções confiáveis e úteis para o negócio.
+        </p>
+        <p class="profile-copy">
+          Tenho 6+ anos de experiência em dados e formação em Ciência da Computação.
+        </p>
+        <a class="follow-button" href="https://api.whatsapp.com/send/?phone=5581981966412&text&type=phone_number&app_absent=0" target="_blank" rel="noreferrer">
+          <img class="social-icon" src="assets/contact/whatsapp-svgrepo-com.svg" alt="" aria-hidden="true" />
+          Entrar em contato
+        </a>
+
+        <ul class="profile-details" aria-label="Informações profissionais">
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M4 8h16v10.5A1.5 1.5 0 0 1 18.5 20h-13A1.5 1.5 0 0 1 4 18.5V8Z"/><path d="M4 12h16M10 12v2h4v-2"/></svg>
+            <span>Analista de Dados · Grupo Gomes Sobral</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            <span>Recife, Pernambuco</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
+            <a href="mailto:raffaelhfarias@gmail.com">raffaelhfarias@gmail.com</a>
+          </li>
+        </ul>
+      </aside>
+
+      <main id="conteudo" class="content-column">
+        <nav class="primary-nav" aria-label="Navegação principal">
+          <span class="nav-link is-active" aria-current="page">
+            <img class="tab-icon" src="assets/navigation/book-svgrepo-com.svg" alt="" aria-hidden="true" />
+            Overview
+          </span>
+          <a class="nav-link" href="projects.html">
+            <img class="tab-icon" src="assets/navigation/folder-svgrepo-com.svg" alt="" aria-hidden="true" />
+            Projetos
+          </a>
+          <a class="nav-link" href="contrate-me.html">
+            <img class="tab-icon" src="assets/navigation/suitcase-svgrepo-com.svg" alt="" aria-hidden="true" />
+            Contrate-me
+          </a>
+          <a class="nav-link" href="cv.html">
+            <img class="tab-icon" src="assets/navigation/person-male-svgrepo-com.svg" alt="" aria-hidden="true" />
+            CV
+          </a>
+        </nav>
+
+        <div class="content-stack">
+          <section id="overview" class="readme-panel" aria-labelledby="readme-title">
+            <div class="file-heading">
+              <span class="file-owner">raffaelhfarias</span>
+              <span aria-hidden="true">/</span>
+              <span id="readme-title">README.md</span>
+            </div>
+            <p class="readme-summary">
+              Acredito que o valor da IA aparece quando ela deixa de ser apenas uma resposta isolada e passa a fazer parte de sistemas conectados a dados, regras, ferramentas e processos reais.
+            </p>
+            <div class="social-links" aria-label="Links externos">
+              <a href="https://github.com/raffaelhfarias" target="_blank" rel="noreferrer">
+                <img class="social-icon" src="assets/social/github-invertocat-logo-f0e0.png" alt="" aria-hidden="true" />
+                GitHub
+              </a>
+              <a href="https://www.linkedin.com/in/raffael-henrique/" target="_blank" rel="noreferrer">
+                <img class="social-icon" src="assets/social/linked-in-icon-a534.png" alt="" aria-hidden="true" />
+                LinkedIn
+              </a>
+            </div>
+          </section>
+
+          <section id="projects" class="content-section" aria-labelledby="projects-title">
+            <div class="section-heading">
+              <h2 id="projects-title">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h4l2 2h7A2.5 2.5 0 0 1 21 9.5v7a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 16.5v-9Z" />
+                </svg>
+                Projetos
+              </h2>
+            </div>
+            <div class="featured-project-grid">
+              <article class="featured-project-card">
+                <div class="featured-project-title">
+                  <h3>
+                    <a href="https://github.com/raffaelhfarias/Dados_Airbnb" target="_blank" rel="noreferrer">
+                      Dados_Airbnb
+                    </a>
+                  </h3>
+                  <a class="project-external" href="https://github.com/raffaelhfarias/Dados_Airbnb" target="_blank" rel="noreferrer" aria-label="Abrir Dados_Airbnb no GitHub">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M14 4h6v6M20 4l-9 9" />
+                      <path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5" />
+                    </svg>
+                  </a>
+                </div>
+                <p>Analisando dados do Airbnb.</p>
+              </article>
+
+              <article class="featured-project-card">
+                <div class="featured-project-title">
+                  <h3>
+                    <a href="https://github.com/raffaelhfarias/Panorama_COVID-19" target="_blank" rel="noreferrer">
+                      Panorama_COVID-19
+                    </a>
+                  </h3>
+                  <a class="project-external" href="https://github.com/raffaelhfarias/Panorama_COVID-19" target="_blank" rel="noreferrer" aria-label="Abrir Panorama_COVID-19 no GitHub">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M14 4h6v6M20 4l-9 9" />
+                      <path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5" />
+                    </svg>
+                  </a>
+                </div>
+                <p>Panorama do COVID-19 no Brasil.</p>
+              </article>
+            </div>
+            <a class="all-projects-link" href="projects.html">Ver todos os projetos</a>
+          </section>
+
+          <section class="tech-stack" aria-labelledby="stack-title">
+            <div class="tech-stack-heading">
+              <h2 id="stack-title">
+                <img class="section-icon" src="assets/tech-stack/stack.svg" alt="" aria-hidden="true" />
+                Stack técnica
+              </h2>
+              <span>selecione uma categoria para filtrar</span>
+            </div>
+            <div class="tech-filter" role="group" aria-label="Filtrar stack técnica">
+              <button class="tech-filter-button is-active" type="button" data-filter="all" aria-pressed="true">Todas</button>
+              <button class="tech-filter-button" type="button" data-filter="language" aria-pressed="false">Linguagens</button>
+              <button class="tech-filter-button" type="button" data-filter="data" aria-pressed="false">Dados</button>
+              <button class="tech-filter-button" type="button" data-filter="automation" aria-pressed="false">Automação</button>
+              <button class="tech-filter-button" type="button" data-filter="ai" aria-pressed="false">IA aplicada</button>
+              <button class="tech-filter-button" type="button" data-filter="tools" aria-pressed="false">Ferramentas</button>
+            </div>
+            <div class="tech-list" aria-live="polite">
+              <span class="tech-pill" data-category="language">Python</span>
+              <span class="tech-pill" data-category="language">SQL</span>
+              <span class="tech-pill" data-category="language">DAX</span>
+              <span class="tech-pill" data-category="language">VBA</span>
+              <span class="tech-pill" data-category="data">ETL/ELT</span>
+              <span class="tech-pill" data-category="data">Power BI</span>
+              <span class="tech-pill" data-category="data">Power Query</span>
+              <span class="tech-pill" data-category="data">APIs</span>
+              <span class="tech-pill" data-category="automation">Kestra</span>
+              <span class="tech-pill" data-category="automation">Docker</span>
+              <span class="tech-pill" data-category="automation">EvolutionAPI</span>
+              <span class="tech-pill" data-category="automation">Automação de processos</span>
+              <span class="tech-pill" data-category="ai">LLMs</span>
+              <span class="tech-pill" data-category="ai">Agentes de IA</span>
+              <span class="tech-pill" data-category="ai">RAG</span>
+              <span class="tech-pill" data-category="ai">MCP</span>
+              <span class="tech-pill" data-category="tools">Git</span>
+              <span class="tech-pill" data-category="tools">GitHub</span>
+              <span class="tech-pill" data-category="tools">Playwright</span>
+              <span class="tech-pill" data-category="tools">Excel</span>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
