@@ -41,35 +41,99 @@
         <div class="content-stack">
           <article class="note-detail">
             <a class="note-back" href="../notas.html">← Voltar para Notas</a>
-            <span class="note-card-kicker">Estudo · em andamento</span>
             <h1>AI Engineering</h1>
             <div class="note-tags"><span class="note-tag">AI Engineering</span><span class="note-tag">LLMs</span><span class="note-tag">Produção</span></div>
 
-            <h2>Ideia central</h2>
-            <p>AI Engineering é a disciplina de transformar modelos de IA em produtos e processos úteis. O modelo é apenas um componente: a solução também precisa de dados, regras, ferramentas, avaliação, observabilidade e operação.</p>
+            <h2>Como estou entendendo</h2>
+            <p>Eu entendo AI Engineering como a prática de transformar modelos de IA em partes úteis de produtos e processos. O modelo é apenas um componente. Para uma solução funcionar de verdade, preciso conectar dados, regras, ferramentas, avaliação, observabilidade e operação.</p>
             <div class="note-callout"><strong>Minha síntese:</strong> uma demo mostra que o modelo responde; um sistema de AI Engineering mostra que a resposta é útil, rastreável, segura e sustentável.</div>
 
-            <h2>O ciclo completo</h2>
+            <h2>Começar pelo problema</h2>
+            <p>Não devo começar escolhendo um modelo ou um framework. Primeiro preciso entender quem usa a solução, qual tarefa está sendo realizada hoje e como saberei que ela melhorou.</p>
             <ol>
-              <li><strong>Problema:</strong> entender quem usa a solução e qual decisão ou tarefa precisa melhorar.</li>
-              <li><strong>Dados:</strong> organizar documentos, tabelas, APIs e contexto com qualidade.</li>
-              <li><strong>Modelo:</strong> escolher API, modelo local, prompt ou workflow adequado.</li>
-              <li><strong>Aplicação:</strong> conectar o modelo a uma API, interface ou processo existente.</li>
-              <li><strong>Avaliação:</strong> medir correção, fundamentação, formato, segurança e custo.</li>
-              <li><strong>Operação:</strong> observar, versionar, limitar, corrigir e evoluir o sistema.</li>
+              <li>Quem é o usuário e em qual contexto ele fará a solicitação?</li>
+              <li>Qual entrada existe: pergunta, documento, evento, tabela ou chamada de API?</li>
+              <li>Qual saída é realmente útil: texto, decisão, estrutura, consulta ou ação?</li>
+              <li>O que pode dar errado e qual é o custo de uma resposta errada?</li>
+              <li>Qual métrica mostra valor: tempo economizado, precisão, taxa de conclusão ou custo?</li>
             </ol>
 
-            <h2>O que estou estudando</h2>
+            <h2>Arquitetura mental</h2>
+            <pre>Usuário / processo
+        ↓
+API e autenticação
+        ↓
+Orquestração ──────── Avaliação e logs
+   ↓       ↓
+Dados   Ferramentas
+        ↓
+      LLM
+        ↓
+Resposta validada ou ação aprovada</pre>
+            <p>Essa separação me ajuda a lembrar que o LLM não deve controlar tudo. Código determinístico valida, executa, registra e impede que uma resposta inválida vire uma ação externa.</p>
+
+            <h2>LLM como componente de software</h2>
+            <p>Uma primeira integração pode ser simples, mas já precisa de limites. Eu devo versionar o prompt, validar a saída e registrar o suficiente para reproduzir o comportamento.</p>
+            <pre>response = llm.generate(
+    prompt=prompt_v1,
+    input=user_input,
+    output_schema=ReportSummary,
+)
+
+validated = ReportSummary.model_validate(response)
+save_audit(model, prompt_version, latency, cost, validated)</pre>
             <ul>
-              <li>LLM APIs, structured outputs e function calling.</li>
-              <li>RAG para conectar modelos a dados confiáveis.</li>
-              <li>Agentes e workflows com ferramentas controladas.</li>
-              <li>Avaliação, observabilidade, segurança e custo.</li>
-              <li>Integração com APIs e automações de negócio.</li>
+              <li><strong>Structured output:</strong> impede que o próximo componente receba texto onde esperava dados estruturados.</li>
+              <li><strong>Timeout e retry:</strong> evitam que uma indisponibilidade trave o processo inteiro.</li>
+              <li><strong>Fallback:</strong> permite responder com segurança ou encaminhar para uma pessoa.</li>
+              <li><strong>Versionamento:</strong> torna possível comparar uma mudança de prompt com a versão anterior.</li>
             </ul>
 
-            <h2>Como reconhecer um sistema maduro</h2>
-            <p>Consigo reproduzir uma execução, saber qual prompt e modelo foram usados, identificar as fontes consultadas, medir o custo e explicar o que acontece quando o modelo falha. Se uma ação tiver impacto externo, ela precisa de permissão, validação e auditoria.</p>
+            <h2>RAG: conectar o modelo aos meus dados</h2>
+            <p>Quando a resposta depende de documentos ou dados que não estão no conhecimento do modelo, o próximo passo é <a href="rag.html">RAG</a>. A aplicação recupera evidências, monta o contexto e pede uma resposta fundamentada.</p>
+            <p>O ponto importante é que RAG não é apenas “colocar PDF em uma base vetorial”. É um pipeline de dados com atualização, metadados, busca, avaliação e tratamento de ausência de evidência.</p>
+
+            <h2>Agentes e ferramentas</h2>
+            <p>Eu só devo usar um agente quando o caminho depende de decisões ou de várias ferramentas. Se uma regra simples resolver o problema, uma função determinística é mais fácil de testar e operar.</p>
+            <ol>
+              <li>Descrever as ferramentas com schemas pequenos e argumentos explícitos.</li>
+              <li>Validar os argumentos antes da execução.</li>
+              <li>Aplicar permissões e limites de passos.</li>
+              <li>Registrar cada chamada, resultado e erro.</li>
+              <li>Exigir aprovação humana antes de ações sensíveis.</li>
+            </ol>
+
+            <h2>Avaliar antes de afirmar que funciona</h2>
+            <p>Uma saída convincente não é necessariamente uma saída correta. Preciso criar exemplos reais, ambíguos, fora de escopo e de recusa. Depois comparo versões usando critérios definidos antes de olhar o resultado.</p>
+            <ul>
+              <li>A resposta está correta?</li>
+              <li>Está fundamentada nas fontes disponíveis?</li>
+              <li>Respeitou o formato esperado?</li>
+              <li>Escolheu a ferramenta e os argumentos corretos?</li>
+              <li>Respondeu dentro do custo e da latência aceitáveis?</li>
+            </ul>
+
+            <h2>O que muda quando vai para produção</h2>
+            <p>Em produção, preciso saber qual modelo e prompt foram usados, quais fontes entraram no contexto, quanto custou e em que etapa ocorreu a falha. Também preciso proteger dados sensíveis, limitar uso e ter um plano de recuperação.</p>
+            <ul>
+              <li>Logs estruturados e <code>request_id</code>.</li>
+              <li>Tracing de chamadas do modelo e das ferramentas.</li>
+              <li>Monitoramento de qualidade, custo, latência e erros.</li>
+              <li>Controle de acesso, secrets e proteção contra prompt injection.</li>
+              <li>Fallback, rollback e runbook para incidentes.</li>
+            </ul>
+
+            <h2>Conexões desta nota</h2>
+            <p>Para aprofundar a base do modelo, estou estudando <a href="attention.html">Attention</a>. Para a parte de dados e contexto, sigo para <a href="rag.html">RAG</a>.</p>
+
+            <h2>Perguntas para revisar</h2>
+            <ul>
+              <li>Qual parte da solução deveria ser determinística?</li>
+              <li>Como eu provaria que uma mudança de prompt melhorou o sistema?</li>
+              <li>O que acontece quando o modelo responde sem evidência?</li>
+              <li>Como investigaria uma execução cara ou lenta?</li>
+              <li>Em qual ponto uma pessoa precisa revisar ou aprovar?</li>
+            </ul>
           </article>
         </div>
       </main>

@@ -18,12 +18,43 @@
       <main id="conteudo" class="content-column">
         <nav class="primary-nav" aria-label="Navegação principal"><a class="nav-link" href="../index.html"><img class="tab-icon" src="../assets/navigation/book-svgrepo-com.svg" alt="" aria-hidden="true" />Overview</a><a class="nav-link" href="../projects.html"><img class="tab-icon" src="../assets/navigation/folder-svgrepo-com.svg" alt="" aria-hidden="true" />Projetos</a><a class="nav-link is-active" href="../notas.html" aria-current="page"><img class="tab-icon" src="../assets/navigation/note-svgrepo-com.svg" alt="" aria-hidden="true" />Notas</a><a class="nav-link" href="../contrate-me.html"><img class="tab-icon" src="../assets/navigation/suitcase-svgrepo-com.svg" alt="" aria-hidden="true" />Contrate-me</a><a class="nav-link" href="../cv.html"><img class="tab-icon" src="../assets/navigation/person-male-svgrepo-com.svg" alt="" aria-hidden="true" />CV</a></nav>
         <div class="content-stack"><article class="note-detail">
-          <a class="note-back" href="../notas.html">← Voltar para Notas</a><span class="note-card-kicker">Estudo · fundamentos</span><h1>RAG</h1><div class="note-tags"><span class="note-tag">RAG</span><span class="note-tag">Embeddings</span><span class="note-tag">Retrieval</span></div>
-          <h2>Ideia central</h2><p>Retrieval-Augmented Generation combina recuperação de informação com geração de texto. Antes de responder, a aplicação busca evidências relevantes e entrega esse contexto ao modelo.</p>
+          <a class="note-back" href="../notas.html">← Voltar para Notas</a><h1>RAG</h1><div class="note-tags"><span class="note-tag">RAG</span><span class="note-tag">Embeddings</span><span class="note-tag">Retrieval</span></div>
+          <h2>Como estou entendendo</h2><p>Retrieval-Augmented Generation combina recuperação de informação com geração de texto. Antes de responder, a aplicação busca evidências relevantes e entrega esse contexto ao modelo. Assim, a resposta pode usar dados específicos, atualizados e controlados pela aplicação.</p>
           <div class="note-callout"><strong>Pipeline mental:</strong> pergunta → busca → contexto → resposta fundamentada.</div>
-          <h2>Etapas principais</h2><ol><li><strong>Ingestão:</strong> coletar, limpar e versionar documentos ou registros.</li><li><strong>Chunking:</strong> dividir o conteúdo em unidades que preservem significado.</li><li><strong>Embeddings:</strong> representar os chunks como vetores sem perder seus metadados.</li><li><strong>Retrieval:</strong> buscar por similaridade, palavras-chave ou combinação das duas.</li><li><strong>Geração:</strong> pedir ao modelo que responda somente com base no contexto suficiente.</li><li><strong>Citação:</strong> devolver as fontes para permitir conferência e auditoria.</li></ol>
-          <h2>Onde pode falhar</h2><ul><li>O documento correto não foi ingerido ou está desatualizado.</li><li>O chunk separou uma informação de sua condição ou exceção.</li><li>A consulta recuperou textos parecidos, mas não relevantes.</li><li>O contexto ficou grande demais ou misturou fontes conflitantes.</li><li>O modelo respondeu com confiança mesmo sem evidência.</li></ul>
-          <h2>Checklist de uma RAG confiável</h2><ul><li>Tenho casos de avaliação para recuperação e geração separadamente.</li><li>Consigo mostrar quais fontes sustentaram a resposta.</li><li>Existe recusa clara quando o contexto não é suficiente.</li><li>Documento, chunk e embedding possuem versão e metadados.</li><li>Logs registram consulta, fontes, modelo, latência e custo.</li></ul>
+
+          <h2>Quando RAG faz sentido</h2><p>RAG é útil quando o conhecimento necessário está em documentos, bancos ou APIs que mudam com o tempo. Eu não preciso treinar novamente o modelo para cada atualização; preciso manter o pipeline de dados e a recuperação funcionando.</p><ul><li>Responder perguntas sobre políticas, manuais e documentação.</li><li>Pesquisar uma base de conhecimento interna ou pública.</li><li>Combinar documentos com dados estruturados de negócio.</li><li>Apresentar respostas com fontes para permitir conferência.</li></ul><p>Se a tarefa for apenas transformar um texto pequeno em outro formato, RAG adicionaria complexidade sem benefício. Se o resultado precisar de um número atual, também devo consultar a fonte estruturada em vez de esperar que o modelo memorize o valor.</p>
+
+          <h2>1. Ingestão</h2><p>A qualidade começa antes da pergunta. Primeiro coleto os documentos, identifico a origem e removo ruídos que prejudicariam a busca.</p><ol><li>Extrair texto de PDF, HTML, Markdown ou banco.</li><li>Normalizar espaços, cabeçalhos, tabelas e caracteres.</li><li>Separar conteúdo por documento, seção e versão.</li><li>Salvar metadados como título, URL, data, categoria e permissão.</li><li>Reprocessar apenas o que mudou usando um hash do conteúdo.</li></ol><pre>document = {
+    "id": "politica-reembolso-v3",
+    "text": clean(raw_text),
+    "source": "https://exemplo.com/politica",
+    "version": "2026-09-01",
+    "category": "financeiro",
+}</pre>
+
+          <h2>2. Chunking</h2><p>Um chunk precisa ser pequeno o bastante para ser recuperado com precisão e grande o bastante para preservar o significado. Não existe um tamanho universal. Eu devo observar como o documento é organizado e testar a estratégia.</p><ul><li>Respeitar títulos e subtítulos quando eles carregam contexto.</li><li>Evitar separar uma regra de sua exceção.</li><li>Usar sobreposição somente quando ela realmente preserva continuidade.</li><li>Manter o título e os metadados junto do conteúdo.</li><li>Testar perguntas cuja resposta atravessa dois chunks.</li></ul>
+
+          <h2>3. Embeddings e recuperação</h2><p>Embeddings transformam texto em vetores. A busca semântica encontra conteúdos próximos em significado, mesmo quando as palavras não são iguais. Mas só similaridade pode falhar com códigos, nomes próprios, números e termos exatos.</p><p>Por isso, eu comparo três abordagens:</p><ol><li><strong>Lexical:</strong> encontra termos exatos e funciona bem para nomes, códigos e números.</li><li><strong>Vetorial:</strong> encontra intenção e significado aproximado.</li><li><strong>Híbrida:</strong> combina as duas e pode ser melhor para perguntas de negócio.</li></ol><p>Depois da busca inicial, um reranker pode reordenar os candidatos. Ainda assim, a avaliação precisa verificar se o trecho relevante apareceu, não apenas se o resultado parece plausível.</p>
+
+          <h2>4. Contexto e geração</h2><p>O prompt precisa dizer ao modelo qual é a fonte de autoridade e o que fazer quando ela não é suficiente.</p><pre>Você responde somente com base no CONTEXTO.
+Se o contexto não sustentar a resposta, diga que não encontrei evidência suficiente.
+Inclua as fontes usadas.
+
+CONTEXTO:
+{retrieved_chunks}
+
+PERGUNTA:
+{question}</pre><p>Eu não devo tratar “responda sempre” como requisito. Em uma aplicação confiável, recusar uma pergunta sem evidência é melhor do que preencher a lacuna com uma invenção.</p>
+
+          <h2>Exemplo aplicado</h2><p>Imagine um gestor perguntando: “Por que a comissão da região Nordeste caiu em agosto?”. O fluxo pode ser:</p><ol><li>Classificar a pergunta e identificar período, região e métrica.</li><li>Consultar a tabela de vendas para calcular a variação.</li><li>Buscar nas políticas e registros operacionais possíveis causas.</li><li>Combinar os dados estruturados com os trechos citados.</li><li>Responder com o cálculo, as evidências e as limitações.</li></ol><p>O LLM pode organizar a explicação, mas o cálculo da comissão deve continuar sendo executado por SQL ou código controlado.</p>
+
+          <h2>Onde pode falhar</h2><ul><li>O documento correto não foi ingerido ou está desatualizado.</li><li>O chunk separou uma informação de sua condição ou exceção.</li><li>A consulta recuperou textos parecidos, mas não relevantes.</li><li>O contexto ficou grande demais ou misturou fontes conflitantes.</li><li>O modelo respondeu com confiança mesmo sem evidência.</li><li>O usuário recebeu um documento ao qual não deveria ter acesso.</li></ul>
+
+          <h2>Como avaliar</h2><p>Eu separo a avaliação em duas perguntas: encontrei o contexto certo? A resposta usou esse contexto corretamente?</p><ul><li><strong>Retrieval:</strong> precision@k, recall@k, relevância dos chunks e cobertura da fonte.</li><li><strong>Geração:</strong> correção, groundedness, completude, formato e qualidade das citações.</li><li><strong>Operação:</strong> latência, tokens, custo, taxa de recusa e erro.</li></ul><p>Meu conjunto de testes deve conter casos fáceis, perguntas ambíguas, perguntas fora do escopo, documentos conflitantes e situações em que a resposta correta é “não encontrei evidência”.</p>
+
+          <h2>Checklist de uma RAG confiável</h2><ul><li>Tenho ingestão reproduzível e documentos versionados.</li><li>Documento, chunk e embedding possuem metadados suficientes.</li><li>Consigo mostrar quais fontes sustentaram a resposta.</li><li>Existe recusa clara quando o contexto não é suficiente.</li><li>Tenho casos de avaliação para recuperação e geração separadamente.</li><li>Logs registram consulta, fontes, modelo, latência e custo.</li><li>As permissões do usuário são aplicadas antes da recuperação.</li></ul>
+
+          <h2>Conexões desta nota</h2><p>RAG é uma aplicação prática de <a href="ai-engineering.html">AI Engineering</a>. Para entender melhor como o modelo processa contexto, estou revisando <a href="attention.html">Attention</a>.</p>
         </article></div>
       </main>
     </div>
