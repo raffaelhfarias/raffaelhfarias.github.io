@@ -127,7 +127,7 @@ Pergunta → Embedding → FAISS → Chunks relevantes
       <p>O notebook usa um splitter de texto, um modelo para embeddings, um índice vetorial e um modelo para geração. Cada biblioteca resolve uma parte pequena do pipeline.</p>
       <p>O projeto foi executado no <a href="https://colab.research.google.com/" target="_blank" rel="noopener">Google Colab</a>. O notebook usado neste estudo é <code>rag_colab.ipynb</code>. A primeira célula instala:</p>
       <pre><code>!pip install transformers accelerate sentence-transformers faiss-cpu langchain-text-splitters -q</code></pre>
-      <p>Com o arquivo <code>knowledge.txt</code> disponível no ambiente, a primeira célula de código consegue lê-lo diretamente. O <code>langchain-text-splitters</code> será usado apenas para dividir o texto; o restante do fluxo será implementado explicitamente.</p>
+      <p>Abra o arquivo <a href="https://github.com/raffaelhfarias/raffaelhfarias.github.io/blob/main/meusEstudos/rag-do-zero/knowledge.txt" target="_blank" rel="noopener"><code>knowledge.txt</code></a> no GitHub, copie seu conteúdo e crie um arquivo com o mesmo nome no Colab. Com o arquivo disponível no ambiente, a primeira célula de código consegue lê-lo diretamente. O <code>langchain-text-splitters</code> será usado apenas para dividir o texto; o restante do fluxo será implementado explicitamente.</p>
       <div class="result"><strong>Resultado:</strong> um ambiente pronto para executar o fluxo no Google Colab, sem transformar o tutorial em um projeto dependente de LangChain.</div>
     </section>
 
