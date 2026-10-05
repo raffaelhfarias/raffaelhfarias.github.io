@@ -1,0 +1,9 @@
+Manual interno da empresa
+
+Trabalho remoto: os funcionários podem trabalhar remotamente às segundas e sextas-feiras. Às terças, quartas e quintas-feiras, o trabalho deve ser presencial.
+
+Férias: funcionários em período integral recebem 20 dias de férias por ano. O saldo é acumulado mensalmente.
+
+Tecnologia: o backend oficial utiliza Python. O frontend utiliza React. Aplicações móveis utilizam React Native.
+
+Suporte: solicitações de suporte devem ser abertas no sistema interno durante o horário comercial, de segunda a sexta-feira, das 08h às 18h.

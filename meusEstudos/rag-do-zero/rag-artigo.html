@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RAG do zero com Python</title>
+  <style>
+    :root {
+      --bg: #f6f8fa;
+      --surface: #fff;
+      --ink: #172033;
+      --muted: #58667a;
+      --line: #d0d9e4;
+      --blue: #0969da;
+      --blue-soft: #ddf4ff;
+      --code: #0d1117;
+      --shadow: 0 1px 2px rgba(27, 31, 36, .06);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    a { color: var(--blue); }
+    .shell { max-width: 960px; margin: 0 auto; padding: 36px 20px 64px; }
+    .eyebrow { color: var(--muted); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; }
+    h1, h2, h3 { line-height: 1.25; }
+    h1 { margin: 8px 0 14px; font-size: clamp(2.1rem, 5vw, 3.4rem); letter-spacing: -.04em; }
+    h2 { margin: 42px 0 12px; font-size: 1.65rem; }
+    h3 { margin: 24px 0 8px; font-size: 1.15rem; }
+    p { margin: 0 0 14px; }
+    .lead { max-width: 760px; color: var(--muted); font-size: 1.08rem; }
+    .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+    .tag { padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: var(--surface); font-size: .88rem; }
+    .card, .step, .notice { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: var(--shadow); }
+    .notice { margin: 28px 0 14px; padding: 16px 18px; }
+    .notice strong { color: var(--blue); }
+    .flow { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 22px 0; padding: 0; list-style: none; }
+    .flow li { padding: 10px 6px; border: 1px solid #b6d7f7; border-radius: 6px; color: var(--blue); background: var(--blue-soft); text-align: center; font-size: .88rem; }
+    .step { margin: 18px 0; padding: 20px; }
+    .step-number { color: var(--blue); font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .step > h2 { margin-top: 0; }
+    .step h3 { margin-top: 4px; }
+    .step ul, .step ol { margin: 8px 0 14px; padding-left: 22px; }
+    .step li { margin: 4px 0; }
+    pre { overflow-x: auto; margin: 14px 0; padding: 16px; border-radius: 6px; color: #e6edf3; background: var(--code); font: .88rem/1.55 Consolas, "Cascadia Code", monospace; }
+    code { padding: 1px 4px; border-radius: 4px; color: #8250df; background: #fbefff; font-size: .9em; }
+    pre code { padding: 0; color: inherit; background: transparent; font-size: inherit; }
+    .output { margin: 14px 0; padding: 12px 14px; border: 1px solid #b7dfc0; border-radius: 6px; background: #f0fff4; }
+    .output strong { color: #1a7f37; }
+    .output pre { margin-bottom: 0; color: #116329; background: transparent; }
+    .result { padding: 12px 14px; border: 1px solid #b7dfc0; border-radius: 6px; color: #116329; background: #dafbe1; }
+    .toc { padding: 16px 18px; }
+    .toc ol { margin: 8px 0 0; padding-left: 22px; }
+    .footer { margin-top: 44px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+    @media (max-width: 700px) {
+      .shell { padding: 24px 14px 48px; }
+      .flow { grid-template-columns: repeat(2, 1fr); }
+      .step { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <h1>Como construir um RAG do zero com Python</h1>
+      <p class="lead">Como fazer um modelo encontrar o parágrafo certo de um manual interno antes de responder? Neste projeto, construímos esse fluxo com Python, embeddings, FAISS e um modelo de linguagem no Google Colab.</p>
+      <div class="meta"><span class="tag">Python</span><span class="tag">Embeddings</span><span class="tag">FAISS</span><span class="tag">Transformers</span><span class="tag">Google Colab</span></div>
+    </header>
+
+    <section class="step" id="por-que-rag">
+      <h2>Por que criar um RAG?</h2>
+      <p>Imagine perguntar quais são os dias de trabalho remoto de uma empresa cujo manual o modelo nunca viu. Um LLM sozinho pode responder com base em padrões aprendidos, mas não tem como consultar esse documento privado ou atualizado.</p>
+      <p>RAG, ou <em>Retrieval-Augmented Generation</em>, combina duas operações: primeiro recupera informação relevante de uma fonte externa; depois entrega essa informação ao modelo para gerar a resposta. Isso reduz a dependência da memória do modelo, mas não transforma a resposta em uma garantia automática de verdade.</p>
+      <p>Vamos acompanhar o mecanismo sem esconder as etapas atrás de um framework: texto, chunks, vetores, busca, contexto, modelo e resposta.</p>
+      <div class="notice"><strong>A pergunta central:</strong> antes de o LLM responder, qual trecho do documento ele recebeu?</div>
+    </section>
+
+    <div class="notice"><strong>Objetivo:</strong> entender o fluxo do RAG sem esconder as partes importantes atrás de um framework. A primeira versão não terá API, agentes, banco externo ou interface.</div>
+
+    <section class="toc">
+      <strong>Passos do artigo</strong>
+      <ol>
+        <li><a href="#por-que-rag">Por que criar um RAG?</a></li>
+        <li><a href="#setup">Preparar o projeto</a></li>
+        <li><a href="#documento">Carregar o documento</a></li>
+        <li><a href="#chunks">Dividir o texto em chunks</a></li>
+        <li><a href="#embeddings">Criar embeddings</a></li>
+        <li><a href="#indice">Criar o índice FAISS</a></li>
+        <li><a href="#modelo">Carregar o modelo</a></li>
+        <li><a href="#geracao">Criar <code>generate_answer</code></a></li>
+        <li><a href="#integracao">Recuperar contexto e responder</a></li>
+        <li><a href="#execucao">Executar no Colab</a></li>
+        <li><a href="#codigo-completo">Código completo</a></li>
+      </ol>
+    </section>
+
+    <h2>O que realmente acontece dentro de um RAG</h2>
+    <p>RAG não é uma tecnologia única. É a combinação de uma etapa de preparação do conhecimento com uma etapa de consulta.</p>
+      <p class="notice"><strong>Como ler os outputs:</strong> use as saídas para conferir cada etapa. A quantidade de texto pode variar conforme o conteúdo do documento e as versões das bibliotecas.</p>
+    <ol class="flow">
+      <li>Documento</li>
+      <li>Chunks</li>
+      <li>Embeddings</li>
+      <li>Índice FAISS</li>
+      <li>Pergunta</li>
+      <li>Resposta</li>
+    </ol>
+    <h3>Indexação</h3>
+    <p>O documento é dividido em chunks, cada chunk vira um embedding e os vetores são adicionados ao FAISS. Esse fluxo prepara a base para consultas futuras.</p>
+    <h3>Consulta</h3>
+    <p>A pergunta também vira um embedding. O FAISS procura os vetores mais próximos, os chunks recuperados formam o contexto e só então o LLM recebe contexto mais pergunta.</p>
+    <pre><code>INDEXAÇÃO:
+Documento → Chunks → Embeddings → FAISS
+
+CONSULTA:
+Pergunta → Embedding → FAISS → Chunks relevantes
+→ Contexto + Pergunta → LLM → Resposta</code></pre>
+
+    <section class="step" id="setup">
+      <div class="step-number">Passo 1</div>
+      <h3>Preparar o projeto</h3>
+      <p>O notebook usa um splitter de texto, um modelo para embeddings, um índice vetorial e um modelo para geração. Cada biblioteca resolve uma parte pequena do pipeline.</p>
+      <p>O projeto foi executado no <a href="https://colab.research.google.com/" target="_blank" rel="noopener">Google Colab</a>. O notebook usado neste estudo é <code>rag_colab.ipynb</code>. A primeira célula instala:</p>
+      <pre><code>!pip install transformers accelerate sentence-transformers faiss-cpu langchain-text-splitters -q</code></pre>
+      <p>Com o arquivo <code>knowledge.txt</code> disponível no ambiente, a primeira célula de código consegue lê-lo diretamente. O <code>langchain-text-splitters</code> será usado apenas para dividir o texto; o restante do fluxo será implementado explicitamente.</p>
+      <div class="result"><strong>Resultado:</strong> um ambiente pronto para executar o fluxo no Google Colab, sem transformar o tutorial em um projeto dependente de LangChain.</div>
+    </section>
+
+    <section class="step" id="documento">
+      <div class="step-number">Passo 2</div>
+      <h3>Carregar o documento</h3>
+      <p>O documento é a base de conhecimento do sistema. Nesta primeira versão usamos apenas um arquivo de texto pequeno, para conseguirmos inspecionar o caminho completo da informação.</p>
+      <pre><code>with open("knowledge.txt") as f:
+    knowledge_text = f.read()</code></pre>
+      <p>O arquivo de exemplo contém políticas de trabalho remoto, férias, tecnologia e suporte. Faça perguntas apenas sobre esse conteúdo no primeiro teste.</p>
+    </section>
+
+    <section class="step" id="chunks">
+      <div class="step-number">Passo 3</div>
+      <h3>Dividir o texto em chunks</h3>
+      <p>O modelo não deve receber um documento inteiro de uma vez. O splitter limita o tamanho dos chunks e mantém uma pequena sobreposição para preservar o contexto entre cortes.</p>
+      <pre><code>from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+with open("knowledge.txt") as f:
+    knowledge_text = f.read()
+
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=250,
+    chunk_overlap=30,
+    separators=["\n\n", "\n", ". ", " ", ""],
+)
+
+chunks = text_splitter.split_text(knowledge_text)
+
+print(f"We have {len(chunks)} chunks:")
+for i, chunk in enumerate(chunks):
+    print(f"--- Chunk {i+1} ---\n{chunk}\n")</code></pre>
+      <div class="output"><strong>Saída esperada</strong><pre><code>We have 3 chunks:
+--- Chunk 1 ---
+Manual interno da empresa
+
+Trabalho remoto: os funcionários podem trabalhar remotamente às segundas e sextas-feiras. Às terças, quartas e quintas-feiras, o trabalho deve ser presencial.
+
+--- Chunk 2 ---
+Férias: funcionários em período integral recebem 20 dias de férias por ano. O saldo é acumulado mensalmente.
+
+Tecnologia: o backend oficial utiliza Python. O frontend utiliza React. Aplicações móveis utilizam React Native.
+
+--- Chunk 3 ---
+Suporte: solicitações de suporte devem ser abertas no sistema interno durante o horário comercial, de segunda a sexta-feira, das 08h às 18h.</code></pre></div>
+      <p>O ponto principal desta etapa é verificar os chunks antes de gerar embeddings. Se uma política estiver misturada com outra, a busca pode recuperar um contexto confuso. Chunking não é uma formalidade: ele influencia diretamente o que o modelo verá depois.</p>
+    </section>
+
+    <section class="step" id="embeddings">
+      <div class="step-number">Passo 4</div>
+      <h3>Criar embeddings</h3>
+      <p>Um embedding transforma cada chunk em uma lista de números que representa seu significado semântico.</p>
+      <pre><code>from sentence_transformers import SentenceTransformer
+
+embedding_model = SentenceTransformer(
+    "all-MiniLM-L6-v2"
+)
+
+chunk_embeddings = embedding_model.encode(chunks)
+
+print(chunk_embeddings.shape)</code></pre>
+      <div class="output"><strong>Saída esperada</strong><pre><code>(3, 384)</code></pre></div>
+      <p>O <code>all-MiniLM-L6-v2</code> transforma cada chunk em um vetor com 384 posições. Essas posições não representam palavras legíveis nem entendimento humano; são uma representação numérica usada para comparar proximidade semântica.</p>
+    </section>
+
+    <section class="step" id="indice">
+      <div class="step-number">Passo 5</div>
+      <h3>Criar o índice FAISS</h3>
+      <p>FAISS armazena os vetores e encontra rapidamente os mais semelhantes ao vetor de uma pergunta.</p>
+      <pre><code>import faiss
+import numpy as np
+
+d = chunk_embeddings.shape[1]
+
+index = faiss.IndexFlatL2(d)
+
+index.add(
+    np.array(chunk_embeddings).astype("float32")
+)
+
+print(f"FAISS index created with {index.ntotal} vectors.")</code></pre>
+      <div class="output"><strong>Saída esperada</strong><pre><code>FAISS index created with 3 vectors.</code></pre></div>
+      <p><code>IndexFlatL2</code> faz uma busca exata pela distância entre vetores. Neste exemplo, o índice contém apenas três vetores, então essa solução simples é suficiente. Em produção, volume, latência e persistência podem exigir outras estratégias.</p>
+    </section>
+
+    <section class="step" id="modelo">
+      <div class="step-number">Passo 6</div>
+      <h3>Carregar o modelo de linguagem</h3>
+      <p>Até aqui preparamos e recuperamos informação, mas ainda não existe geração. Esta célula carrega o tokenizer e o modelo Qwen que serão usados para transformar contexto e pergunta em texto.</p>
+      <pre><code>import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+llm_name = "Qwen/Qwen2.5-1.5B-Instruct"
+
+tokenizer = AutoTokenizer.from_pretrained(llm_name)
+
+llm_model = AutoModelForCausalLM.from_pretrained(
+    llm_name,
+    torch_dtype="auto",
+    device_map="auto"
+)</code></pre>
+      <p>Na primeira execução, o Colab baixa os arquivos do modelo. Essa etapa pode demorar porque o modelo é maior que o modelo de embeddings.</p>
+    </section>
+
+    <section class="step" id="geracao">
+      <div class="step-number">Passo 7</div>
+      <h3>Criar <code>generate_answer</code></h3>
+      <p>Esta função recebe o contexto recuperado e a pergunta, monta as mensagens e chama o modelo para gerar uma resposta curta em português.</p>
+      <pre><code>def generate_answer(context, query):
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "Você responde perguntas usando somente o contexto fornecido. "
+                "Se a resposta não estiver no contexto, diga que não há "
+                "informação suficiente."
+            )
+        },
+        {
+            "role": "user",
+            "content": f"""
+Contexto:
+{context}
+
+Pergunta:
+{query}
+
+Responda em português, de forma curta e objetiva.
+"""
+        }
+    ]
+
+    text = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True
+    )
+
+    inputs = tokenizer(
+        text,
+        return_tensors="pt"
+    ).to(llm_model.device)
+
+    outputs = llm_model.generate(
+        **inputs,
+        max_new_tokens=80,
+        do_sample=False
+    )
+
+    generated_tokens = outputs[0][inputs["input_ids"].shape[1]:]
+
+    return tokenizer.decode(
+        generated_tokens,
+        skip_special_tokens=True
+    )</code></pre>
+      <p>A função não busca documentos. Ela representa a etapa de <em>generation</em>: recebe o contexto produzido pelo <em>retrieval</em> e o coloca junto da pergunta. Sem a recuperação anterior, o modelo não teria a evidência específica do manual.</p>
+    </section>
+
+    <section class="step" id="integracao">
+      <div class="step-number">Passo 8</div>
+      <h3>Criar <code>answer_question</code></h3>
+      <p>Esta é a ligação entre <em>retrieval</em> e <em>generation</em>. Para cada nova pergunta, a função calcula um novo embedding, consulta o índice FAISS e monta um novo contexto antes de chamar <code>generate_answer</code>.</p>
+      <pre><code>def answer_question(query):
+    # RETRIEVE
+    query_embedding = embedding_model.encode(
+        [query]
+    ).astype("float32")
+
+    distances, indices = index.search(
+        query_embedding,
+        k=1
+    )
+
+    retrieved_chunks = [
+        chunks[i]
+        for i in indices[0]
+    ]
+
+    context = "\n\n".join(retrieved_chunks)
+
+    # GENERATE
+    answer = generate_answer(context, query)
+
+    print("--- CONTEXT ---")
+    print(context)
+    print("-----------------")
+
+    return answer</code></pre>
+      <div class="notice"><strong>Importante:</strong> esta célula apenas define a função. Ao executá-la sozinha, nenhum texto será impresso. A função será executada quando você chamar <code>answer_question(query_1)</code> na próxima célula.</div>
+      <p>Quando a função é chamada, ela imprime o contexto recuperado antes de retornar a resposta gerada. O <code>k=1</code> é uma simplificação didática: recuperamos apenas o chunk mais próximo para deixar a relação entre fonte e resposta fácil de observar.</p>
+    </section>
+
+    <section class="step" id="execucao">
+      <div class="step-number">Passo 9</div>
+      <h3>Executar no Google Colab</h3>
+      <p>No Google Colab, execute uma nova célula depois de definir <code>answer_question</code>:</p>
+      <pre><code>query_1 = "Quais são os dias de trabalho remoto?"
+
+print(f"Query: {query_1}")
+print(f"Answer: {answer_question(query_1)}")</code></pre>
+      <div class="output"><strong>Saída registrada no notebook</strong><pre><code>Query: Quais são os dias de trabalho remoto?
+--- CONTEXT ---
+Manual interno da empresa
+
+Trabalho remoto: os funcionários podem trabalhar remotamente às segundas e sextas-feiras. Às terças, quartas e quintas-feiras, o trabalho deve ser presencial.
+-----------------
+Answer: Os funcionários têm direito ao trabalho remoto nas segundas e sextas-feiras.</code></pre></div>
+      <ol>
+        <li>Troque o texto de <code>query_1</code> por outra pergunta do documento.</li>
+        <li>Observe o contexto recuperado antes da resposta.</li>
+        <li>Compare a resposta gerada com o contexto recebido pelo modelo.</li>
+      </ol>
+    </section>
+
+    <section class="step" id="codigo-completo">
+      <div class="step-number">Passo 10</div>
+      <h3>Código completo usado no <code>rag_colab.ipynb</code></h3>
+      <p>Depois de entender cada bloco, leia o fluxo inteiro como uma sequência de células.</p>
+      <pre><code>from langchain_text_splitters import RecursiveCharacterTextSplitter
+from sentence_transformers import SentenceTransformer
+import faiss
+import numpy as np
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+with open("knowledge.txt") as f:
+    knowledge_text = f.read()
+
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=250,
+    chunk_overlap=30,
+    separators=["\n\n", "\n", ". ", " ", ""],
+)
+chunks = text_splitter.split_text(knowledge_text)
+
+print(f"We have {len(chunks)} chunks:")
+for i, chunk in enumerate(chunks):
+    print(f"--- Chunk {i+1} ---\n{chunk}\n")
+
+embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+chunk_embeddings = embedding_model.encode(chunks)
+
+print(chunk_embeddings.shape)
+
+index = faiss.IndexFlatL2(chunk_embeddings.shape[1])
+index.add(np.array(chunk_embeddings).astype("float32"))
+
+print(f"FAISS index created with {index.ntotal} vectors.")
+
+llm_name = "Qwen/Qwen2.5-1.5B-Instruct"
+tokenizer = AutoTokenizer.from_pretrained(llm_name)
+llm_model = AutoModelForCausalLM.from_pretrained(
+    llm_name,
+    torch_dtype="auto",
+    device_map="auto",
+)
+
+def generate_answer(context, query):
+    messages = [
+        {"role": "system", "content": (
+            "Você responde perguntas usando somente o contexto fornecido. "
+            "Se a resposta não estiver no contexto, diga que não há "
+            "informação suficiente."
+        )},
+        {"role": "user", "content": f"""
+Contexto:
+{context}
+
+Pergunta:
+{query}
+
+Responda em português, de forma curta e objetiva.
+"""},
+    ]
+
+    text = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True,
+    )
+    inputs = tokenizer(text, return_tensors="pt").to(llm_model.device)
+    outputs = llm_model.generate(**inputs, max_new_tokens=80, do_sample=False)
+    generated_tokens = outputs[0][inputs["input_ids"].shape[1]:]
+    return tokenizer.decode(generated_tokens, skip_special_tokens=True)
+
+def answer_question(query):
+    # RETRIEVE
+    query_embedding = embedding_model.encode(
+        [query]
+    ).astype("float32")
+
+    distances, indices = index.search(
+        query_embedding,
+        k=1
+    )
+
+    retrieved_chunks = [
+        chunks[i]
+        for i in indices[0]
+    ]
+
+    context = "\n\n".join(retrieved_chunks)
+
+    # GENERATE
+    answer = generate_answer(
+        context,
+        query
+    )
+
+    print("--- CONTEXT ---")
+    print(context)
+    print("-----------------")
+
+    return answer
+
+query_1 = "Quais são os dias de trabalho remoto?"
+
+print(f"Query: {query_1}")
+print(f"Answer: {answer_question(query_1)}")</code></pre>
+    </section>
+
+    <section class="step" id="limitacoes">
+      <h2>O que esta implementação ainda não resolve</h2>
+      <p>Este projeto foi deliberadamente reduzido para que o mecanismo fique visível. Isso também define seus limites:</p>
+      <ul>
+        <li>há uma única fonte de conhecimento e poucos chunks;</li>
+        <li>recuperamos apenas <code>k=1</code>, sem reranking;</li>
+        <li>não há metadados, avaliação formal ou persistência do índice;</li>
+        <li>o documento precisa ser pequeno e estar disponível no ambiente;</li>
+        <li>o modelo de geração é pequeno e pode cometer erros;</li>
+        <li>não há API, interface, autenticação ou monitoramento.</li>
+      </ul>
+      <p>Além disso, recuperar um chunk relevante não garante que o LLM interpretará tudo corretamente. RAG reduz a dependência de conhecimento paramétrico, mas não elimina alucinações nem substitui avaliação.</p>
+    </section>
+
+    <section class="step" id="proximos-passos">
+      <h2>Próximos experimentos</h2>
+      <p>Depois de entender o fluxo atual, experimente uma variável por vez:</p>
+      <ol>
+        <li>altere <code>chunk_size</code> e <code>chunk_overlap</code>;</li>
+        <li>recupere <code>k &gt; 1</code> e compare o contexto enviado ao modelo;</li>
+        <li>normalize os embeddings e compare estratégias de similaridade;</li>
+        <li>adicione múltiplos documentos e metadados;</li>
+        <li>teste outro modelo de embedding e outro LLM;</li>
+        <li>meça separadamente a qualidade da recuperação e da resposta;</li>
+        <li>só depois considere persistência, API e interface.</li>
+      </ol>
+    </section>
+
+    <section class="step" id="encerramento">
+      <h2>Conclusão</h2>
+      <p>Chegamos ao final da primeira versão do projeto. Agora já é possível acompanhar o caminho completo entre um documento, uma pergunta e a resposta produzida pelo modelo.</p>
+      <p>O RAG deixa de parecer uma caixa-preta quando separamos suas responsabilidades. O índice não responde; ele recupera. O LLM não consulta o documento sozinho; ele recebe o contexto que o pipeline selecionou.</p>
+      <p>Em essência, o fluxo é simples: encontrar o contexto certo antes de pedir ao modelo que responda.</p>
+      <div class="notice"><strong>Resumo:</strong> documento → chunks → embeddings → FAISS → contexto + pergunta → LLM → resposta.</div>
+      <p>Este projeto foi construído para tornar esse fluxo observável e servir como base para experimentos mais completos em AI Engineering.</p>
+      <p>Se você gostou do conteúdo, acompanhe meus estudos e novos projetos no <a href="https://www.linkedin.com/in/raffael-henrique/" target="_blank" rel="noopener">LinkedIn</a>. O código e os próximos experimentos também estarão disponíveis no <a href="https://github.com/raffaelhfarias/raffaelhfarias.github.io" target="_blank" rel="noopener">GitHub</a>.</p>
+    </section>
+
+    <footer class="footer">Projeto de estudo de Raffael Henrique · RAG mínimo executado no Google Colab</footer>
+  </main>
+</body>
+</html>

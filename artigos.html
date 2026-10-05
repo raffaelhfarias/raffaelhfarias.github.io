@@ -6,16 +6,15 @@
     <meta name="theme-color" content="#f6f8fa" />
     <meta
       name="description"
-      content="Projetos de Raffael Henrique no GitHub."
+      content="Artigos de Raffael Henrique sobre dados, automação e engenharia de IA."
     />
-    <title>Projetos — Raffael Henrique</title>
+    <title>Artigos — Raffael Henrique</title>
     <link rel="stylesheet" href="css/styles.css" />
     <script>
       document.documentElement.dataset.theme =
         localStorage.getItem("portfolio-theme") || "light";
     </script>
     <script src="js/script.js" defer></script>
-    <script src="js/projects.js" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -76,11 +75,11 @@
             <img class="tab-icon" src="assets/navigation/book-svgrepo-com.svg" alt="" aria-hidden="true" />
             Overview
           </a>
-          <a class="nav-link is-active" href="projects.html" aria-current="page">
+          <a class="nav-link" href="projects.html">
             <img class="tab-icon" src="assets/navigation/folder-svgrepo-com.svg" alt="" aria-hidden="true" />
             Projetos
           </a>
-          <a class="nav-link" href="artigos.html">
+          <a class="nav-link is-active" href="artigos.html" aria-current="page">
             <img class="tab-icon" src="assets/navigation/article-svgrepo-com.svg" alt="" aria-hidden="true" />
             Artigos
           </a>
@@ -95,30 +94,27 @@
         </nav>
 
         <div class="content-stack">
-          <section class="projects-page" aria-labelledby="projects-title">
-            <h1 class="sr-only" id="projects-title">Projetos no GitHub</h1>
+          <section class="projects-page" aria-labelledby="articles-title">
+            <h1 class="sr-only" id="articles-title">Artigos de Raffael Henrique</h1>
 
-            <div class="projects-toolbar" aria-label="Filtros de projetos">
-              <label class="search-field">
-                <span class="sr-only">Buscar projeto</span>
-                <input id="project-search" type="search" placeholder="Buscar um repositório..." />
-              </label>
-              <select id="project-type" aria-label="Filtrar por tipo">
-                <option value="all">Tipo</option>
-                <option value="public">Públicos</option>
-              </select>
-              <select id="project-language" aria-label="Filtrar por linguagem">
-                <option value="all">Linguagem</option>
-              </select>
-              <select id="project-sort" aria-label="Ordenar projetos">
-                <option value="updated">Mais recentes</option>
-                <option value="name">Nome</option>
-                <option value="stars">Estrelas</option>
-              </select>
+            <div class="featured-project-grid">
+              <article class="featured-project-card">
+                <div class="featured-project-title">
+                  <h2>
+                    <a href="meusEstudos/rag-do-zero/rag-artigo.html">
+                      RAG do zero com Python
+                    </a>
+                  </h2>
+                  <a class="project-external" href="meusEstudos/rag-do-zero/rag-artigo.html" aria-label="Ler o artigo RAG do zero com Python">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M14 4h6v6M20 4l-9 9" />
+                      <path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5" />
+                    </svg>
+                  </a>
+                </div>
+                <p>Construindo um sistema RAG simples com Python, embeddings, FAISS e Qwen no Google Colab.</p>
+              </article>
             </div>
-
-            <div id="project-list" class="project-list" aria-live="polite"></div>
-            <p id="project-status" class="project-status" role="status"></p>
           </section>
         </div>
       </main>
