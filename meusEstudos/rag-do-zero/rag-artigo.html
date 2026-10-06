@@ -36,6 +36,8 @@
     .lead { max-width: 760px; color: var(--muted); font-size: 1.08rem; }
     .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
     .tag { padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: var(--surface); font-size: .88rem; }
+    .back-link { display: inline-block; margin-top: 22px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); background: var(--surface); font-size: .92rem; font-weight: 600; text-decoration: none; }
+    .back-link:hover { border-color: var(--blue); color: var(--blue); text-decoration: none; }
     .card, .step, .notice { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); box-shadow: var(--shadow); }
     .notice { margin: 28px 0 14px; padding: 16px 18px; }
     .notice strong { color: var(--blue); }
@@ -67,6 +69,7 @@
 <body>
   <main class="shell">
     <header>
+      <a class="back-link" href="../../index.html">Voltar ao portfólio</a>
       <h1>Como construir um RAG do zero com Python</h1>
       <p class="lead">Como fazer um modelo encontrar o parágrafo certo de um manual interno antes de responder? Neste projeto, construímos esse fluxo com Python, embeddings, FAISS e um modelo de linguagem no Google Colab.</p>
       <div class="meta"><span class="tag">Python</span><span class="tag">Embeddings</span><span class="tag">FAISS</span><span class="tag">Transformers</span><span class="tag">Google Colab</span></div>
