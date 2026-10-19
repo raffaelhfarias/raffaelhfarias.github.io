@@ -45,6 +45,8 @@ uv run uvicorn app.main:app --reload
 
 `POST /v1/auth/login` recebe `{email,password}` e retorna somente Bearer: `access_token`, `token_type`, `expires_in`, `user_id` e `tenants` (`id`, `name`, `role`). O tenant selecionado vem de `X-Tenant-ID`, validado contra a membership do usuário; não vem do payload. Envie o token em `Authorization: Bearer <access_token>`.
 
+No Swagger (`/docs`), autorize com o token e preencha o campo obrigatório `X-Tenant-ID` em `POST /v1/collections` com um ID retornado no login. Sem esse header, a API retorna `422` de validação; enviar `tenant_id` no JSON não o substitui.
+
 Exemplo PowerShell 7 usando as senhas padrão locais (substitua a senha se alterou o `.env`):
 
 ```powershell
@@ -67,6 +69,8 @@ Invoke-RestMethod "http://localhost:8000/v1/documents/$($upload.document_id)" -H
 `GET /v1/collections/{id}/documents?page=1&page_size=50` lista documentos (página até 1.000.000, tamanho de 1 a 100). `GET /v1/documents/{id}` retorna status, páginas e erro sanitizado. `/health/live` verifica o processo; `/health/ready` verifica acesso ao schema no banco, não a disponibilidade de Redis/MinIO.
 
 O seed cria três usuários e dois tenants: `owner.a@example.test` é owner de Demo Alpha, `owner.b@example.test` é owner de Demo Beta e `viewer.a@example.test` é viewer somente de Demo Alpha. As senhas vêm de `settings()` carregando `.env`; o script imprime apenas `id`, `email` e `role`, nunca senhas.
+
+O seed não altera senhas de usuários existentes. Alterar as variáveis de senha e executá-lo novamente não rotaciona essas credenciais.
 
 Uploads aceitos: PDF com assinatura e contagem de páginas, DOCX com estrutura XML validada e TXT UTF-8. Não se confia no Content-Type informado pelo cliente. O limite padrão é 20 MB/200 páginas de PDF; configure `MAX_UPLOAD_BYTES` e `MAX_PDF_PAGES` no `.env`. A detecção de PDF escaneado depende da extração, na Sprint 2. Se MinIO falhar, o registro permanece rastreável como `failed` com `storage_upload_failed`.
 

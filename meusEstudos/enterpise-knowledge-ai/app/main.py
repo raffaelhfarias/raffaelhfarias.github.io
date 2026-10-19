@@ -8,7 +8,7 @@ from uuid import uuid4
 from xml.etree import ElementTree
 from zipfile import BadZipFile, ZipFile
 
-from fastapi import Depends, FastAPI, File, HTTPException, Query, Request, UploadFile
+from fastapi import Depends, FastAPI, File, Header, HTTPException, Query, Request, UploadFile
 from pydantic import BaseModel, Field, field_validator
 from pypdf import PdfReader
 from sqlalchemy import select
@@ -183,14 +183,11 @@ def logout(request: Request, db: Session = Depends(get_db), _user: User = Depend
 
 @app.post("/v1/collections", status_code=201)
 def create_collection(
-    request: Request,
     payload: CollectionIn,
+    tenant_id: str = Header(..., alias="X-Tenant-ID"),
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ):
-    tenant_id = request.headers.get("X-Tenant-ID")
-    if not tenant_id:
-        raise HTTPException(400, "x_tenant_id_required")
     item = require_role(db, user, tenant_id, "owner", "editor")
     collection = Collection(tenant_id=item.tenant_id, name=payload.name.strip(), created_by=user.id)
     db.add(collection)

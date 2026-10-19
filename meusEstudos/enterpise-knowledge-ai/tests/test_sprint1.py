@@ -95,6 +95,27 @@ def create_collection(client):
     return response.json()["id"]
 
 
+def test_create_collection_declares_required_tenant_header_in_openapi(client):
+    schema = client.get("/openapi.json").json()
+    parameters = schema["paths"]["/v1/collections"]["post"].get("parameters", [])
+    tenant_headers = [
+        parameter
+        for parameter in parameters
+        if parameter["name"] == "X-Tenant-ID" and parameter["in"] == "header"
+    ]
+    assert len(tenant_headers) == 1
+    assert tenant_headers[0]["required"] is True
+
+
+@pytest.mark.parametrize("extra_fields", [{}, {"tenant_id": "untrusted-body-tenant"}])
+def test_create_collection_requires_tenant_header(client, extra_fields):
+    login(client)
+    client.headers.pop("X-Tenant-ID")
+    response = client.post("/v1/collections", json={"name": "private", **extra_fields})
+    assert response.status_code == 422
+    assert response.json()["detail"][0]["loc"] == ["header", "X-Tenant-ID"]
+
+
 def upload(client, collection_id, name="x.txt", content=b"hello"):
     return client.post(
         f"/v1/collections/{collection_id}/documents", files={"file": (name, content)}
