@@ -1,0 +1,58 @@
+x-app-environment: &app-environment
+  DATABASE_URL: postgresql+psycopg://knowledge:knowledge@db:5432/knowledge
+  REDIS_URL: redis://redis:6379/0
+  S3_ENDPOINT: http://minio:9000
+  S3_ACCESS_KEY: minioadmin
+  S3_SECRET_KEY: minioadmin
+  S3_BUCKET: knowledge-private
+  DEMO_OWNER_PASSWORD: ${DEMO_OWNER_PASSWORD:-change-me-owner}
+  DEMO_SECOND_OWNER_PASSWORD: ${DEMO_SECOND_OWNER_PASSWORD:-change-me-owner-b}
+  DEMO_VIEWER_PASSWORD: ${DEMO_VIEWER_PASSWORD:-change-me-viewer}
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment: {POSTGRES_DB: knowledge, POSTGRES_USER: knowledge, POSTGRES_PASSWORD: knowledge}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck: {test: [CMD-SHELL, "pg_isready -U knowledge -d knowledge"], interval: 5s, timeout: 5s, retries: 10}
+  redis:
+    image: redis:7-alpine
+    healthcheck: {test: [CMD, redis-cli, ping], interval: 5s, timeout: 5s, retries: 10}
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-10-15T17-29-55Z
+    command: server /data --console-address ":9001"
+    environment: {MINIO_ROOT_USER: minioadmin, MINIO_ROOT_PASSWORD: minioadmin}
+    volumes: [miniodata:/data]
+  minio-init:
+    image: quay.io/minio/mc:RELEASE.2025-08-13T08-35-41Z
+    depends_on: {minio: {condition: service_started}}
+    entrypoint: /bin/sh
+    command: >-
+      -c 'attempt=0; while [ "$$attempt" -lt 30 ]; do
+      mc alias set local http://minio:9000 minioadmin minioadmin >/dev/null 2>&1
+      && mc mb --ignore-existing local/knowledge-private
+      && exit 0;
+      attempt=$$((attempt + 1));
+      sleep 2;
+      done;
+      echo "MinIO bucket initialization timed out" >&2;
+      exit 1'
+  migrate:
+    build: .
+    env_file: {path: .env, required: false}
+    environment: *app-environment
+    depends_on: {db: {condition: service_healthy}}
+    command: alembic upgrade head
+  api:
+    build: .
+    env_file: {path: .env, required: false}
+    environment: *app-environment
+    ports: ["127.0.0.1:8000:8000"]
+    depends_on: {migrate: {condition: service_completed_successfully}, minio-init: {condition: service_completed_successfully}}
+  worker:
+    build: .
+    env_file: {path: .env, required: false}
+    environment: *app-environment
+    depends_on: {db: {condition: service_healthy}, redis: {condition: service_healthy}, minio-init: {condition: service_completed_successfully}}
+    command: celery -A app.worker.celery_app worker --loglevel=INFO
+volumes: {pgdata: {}, miniodata: {}}

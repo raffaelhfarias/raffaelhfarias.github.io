@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "enterprise-knowledge-ai"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+  "alembic>=1.13,<2",
+  "boto3>=1.35,<2",
+  "celery[redis]>=5.4,<6",
+  "fastapi>=0.115,<1",
+  "pypdf>=5,<6",
+  "pydantic-settings>=2.6,<3",
+  "python-multipart>=0.0.20,<1",
+  "sqlalchemy>=2.0,<3",
+  "psycopg[binary]>=3.2,<4",
+  "uvicorn[standard]>=0.34,<1",
+]
+[dependency-groups]
+dev = ["httpx>=0.28,<1", "pytest>=8,<9", "ruff>=0.9,<1"]
+
+[tool.setuptools]
+packages = ["app", "scripts"]
+
+[tool.ruff]
+line-length = 100
+[tool.ruff.lint]
+ignore = ["B008", "BLE001", "PLR1711", "RET501", "UP017"]
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
