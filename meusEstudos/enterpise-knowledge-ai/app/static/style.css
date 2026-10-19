@@ -118,7 +118,13 @@ h2, p { margin-top: 0; }
 .source-description { display: block; font-size: 12px; font-weight: 400; color: var(--muted); margin-top: 5px; }
 .source-toggle { margin-left: auto; }
 .sources blockquote { margin: 17px 0 0; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12px; line-height: 1.9; color: #4d604f; }
-#no-source { font-size: 12px; line-height: 1.8; }
+#history .answer { margin-bottom: 24px; overflow-wrap: anywhere; }
+#history h2 { font-size: 18px; line-height: 1.5; }
+#history p { white-space: pre-wrap; }
+#history details { margin: 14px 0; font-size: 13px; }
+#history blockquote { margin: 12px 0; line-height: 1.8; white-space: pre-wrap; }
+.quota-dots .used { opacity: .2; }
+button:disabled { cursor: not-allowed; opacity: .55; }
 .noscript-message { padding: 20px; background: #fff4d7; text-align: center; }
 @media (max-width: 1050px) { .layout { grid-template-columns: 280px minmax(0, 1fr); } .sidebar { padding-inline: 20px; } .workspace { padding-inline: 28px; } .quota-dots { display: none; } }
 @media (max-width: 720px) {

@@ -21,7 +21,7 @@
     <a class="about-link" href="#how-it-works">Como funciona <span aria-hidden="true">↗</span></a>
   </header>
 
-  <div class="preview-banner"><span class="status-dot" aria-hidden="true"></span><p><strong>Prévia da interface.</strong> Nenhum arquivo é enviado. A conexão da tela com o RAG é a próxima etapa.</p></div>
+  <div class="preview-banner"><span class="status-dot" aria-hidden="true"></span><p><strong>Demo de portfólio.</strong> O texto do documento e suas perguntas serão enviados à NVIDIA. Use apenas arquivos de teste, sem dados sensíveis.</p></div>
 
   <div class="layout">
     <aside class="sidebar" aria-label="Documento e informações da sessão">
@@ -41,21 +41,21 @@
       </section>
       <p id="file-error" class="error-message" role="alert" hidden></p>
 
-      <div class="example-choice"><p>Não tem um arquivo agora?</p><button id="use-example" class="text-button" type="button">Explorar um exemplo visual <span aria-hidden="true">→</span></button></div>
+      <div class="example-choice"><p>Não tem um arquivo agora?</p><button id="use-example" class="text-button" type="button">Testar com um documento fictício <span aria-hidden="true">→</span></button></div>
 
       <div class="session-note"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 4 6v5c0 5 8 10 8 10s8-5 8-10V6l-8-3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m8.5 11 2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><p>Use documentos de teste.<br><span class="muted">Não inclua dados pessoais ou informações confidenciais.</span></p></div>
 
       <details id="how-it-works" class="how-it-works">
         <summary>O que acontece por trás?</summary>
         <ol><li>O texto é extraído e dividido em trechos.</li><li>A busca semântica encontra as evidências para a pergunta.</li><li>A IA recebe os trechos e produz uma resposta com fontes.</li></ol>
-        <p>O motor já pode ser avaliado por comando. Esta tela ainda não envia documentos ou perguntas à API.</p>
+        <p>Sem cadastro: um documento e cinco tentativas por sessão. Texto e vetores ficam temporariamente no banco por 30 minutos; a limpeza roda a cada minuto. O arquivo original não é armazenado. Recarregar preserva a sessão, mas não o histórico da tela.</p>
         <a href="/docs">Ver documentação da API <span aria-hidden="true">↗</span></a>
       </details>
       <div class="sidebar-footer">FastAPI <span aria-hidden="true">/</span> RAG <span aria-hidden="true">/</span> NVIDIA</div>
     </aside>
 
     <main id="workspace" class="workspace" tabindex="-1">
-      <div class="workspace-header"><span id="workspace-label">Área de perguntas</span><span class="question-quota"><span class="quota-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>Até 5 perguntas por sessão</span></div>
+      <div class="workspace-header"><span id="workspace-label">Área de perguntas</span><span class="question-quota"><span class="quota-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span id="quota-text">Até 5 perguntas por sessão</span></span></div>
 
       <div id="empty-state" class="empty-state">
         <div class="document-symbol" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M13 7h15l8 8v26H13V7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M28 7v9h8M19 23h11M19 29h11M19 35h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
@@ -65,20 +65,13 @@
       </div>
 
       <section id="example-state" class="example-state" aria-labelledby="example-title" hidden>
-        <div class="example-heading"><div><h1 id="example-title">Uma pergunta. Uma fonte.</h1><p>Explore a apresentação de uma resposta fundamentada.</p></div><span class="example-badge">Exemplo visual</span></div>
-        <p class="example-disclaimer">Conteúdo fictício e respostas pré-definidas, não geradas pela IA. As perguntas abaixo não consomem a cota da futura sessão.</p>
-        <div class="sample-questions" aria-label="Perguntas ilustrativas"><button type="button" data-example="deadline" aria-pressed="true">Qual é o prazo para reembolso?</button><button type="button" data-example="approver" aria-pressed="false">Quem aprova a solicitação?</button><button type="button" data-example="unknown" aria-pressed="false">Qual é o salário da gestora?</button></div>
-        <article class="answer" aria-live="polite" aria-atomic="true">
-          <div class="answer-heading"><h2>Resposta</h2><span>Ilustrativa</span></div>
-          <p id="sample-answer"></p>
-          <div class="answer-actions"><span id="source-count"></span><button id="copy-answer" class="text-button" type="button">Copiar resposta</button></div>
-        </article>
-        <section class="sources" aria-labelledby="sources-title"><h2 id="sources-title">Confira a fonte</h2><details id="source-detail" open><summary><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 3h8l4 4v14H6V3Zm8 0v5h4M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span>Manual da equipe Aurora<span class="source-description">Documento fictício · trecho de exemplo</span></span><span class="source-toggle" aria-hidden="true">⌄</span></summary><blockquote id="source-quote"></blockquote></details><p id="no-source" class="muted" hidden>O documento não contém essa informação. Sem evidência, a resposta deve se abster.</p></section>
+        <div class="example-heading"><div><h1 id="example-title">Pergunte ao seu documento.</h1><p>A IA responde usando os trechos encontrados. Confira as fontes: modelos podem errar.</p></div></div>
+        <div id="history" aria-label="Perguntas e respostas"></div>
       </section>
 
       <div class="composer-area">
-        <div class="composer"><label for="question">Sua pergunta</label><textarea id="question" rows="2" maxlength="1000" placeholder="O que você quer descobrir no documento?" disabled aria-describedby="connection-note"></textarea><div class="composer-bottom"><span>Respostas com evidências, não suposições.</span><button class="send-button" type="button" disabled aria-label="Enviar pergunta, disponível após integrar a API"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 18V6m0 0-5 5m5-5 5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
-        <p id="connection-note" class="connection-note">Perguntas livres serão habilitadas após conectar esta interface ao RAG.</p>
+        <div class="composer"><label for="question">Sua pergunta</label><textarea id="question" rows="2" maxlength="1000" placeholder="O que você quer descobrir no documento?" disabled aria-describedby="connection-note"></textarea><div class="composer-bottom"><span>Enter envia · Shift + Enter quebra a linha.</span><button id="send-question" class="send-button" type="button" disabled aria-label="Enviar pergunta"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 18V6m0 0-5 5m5-5 5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
+        <p id="connection-note" class="connection-note">Selecione um documento para começar.</p>
       </div>
       <footer class="workspace-footer"><span>Knowledge AI</span><span>Conhecimento com contexto. Respostas com fontes.</span></footer>
     </main>

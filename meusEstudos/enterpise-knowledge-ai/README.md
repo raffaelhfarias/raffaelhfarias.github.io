@@ -1,8 +1,8 @@
 # Enterprise Knowledge AI — Demo RAG de portfólio
 
-O objetivo atual é uma demo pública: enviar um PDF/DOCX e fazer cinco perguntas por sessão, com respostas fundamentadas e fontes. O escopo vigente e a sequência de entrega estão em [enterprise_knowledge_ai_handoff.md](enterprise_knowledge_ai_handoff.md). Existem um motor RAG de avaliação por comando e uma prévia da interface; ainda não há sessão anônima ou endpoints de perguntas. As instruções da API descrevem a fundação existente, não uma plataforma B2B a concluir.
+O objetivo atual é uma demo pública: enviar um PDF/DOCX e fazer cinco perguntas por sessão, com respostas fundamentadas e fontes. O escopo vigente está em [enterprise_knowledge_ai_handoff.md](enterprise_knowledge_ai_handoff.md). A interface está ligada ao motor RAG por sessões anônimas temporárias. Os endpoints autenticados da fundação anterior continuam separados; não estamos construindo uma plataforma B2B.
 
-## Interface em prévia
+## Interface e demo
 
 A rota `/` serve a página em português com HTML, CSS e JavaScript locais, sem framework, CDN ou processo de build separado. O mesmo Dockerfile já inclui os arquivos. Para visualizar sem banco, chave NVIDIA ou serviços externos:
 
@@ -10,9 +10,24 @@ A rota `/` serve a página em português com HTML, CSS e JavaScript locais, sem 
 uv run uvicorn app.main:app --host 127.0.0.1 --port 8765
 ```
 
-Abra `http://127.0.0.1:8765`. A página adapta o layout para desktop e celular. Permite selecionar/arrastar um PDF ou DOCX e valida extensão, arquivo vazio e tamanho de até 20 MB no navegador. Essa checagem é de interface, não substitui validação no servidor. Nenhum arquivo é lido ou enviado; a seleção fica somente na página e desaparece ao recarregar.
+Abra `http://127.0.0.1:8765`. Sem habilitação da demo, a página abre, mas o servidor recusa envios. Com `DEMO_ENABLED=true`, selecionar/arrastar um PDF ou DOCX envia o arquivo ao backend; extensão, conteúdo, tamanho e páginas são validados no servidor. O limite padrão é 20 MB/200 páginas, mas documentos também precisam caber em até 80 trechos de texto. PDF escaneado não tem OCR.
 
-O botão de exemplo apresenta três respostas pré-definidas sobre um manual fictício, com fonte ou abstenção. Elas estão identificadas como ilustrativas e não consomem a cota de uma sessão real. O campo de perguntas livres fica desabilitado, com explicação da integração pendente. Não há chamadas à NVIDIA pela interface, persistência no navegador ou credenciais embutidas. A integração com o motor RAG e os controles da demo pública são a próxima entrega, não funcionalidades já concluídas.
+O botão de exemplo processa um manual fictício pelo mesmo RAG real; não apresenta respostas pré-definidas. O visitante faz perguntas livres e recebe fontes expansíveis. Todo texto é renderizado como texto, nunca HTML do documento/modelo. O histórico fica apenas na página; recarregar preserva o documento e a cota pelo cookie, mas não restaura as respostas anteriores.
+
+### Habilitar depois do próximo deploy
+
+1. Manter `NVIDIA_API_KEY` somente no runtime e confirmar os termos da conta para exposição pública.
+2. No terminal da aplicação, executar `alembic upgrade head` (nova migration `0002_demo`).
+3. Configurar `DEMO_ENABLED=true` no runtime e reiniciar/reimplantar pelo Coolify.
+4. Abrir `/`, testar o documento fictício e perguntar pelo prazo de reembolso (15 dias) e pelo salário da gestora (abstenção). Depois testar um PDF textual e um DOCX próprios, sem dados sensíveis.
+
+Nenhum serviço novo é necessário. A demo usa o PostgreSQL existente, sem MinIO/Redis/worker. Trechos e vetores ficam em colunas JSON, com busca de cosseno em memória sobre até 80 trechos; índice vetorial/pgvector não é necessário nessa escala. O arquivo original é descartado após extração. Conteúdo extraído e perguntas são enviados à NVIDIA, cujas políticas de retenção são independentes das nossas.
+
+Sessões expiram em 30 minutos. A limpeza física roda a cada minuto enquanto a aplicação está ativa e também antes de novos uploads; após uma parada, roda novamente quando a aplicação volta. Remover o documento exclui imediatamente a sessão do banco. Isso não apaga backups/WAL do banco nem dados eventualmente retidos pelo provedor. Cookie opaco `HttpOnly`, `SameSite=Strict` e `Secure` em HTTPS; só o hash é armazenado no banco. Não há credencial da NVIDIA no navegador.
+
+Cinco tentativas por sessão, inclusive falha do provedor; chamadas concorrentes da mesma sessão são rejeitadas. Cotas globais persistidas no banco: `DEMO_UPLOADS_PER_HOUR=10` e `DEMO_QUESTIONS_PER_HOUR=50`, por hora UTC de calendário, compartilhadas por visitantes/processos e preservadas em reinícios. Upload inválido após reserva também consome a cota de envio. Limite global atingido não consome uma tentativa da sessão. Limites conservadores não garantem disponibilidade: alguém pode esgotar a cota, apagar cookies ou iniciar sessões novas. Não há identificação por pessoa, CAPTCHA ou proteção antiabuso completa. Recomenda-se manter limite de corpo/conexões no proxy; as cotas da NVIDIA continuam valendo separadamente. Não há retries automáticos.
+
+Rotas da demo: `POST /v1/demo/document?filename=arquivo.pdf` (corpo binário), `POST /v1/demo/example`, `GET /v1/demo/session`, `DELETE /v1/demo/session` e `POST /v1/demo/questions` (`{"question":"..."}`). Escritas exigem `X-Demo-Request: 1` e usam o cookie de sessão; não é permitido CORS. Nenhuma rota recebe ID de outro visitante. A habilitação é desligada por padrão para evitar consumo acidental antes da migration e da revisão dos termos.
 
 ## Avaliar o motor RAG com NVIDIA
 
@@ -37,13 +52,13 @@ uv run python -m scripts.rag_demo --file ./documento.pdf
 
 Sem `--question`, o comando aceita perguntas interativamente; use `/sair` para encerrar. É necessário ter o arquivo no ambiente onde o comando roda. O conteúdo extraído e as perguntas são enviados à NVIDIA: use documentos sintéticos, não dados sensíveis.
 
-Esta etapa mantém trechos e vetores apenas na memória do processo. Não grava arquivos, texto ou embeddings no nosso banco/storage; o provedor tem suas próprias políticas de dados. O limite é de cinco tentativas por execução, inclusive falhas do provedor, com até 80 trechos e perguntas de até 1000 caracteres. Não há retry automático. Reiniciar o comando reinicia a contagem: isso **não** é a proteção da futura demo pública. Persistência em pgvector, quotas compartilhadas, expiração e limpeza das futuras sessões continuam pendentes.
+O comando mantém trechos e vetores apenas na memória do processo, diferente das sessões temporárias da interface. O limite é de cinco tentativas por execução, inclusive falhas do provedor, com até 80 trechos e perguntas de até 1000 caracteres. Reiniciar o comando reinicia a contagem; suas chamadas privadas não entram no orçamento das rotas públicas.
 
-As chamadas têm timeout e erros sanitizados de autenticação, indisponibilidade e rate limit. Sem chave, o comando falha antes de qualquer chamada. Testes locais usam respostas simuladas; disponibilidade da conta, latência, qualidade em português e termos para publicação precisam ser verificados no ambiente real. Nenhuma nova rota pública foi exposta.
+As chamadas têm timeout e erros sanitizados de autenticação, indisponibilidade e rate limit. Sem chave, o comando falha antes de qualquer chamada. Testes locais usam respostas simuladas; disponibilidade da conta, latência, qualidade em português e termos para publicação precisam ser verificados no ambiente real.
 
 ## Fundação existente (Sprint 1 original)
 
-API FastAPI multi-tenant com PostgreSQL/pgvector, Redis/Celery preparado e suporte a MinIO privado. A fundação entrega autenticação, memberships, coleções e upload. Documentos dessa API continuam `pending`: ainda não há integração com o motor RAG por comando ou worker de ingestão. A interface em `/` é uma prévia visual separada desse fluxo.
+API FastAPI multi-tenant com PostgreSQL/pgvector, Redis/Celery preparado e suporte a MinIO privado. A fundação entrega autenticação, memberships, coleções e upload. Documentos dessa API continuam `pending`: não há integração com o motor RAG ou worker de ingestão. A demo anônima tem fluxo separado em `/v1/demo`, sem contas e coleções.
 
 ## Rodar com Docker (fluxo principal)
 
@@ -129,4 +144,4 @@ Se o pytest encontrar erro de permissão no diretório temporário padrão do Wi
 
 As verificações locais cobrem SQLite; Postgres/pgvector, Redis, Celery e MinIO exigem Docker/serviços disponíveis. Não há alegação de validação Postgres sem executar o Compose.
 
-Cadastro público, busca na API, exclusão de documentos e ingestão dos uploads não foram implementados nesta sprint; os usuários da API vêm do seed. RLS e ACL por coleção não foram adicionados. Antes de publicação externa ainda são necessários TLS, proteção contra brute force/rate limiting, limites de corpo no proxy e revisão dos segredos de demonstração. O motor RAG por comando envia conteúdo à NVIDIA somente quando executado explicitamente; a API de upload não faz esse envio.
+Cadastro público, busca, exclusão e ingestão dos uploads da API autenticada não foram implementados; os usuários dessa API vêm do seed. RLS e ACL por coleção não foram adicionados. Para essa fundação ainda são necessários proteção contra brute force/rate limiting e revisão dos segredos de demonstração. Diferentemente do upload autenticado, as rotas anônimas `/v1/demo` enviam texto e perguntas à NVIDIA quando habilitadas. Use TLS e limites de corpo/conexões no proxy.

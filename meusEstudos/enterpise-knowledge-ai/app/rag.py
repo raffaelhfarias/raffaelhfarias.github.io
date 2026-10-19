@@ -52,12 +52,16 @@ def extract_chunks(data: bytes, mime: str) -> list[Chunk]:
 
 
 class RagSession:
-    def __init__(self, chunks: list[Chunk], provider: NvidiaClient):
+    def __init__(self, chunks: list[Chunk], provider: NvidiaClient, vectors=None):
         if not chunks:
             raise ValueError("no_extractable_text")
         self.chunks = chunks
         self.provider = provider
-        self.vectors = provider.embed([chunk.text for chunk in chunks], "passage")
+        self.vectors = (
+            vectors
+            if vectors is not None
+            else provider.embed([chunk.text for chunk in chunks], "passage")
+        )
         self.questions_used = 0
 
     def ask(self, question: str) -> dict:

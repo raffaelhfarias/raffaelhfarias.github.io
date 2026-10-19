@@ -78,15 +78,21 @@ Os valores dos limites, retenção e orçamento serão acordados antes da public
 
 O código atual de usuários, tenants e coleções não precisa ser removido nesta etapa. Pode ser reaproveitado internamente se simplificar o isolamento, mas o visitante não deve operar esses conceitos. A adaptação da sessão pública deve ser explícita e testada, nunca baseada em compartilhar a mesma credencial entre todos os visitantes.
 
-## 5. Estado real na data do realinhamento
+## 5. Estado real após a integração da demo
+
+Atualização local, ainda não publicada: a interface está ligada ao RAG por `/v1/demo`, com sessão anônima por cookie opaco, cinco tentativas, uma pergunta simultânea, expiração em 30 minutos e limpeza a cada minuto. Cotas por hora compartilhadas persistem no banco (10 envios e 50 perguntas por padrão). O documento fictício também usa a NVIDIA, sem respostas pré-definidas. PDF/DOCX seguem validação no servidor e limite de até 80 trechos. O histórico fica apenas na tela.
+
+A migration `0002_demo` adiciona duas tabelas ao banco existente: sessões temporárias (texto/vetores JSON) e orçamento global. Não usa MinIO, Redis ou Celery. Para esta escala, busca de cosseno sobre até 80 trechos substitui a necessidade de índice pgvector; o banco continua PostgreSQL, sem serviço novo. Arquivos originais não são armazenados. Retenção externa da NVIDIA e backups do banco são independentes da limpeza lógica da aplicação.
+
+`DEMO_ENABLED=false` por padrão: antes de ativar, aplicar migration, confirmar termos da conta e validar a NVIDIA real no Coolify. Não é alegada validação autenticada da NVIDIA nem teste contra PostgreSQL neste ambiente. Cotas limitam consumo, mas não impedem esgotamento deliberado ou uma pessoa criar sessões novas. As seções abaixo registram o estado anterior ao desenvolvimento desta integração.
 
 - Implementado: API de autenticação, memberships, coleções, upload e consulta de status; migrations e testes locais.
 - Confirmado pelo usuário no Coolify: API publicada, PostgreSQL conectado, migrations, seed e login funcionando.
-- Correção do header de criação de coleções enviada ao GitHub; publicação desse ajuste depende do deploy pelo usuário.
+- Usuário confirmou deploy da interface anterior em prévia. A integração atual ainda está local.
 - Ainda não confirmado no deploy: armazenamento de arquivos e fluxo completo de upload/isolamento.
 - Implementado após o realinhamento: motor RAG por comando, com extração, chunks e vetores em memória, recuperação, resposta com fontes e cinco tentativas por execução. Testado localmente com provedor simulado; falta validação autenticada na NVIDIA.
-- Interface em prévia implementada em `/`: seleção local de PDF/DOCX, exemplo fictício com respostas ilustrativas e fontes, layout responsivo. Não envia arquivos nem perguntas ao backend; o campo livre fica desabilitado, com explicação visível.
-- Ainda não implementado: sessão anônima da demo, integração do frontend com o motor RAG, pipeline ligado aos uploads da API, persistência dos vetores em pgvector, quotas globais e retenção/limpeza.
+- Interface ligada à demo anônima em `/`: upload, exemplo real, perguntas, histórico da tela e fontes; cota e isolamento verificados no backend com provedor simulado.
+- Pendente: validação da conta NVIDIA real, migration e teste completo no PostgreSQL/Coolify. Uploads da API autenticada permanecem separados; índice pgvector e pipeline empresarial não são necessários para esta entrega.
 - `/health/ready` verifica banco/schema; não comprova que o RAG ou o armazenamento estão operacionais.
 
 A implementação da fundação anterior não equivale à conclusão da nova demo.

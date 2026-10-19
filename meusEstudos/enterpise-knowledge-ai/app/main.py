@@ -10,7 +10,7 @@ from xml.etree import ElementTree
 from zipfile import BadZipFile, ZipFile
 
 from fastapi import Depends, FastAPI, File, Header, HTTPException, Query, Request, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, field_validator
 from pypdf import PdfReader
@@ -20,6 +20,8 @@ from sqlalchemy.orm import Session
 
 from .config import settings
 from .db import Collection, Document, Membership, SessionToken, Tenant, User, get_db, now
+from .demo import demo_lifespan
+from .demo import router as demo_router
 from .security import (
     current_user,
     hash_password,
@@ -30,10 +32,24 @@ from .security import (
 )
 from .storage import storage
 
-app = FastAPI(title="Enterprise Knowledge AI", version="0.1.0")
+app = FastAPI(title="Enterprise Knowledge AI", version="0.1.0", lifespan=demo_lifespan)
+app.include_router(demo_router)
 static_directory = Path(__file__).resolve().parent / "static"
 app.mount("/static", StaticFiles(directory=static_directory), name="static")
 dummy_password_hash = hash_password(secrets.token_urlsafe(32))
+
+
+@app.middleware("http")
+async def demo_no_cache(request: Request, call_next):
+    try:
+        response = await call_next(request)
+    except SQLAlchemyError:
+        if not request.url.path.startswith("/v1/demo/"):
+            raise
+        response = JSONResponse({"detail": "demo_database_unavailable"}, status_code=503)
+    if request.url.path.startswith("/v1/demo/"):
+        response.headers["Cache-Control"] = "no-store"
+    return response
 
 
 @app.get("/", include_in_schema=False)

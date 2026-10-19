@@ -3,6 +3,7 @@ from datetime import UTC, datetime
 from uuid import uuid4
 
 from sqlalchemy import (
+    JSON,
     CheckConstraint,
     DateTime,
     ForeignKey,
@@ -101,6 +102,25 @@ class SessionToken(Base):
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
     revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
+
+
+class DemoSession(Base):
+    __tablename__ = "demo_sessions"
+    token_hash: Mapped[str] = mapped_column(String(64), primary_key=True)
+    filename: Mapped[str] = mapped_column(String(255))
+    chunks: Mapped[list] = mapped_column(JSON)
+    vectors: Mapped[list] = mapped_column(JSON)
+    questions_used: Mapped[int] = mapped_column(default=0)
+    busy: Mapped[bool] = mapped_column(default=True)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+
+
+class DemoBudget(Base):
+    __tablename__ = "demo_budget"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    window_start: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    uploads: Mapped[int] = mapped_column(default=0)
+    questions: Mapped[int] = mapped_column(default=0)
 
 
 engine = create_engine(settings().database_url, pool_pre_ping=True)

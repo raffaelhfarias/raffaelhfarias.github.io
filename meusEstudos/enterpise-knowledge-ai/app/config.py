@@ -20,6 +20,9 @@ class Settings(BaseSettings):
     nvidia_api_key: SecretStr = SecretStr("")
     nvidia_chat_model: str = "nvidia/nemotron-3-super-120b-a12b"
     nvidia_embedding_model: str = "nvidia/nemotron-3-embed-1b"
+    demo_enabled: bool = False
+    demo_uploads_per_hour: int = Field(default=10, gt=0, le=100)
+    demo_questions_per_hour: int = Field(default=50, gt=0, le=500)
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
