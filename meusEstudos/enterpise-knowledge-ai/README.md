@@ -1,6 +1,49 @@
-# Enterprise Knowledge AI — Sprint 1
+# Enterprise Knowledge AI — Demo RAG de portfólio
 
-API FastAPI multi-tenant com PostgreSQL/pgvector, Redis/Celery preparado e MinIO privado. Esta sprint entrega autenticação, memberships, coleções e upload seguro. Documentos ficam `pending`; não há ingestão, OCR, chunks, embeddings, busca ou UI.
+O objetivo atual é uma demo pública: enviar um PDF/DOCX e fazer cinco perguntas por sessão, com respostas fundamentadas e fontes. O escopo vigente e a sequência de entrega estão em [enterprise_knowledge_ai_handoff.md](enterprise_knowledge_ai_handoff.md). Existem um motor RAG de avaliação por comando e uma prévia da interface; ainda não há sessão anônima ou endpoints de perguntas. As instruções da API descrevem a fundação existente, não uma plataforma B2B a concluir.
+
+## Interface em prévia
+
+A rota `/` serve a página em português com HTML, CSS e JavaScript locais, sem framework, CDN ou processo de build separado. O mesmo Dockerfile já inclui os arquivos. Para visualizar sem banco, chave NVIDIA ou serviços externos:
+
+```powershell
+uv run uvicorn app.main:app --host 127.0.0.1 --port 8765
+```
+
+Abra `http://127.0.0.1:8765`. A página adapta o layout para desktop e celular. Permite selecionar/arrastar um PDF ou DOCX e valida extensão, arquivo vazio e tamanho de até 20 MB no navegador. Essa checagem é de interface, não substitui validação no servidor. Nenhum arquivo é lido ou enviado; a seleção fica somente na página e desaparece ao recarregar.
+
+O botão de exemplo apresenta três respostas pré-definidas sobre um manual fictício, com fonte ou abstenção. Elas estão identificadas como ilustrativas e não consomem a cota de uma sessão real. O campo de perguntas livres fica desabilitado, com explicação da integração pendente. Não há chamadas à NVIDIA pela interface, persistência no navegador ou credenciais embutidas. A integração com o motor RAG e os controles da demo pública são a próxima entrega, não funcionalidades já concluídas.
+
+## Avaliar o motor RAG com NVIDIA
+
+O comando extrai PDF textual/DOCX/TXT, divide o texto em trechos, gera embeddings uma vez por execução e recupera até quatro trechos por pergunta usando similaridade de cosseno. A resposta inclui os trechos citados, com página para PDF; fontes inexistentes são rejeitadas. Isso valida a referência, não prova automaticamente que toda afirmação do modelo é verdadeira. Uma resposta sem fontes vira abstenção.
+
+Configure `NVIDIA_API_KEY` como segredo de runtime. Os modelos padrão são `nvidia/nemotron-3-super-120b-a12b` para respostas e `nvidia/nemotron-3-embed-1b` para embeddings; podem ser alterados por `NVIDIA_CHAT_MODEL` e `NVIDIA_EMBEDDING_MODEL`. Não é necessário instalar modelos, GPU, Redis ou MinIO para esse comando.
+
+Depois que o usuário publicar este código no Coolify, executar no terminal da aplicação:
+
+```sh
+cd /app
+python -m scripts.rag_demo --example --question "Qual é o prazo para solicitar reembolso?" --question "Qual é o salário da gestora?"
+```
+
+O exemplo é um manual fictício em português. A primeira pergunta deve citar o prazo de 15 dias; a segunda deve se abster porque o manual não informa salários. Esses são critérios de validação, não resultados já confirmados no serviço real.
+
+Para um documento local, com a chave configurada no `.env` ignorado pelo Git:
+
+```powershell
+uv run python -m scripts.rag_demo --file ./documento.pdf
+```
+
+Sem `--question`, o comando aceita perguntas interativamente; use `/sair` para encerrar. É necessário ter o arquivo no ambiente onde o comando roda. O conteúdo extraído e as perguntas são enviados à NVIDIA: use documentos sintéticos, não dados sensíveis.
+
+Esta etapa mantém trechos e vetores apenas na memória do processo. Não grava arquivos, texto ou embeddings no nosso banco/storage; o provedor tem suas próprias políticas de dados. O limite é de cinco tentativas por execução, inclusive falhas do provedor, com até 80 trechos e perguntas de até 1000 caracteres. Não há retry automático. Reiniciar o comando reinicia a contagem: isso **não** é a proteção da futura demo pública. Persistência em pgvector, quotas compartilhadas, expiração e limpeza das futuras sessões continuam pendentes.
+
+As chamadas têm timeout e erros sanitizados de autenticação, indisponibilidade e rate limit. Sem chave, o comando falha antes de qualquer chamada. Testes locais usam respostas simuladas; disponibilidade da conta, latência, qualidade em português e termos para publicação precisam ser verificados no ambiente real. Nenhuma nova rota pública foi exposta.
+
+## Fundação existente (Sprint 1 original)
+
+API FastAPI multi-tenant com PostgreSQL/pgvector, Redis/Celery preparado e suporte a MinIO privado. A fundação entrega autenticação, memberships, coleções e upload. Documentos dessa API continuam `pending`: ainda não há integração com o motor RAG por comando ou worker de ingestão. A interface em `/` é uma prévia visual separada desse fluxo.
 
 ## Rodar com Docker (fluxo principal)
 
@@ -86,4 +129,4 @@ Se o pytest encontrar erro de permissão no diretório temporário padrão do Wi
 
 As verificações locais cobrem SQLite; Postgres/pgvector, Redis, Celery e MinIO exigem Docker/serviços disponíveis. Não há alegação de validação Postgres sem executar o Compose.
 
-Cadastro público, busca, exclusão de documentos e ingestão não foram implementados nesta sprint; os usuários da demo vêm do seed. RLS e ACL por coleção não foram adicionados. Antes de publicação externa ainda são necessários TLS, proteção contra brute force/rate limiting, limites de corpo no proxy e revisão dos segredos de demonstração. Nenhum documento é enviado a provedores de IA nesta etapa.
+Cadastro público, busca na API, exclusão de documentos e ingestão dos uploads não foram implementados nesta sprint; os usuários da API vêm do seed. RLS e ACL por coleção não foram adicionados. Antes de publicação externa ainda são necessários TLS, proteção contra brute force/rate limiting, limites de corpo no proxy e revisão dos segredos de demonstração. O motor RAG por comando envia conteúdo à NVIDIA somente quando executado explicitamente; a API de upload não faz esse envio.

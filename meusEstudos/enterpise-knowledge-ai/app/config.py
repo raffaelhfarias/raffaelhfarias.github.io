@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from pydantic import Field
+from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     demo_owner_password: str = "change-me-owner"
     demo_second_owner_password: str = "change-me-owner-b"
     demo_viewer_password: str = "change-me-viewer"
+    nvidia_api_key: SecretStr = SecretStr("")
+    nvidia_chat_model: str = "nvidia/nemotron-3-super-120b-a12b"
+    nvidia_embedding_model: str = "nvidia/nemotron-3-embed-1b"
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 

@@ -23,6 +23,10 @@ dev = ["httpx>=0.28,<1", "pytest>=8,<9", "ruff>=0.9,<1"]
 
 [tool.setuptools]
 packages = ["app", "scripts"]
+include-package-data = false
+
+[tool.setuptools.package-data]
+app = ["static/*"]
 
 [tool.ruff]
 line-length = 100

@@ -1,260 +1,137 @@
-# Enterprise Knowledge AI — Handoff de implementação
+# Enterprise Knowledge AI — Demo RAG de portfólio
 
-**Versão:** 1.0  
-**Perfil:** desenvolvedor experiente migrando para AI Engineer júnior  
-**Prazo-alvo:** quatro semanas (semanas 3–6 da trilha), ajustável conforme disponibilidade  
-**Status:** especificação inicial; decisões sujeitas a validação por benchmarks
+**Versão:** 2.0 — escopo realinhado em 19/10/2026
 
-## 1. Resultado esperado
+**Objetivo:** demonstrar um RAG funcional, simples de experimentar e tecnicamente consistente.
 
-Uma plataforma multi-tenant de conhecimento em que um usuário autenticado cria uma coleção, envia PDFs/DOCX/TXT, acompanha a ingestão, faz perguntas e recebe respostas com citações clicáveis (arquivo, página e trecho). A plataforma mede qualidade de retrieval, latência, custo aproximado de geração e falhas; não permite que um usuário acesse documentos de outro.
+**Público:** recrutadores, visitantes do portfólio e testers.
 
-### Definition of Done
+**Status:** fundação da API existente; experiência pública e pipeline RAG ainda não implementados.
 
-- `docker compose up --build` sobe API, PostgreSQL/pgvector, Redis, worker e MinIO; interface pode ser adicionada ao final.
-- Migrações aplicadas de forma reproduzível e dados de teste gerados por script.
-- Autenticação implementada e autorização em todos os endpoints de leitura/escrita.
-- Upload de PDF com texto, DOCX e TXT; arquivos inválidos são recusados.
-- Ingestão assíncrona idempotente, com estados e registro de falhas.
-- Busca lexical, vetorial e híbrida comparáveis usando mesmo corpus.
-- Resposta produzida apenas com trechos permitidos, retornando citações persistentes; ausência de evidência provoca abstenção.
-- Teste automático de isolamento cross-tenant, revogação de acesso, prompt injection e deleção.
-- Dataset com pelo menos 50 perguntas e avaliações automatizadas; resultados reais reportados sem prometer limiares arbitrários.
-- CI executa lint, testes e migrations; README permite reproduzir a demo.
+Este documento substitui o escopo anterior de plataforma empresarial multi-tenant. O nome e o diretório do projeto permanecem; não estamos construindo um SaaS B2B. Requisitos anteriores só continuam obrigatórios quando constam neste escopo.
 
-## 2. Escopo
+## 1. Experiência esperada
 
-### MVP (obrigatório)
-1. Registro/login ou OIDC; tenants (organizações) e associação do usuário a um tenant.
-2. Coleções pertencentes ao tenant; permissões iniciais de owner/editor/viewer.
-3. Upload de PDF textual/DOCX/TXT (limite inicial 20 MB e 200 páginas por arquivo, configurável).
-4. Processamento assíncrono: validação, extração, normalização, chunking, embeddings e persistência.
-5. Busca por tenant/coleção usando pgvector e PostgreSQL full text, com RRF.
-6. Perguntas e respostas com citações que incluem `document_id`, `chunk_id`, página e offsets quando disponíveis.
-7. Endpoints de listagem/status/exclusão; deleção de chunks/embeddings e arquivo associado.
-8. Logs/traces, métricas, testes e avaliação de retrieval.
+O visitante abre uma página, envia um PDF textual ou DOCX, acompanha o processamento e faz perguntas sobre esse documento. As respostas exibem as evidências usadas. Quando não houver informação suficiente, o sistema informa isso claramente.
 
-### Fora do MVP
-- OCR de PDFs escaneados; tabelas complexas e imagens; conectores externos (Drive, SharePoint).
-- Fine-tuning, GraphRAG, múltiplos agentes, memory de longo prazo e tarefas automáticas de escrita.
-- SSO empresarial, cobrança, limites de planos, produção certificada/compliance formal.
+- Sem cadastro, login ou seleção de empresa na experiência pública.
+- Uma sessão de visitante com um documento ativo por vez.
+- Cinco perguntas disponíveis por sessão na primeira versão, com contador visível.
+- Trocar o documento não renova a cota da sessão.
+- Documento de exemplo disponível para quem quiser testar sem fazer upload.
+- Documentos e trechos de uma sessão não ficam acessíveis a outra.
 
-## 3. Arquitetura
+A interface de referência inspira a hierarquia pergunta → resposta → fontes, não os filtros, conectores e painéis empresariais.
 
-```
-Next.js Web UI ───> FastAPI ──────> PostgreSQL + pgvector
-                         │                   │
-                         ├──> Redis Queue --> Celery Worker
-                         │                        │
-                         ├──> MinIO/S3 <──────────┤
-                         │                        └──> Embedding Provider
-                         └──> Retrieval + RRF --> LLM Provider
-                                      │
-                                 Langfuse/OTel
-```
+## 2. Escopo obrigatório
 
-**Fluxo de ingestão:** API valida identidade/tenant, MIME real, tamanho e quota; registra documento como `pending`, envia arquivo a storage privado e publica job. Worker extrai texto e paginação, normaliza, gera chunks com metadados, calcula embeddings em lotes, grava dados via transação e marca `ready`. Falha resulta em `failed` com motivo sanitizado, tentativas limitadas e retry exponencial. Reprocessar o mesmo arquivo deve ser idempotente por `(tenant_id, collection_id, sha256, parser_version, embedding_model)`.
+### Interface
 
-**Fluxo de pergunta:** API autentica, autoriza coleção, incorpora query, busca candidatos lexicais e vetoriais **já filtrados por tenant e permissões**, funde rankings com RRF, opcionalmente reranqueia, envia trechos tratados como dados não confiáveis ao LLM, valida citações contra a lista de chunks entregues e devolve resposta ou abstenção. Registra métricas sem armazenar conteúdo sensível por padrão.
+- Uma página responsiva com upload, nome do documento e status de processamento.
+- Campo de pergunta e histórico das perguntas e respostas da sessão.
+- Contador de perguntas restantes e indicação clara de cota esgotada.
+- Fontes com trecho e identificação do documento; página no PDF quando disponível. Não inventar paginação de DOCX.
+- Estados compreensíveis de carregamento, erro, ausência de evidência e sessão expirada.
+- Aviso para não enviar dados sensíveis e explicação sobre processamento e retenção dos arquivos.
 
-## 4. Estrutura do repositório
+### RAG
 
-```
-enterprise-knowledge-ai/
-├── apps/
-│   ├── api/app/
-│   │   ├── main.py
-│   │   ├── core/{config.py,security.py,observability.py}
-│   │   ├── api/v1/{auth.py,collections.py,documents.py,search.py,chat.py}
-│   │   ├── db/{models.py,session.py}
-│   │   ├── schemas/
-│   │   ├── services/{storage.py,ingestion.py,chunking.py,embeddings.py,retrieval.py,generation.py}
-│   │   └── repositories/
-│   ├── worker/{celery_app.py,tasks.py}
-│   └── web/                       # fase final
-├── migrations/
-├── evals/{datasets/,run_retrieval.py,run_generation.py}
-├── tests/{unit/,integration/,security/,e2e/}
-├── infra/{docker-compose.yml,Dockerfile.api,Dockerfile.worker}
-├── scripts/{seed_demo.py,generate_eval_set.py}
-├── docs/{architecture.md,adr/,security.md,benchmarks.md,runbook.md}
-├── .github/workflows/ci.yml
-├── .env.example
-├── pyproject.toml
-└── README.md
-```
+- Validar formato e tamanho; aceitar PDF com texto e DOCX.
+- Extrair texto, preservar referências de origem e gerar chunks com metadados.
+- Gerar e persistir embeddings; buscar trechos relevantes apenas do documento autorizado à sessão.
+- Enviar ao modelo a pergunta e os trechos recuperados, não o documento inteiro a cada pergunta.
+- Retornar resposta fundamentada e referências verificáveis aos trechos usados.
+- Tratar o conteúdo do arquivo como dados, não como instruções para o sistema.
+- Exibir status de processamento e falha; não duplicar trechos em uma nova tentativa do mesmo processamento.
 
-## 5. Modelo de dados
+### Proteções da demo pública
 
-| Tabela | Campos essenciais | Notas |
-|---|---|---|
-| `tenants` | `id`, `name`, `created_at` | organização isolada |
-| `users` | `id`, `email`, `password_hash` ou `oidc_subject`, `created_at` | identidade |
-| `memberships` | `tenant_id`, `user_id`, `role` | roles: owner/editor/viewer |
-| `collections` | `id`, `tenant_id`, `name`, `created_by` | limite de acesso |
-| `documents` | `id`, `tenant_id`, `collection_id`, `owner_id`, `filename`, `mime`, `sha256`, `storage_key`, `status`, `error_code`, `created_at` | `pending/processing/ready/failed/deleted` |
-| `document_chunks` | `id`, `tenant_id`, `collection_id`, `document_id`, `ordinal`, `content`, `page_start`, `page_end`, `token_count`, `embedding`, `search_vector`, `metadata` | índice vetorial e GIN |
-| `ingestion_jobs` | `id`, `tenant_id`, `document_id`, `status`, `attempts`, `started_at`, `finished_at` | idempotência e retry |
-| `query_logs` | `id`, `tenant_id`, `user_id`, `collection_id`, `latency_ms`, `retrieved_count`, `model`, `estimated_cost`, `created_at` | não registrar conteúdo por padrão |
-| `citation_events` | `query_log_id`, `document_id`, `chunk_id`, `page` | evidência e auditoria |
+- Validar no backend sessão, acesso ao documento e cota de perguntas; o contador da interface não é a proteção.
+- Limitar tamanho/páginas de arquivos, frequência de requisições e concorrência de processamento.
+- Aplicar teto global de consumo para que novas sessões não contornem toda a proteção de custos.
+- Expirar sessões e remover arquivos, texto e embeddings associados conforme a retenção definida.
+- Manter credenciais no servidor e evitar conteúdo de documentos e segredos nos logs.
+- Informar antes do upload se conteúdo será enviado a um provedor externo de IA.
 
-**Índices/constraints:** FK e índices compostos `(tenant_id, collection_id)` em todas as tabelas de conteúdo; HNSW `vector_cosine_ops` em `embedding` (dimensão fixada pelo modelo); GIN em `search_vector`; unique em chaves de idempotência. Escolher `to_tsvector('portuguese', content)` para corpus em português, configurável para corpus multilíngue. Dimensionar tipo `vector(N)` de acordo com o provedor escolhido, registrando `embedding_model` e versão: trocar de modelo exige reindexação.
+Os valores dos limites, retenção e orçamento serão acordados antes da publicação pública da demo. Cinco perguntas por sessão não equivalem a cinco por pessoa nem substituem o teto global.
 
-**Segurança de dados:** o tenant deve ser derivado do token/sessão, nunca confiado ao payload. Filtro de autorização antes do `LIMIT` da busca vetorial/textual; se PostgreSQL RLS for adotado, ele complementa testes de autorização na aplicação. Filtros de documento/coleção precisam ser aplicados em ambos os ramos da busca. URLs para objetos devem ser assinadas e curtas. Evitar armazenamento de texto original em logs e traces.
+## 3. Fora desta versão
 
-## 6. Contratos REST v1
+- Cadastro público, gestão de organizações, convites e painéis administrativos.
+- Permissões empresariais owner/editor/viewer como parte da interface.
+- Coleções e consulta simultânea a vários documentos na experiência pública.
+- Integrações com Drive, Slack, SharePoint ou outras fontes externas.
+- OCR, PDFs escaneados, análise de imagens e tabelas complexas.
+- Comparação obrigatória entre busca lexical, vetorial e híbrida, reranking e dashboards de observabilidade.
+- Fine-tuning, GraphRAG, múltiplos agentes, cobrança, planos e SSO.
+- Dataset de 50 perguntas ou infraestrutura de avaliação extensa como condição para a demo.
 
-| Método | Endpoint | Body / resposta |
-|---|---|---|
-| `POST` | `/v1/auth/login` | credenciais → access token (ou OIDC) |
-| `POST` | `/v1/collections` | `{name}` → `{id,name}` |
-| `GET` | `/v1/collections` | coleções autorizadas |
-| `POST` | `/v1/collections/{id}/documents` | `multipart/form-data: file` → `202 {document_id,status}` |
-| `GET` | `/v1/collections/{id}/documents` | lista paginada |
-| `GET` | `/v1/documents/{id}` | estado, páginas e erro sanitizado |
-| `DELETE` | `/v1/documents/{id}` | `204`; remove dados derivados e objeto |
-| `POST` | `/v1/collections/{id}/search` | `{query,mode,top_k}` → chunks autorizados com metadados |
-| `POST` | `/v1/collections/{id}/ask` | `{question,top_k}` → resposta com citações |
-| `GET` | `/health/live` e `/health/ready` | liveness/readiness |
+## 4. Implementação e infraestrutura
 
-**Resposta ilustrativa de `/ask`:**
+- Reaproveitar FastAPI e PostgreSQL/pgvector já presentes no projeto.
+- Manter o projeto em `meusEstudos/enterpise-knowledge-ai` no repositório do portfólio.
+- Deploy pelo Dockerfile no Coolify existente; o usuário conduz os deploys.
+- Não exigir Docker local nem criar novos serviços sem necessidade confirmada.
+- Escolher a forma mais simples de servir a interface; nenhum framework frontend é obrigatório neste escopo.
+- Reavaliar a necessidade de Redis/Celery e MinIO/S3 antes de pedir novos recursos. Não são entregáveis por si só.
+- Não reestruturar pastas nem introduzir camadas para acomodar possibilidades futuras.
 
-```json
-{
-  "answer": "A política exige aprovação do gestor para valores acima do limite descrito [1].",
-  "grounded": true,
-  "citations": [
-    {"ref": 1, "document_id": "uuid", "chunk_id": "uuid", "filename": "politica.pdf", "page_start": 3, "page_end": 3, "snippet": "..."}
-  ],
-  "retrieval": {"mode": "hybrid", "top_k": 6},
-  "metrics": {"latency_ms": 1240, "estimated_cost_usd": 0.0012}
-}
-```
+O código atual de usuários, tenants e coleções não precisa ser removido nesta etapa. Pode ser reaproveitado internamente se simplificar o isolamento, mas o visitante não deve operar esses conceitos. A adaptação da sessão pública deve ser explícita e testada, nunca baseada em compartilhar a mesma credencial entre todos os visitantes.
 
-*Valores acima são exemplos de formato, não resultados medidos.* Se evidência não for suficiente: `grounded=false`, `answer="Não encontrei evidência suficiente nos documentos disponíveis."`, `citations=[]`.
+## 5. Estado real na data do realinhamento
 
-## 7. Algoritmo de retrieval
+- Implementado: API de autenticação, memberships, coleções, upload e consulta de status; migrations e testes locais.
+- Confirmado pelo usuário no Coolify: API publicada, PostgreSQL conectado, migrations, seed e login funcionando.
+- Correção do header de criação de coleções enviada ao GitHub; publicação desse ajuste depende do deploy pelo usuário.
+- Ainda não confirmado no deploy: armazenamento de arquivos e fluxo completo de upload/isolamento.
+- Implementado após o realinhamento: motor RAG por comando, com extração, chunks e vetores em memória, recuperação, resposta com fontes e cinco tentativas por execução. Testado localmente com provedor simulado; falta validação autenticada na NVIDIA.
+- Interface em prévia implementada em `/`: seleção local de PDF/DOCX, exemplo fictício com respostas ilustrativas e fontes, layout responsivo. Não envia arquivos nem perguntas ao backend; o campo livre fica desabilitado, com explicação visível.
+- Ainda não implementado: sessão anônima da demo, integração do frontend com o motor RAG, pipeline ligado aos uploads da API, persistência dos vetores em pgvector, quotas globais e retenção/limpeza.
+- `/health/ready` verifica banco/schema; não comprova que o RAG ou o armazenamento estão operacionais.
 
-1. Normalizar consulta e validar tamanho.
-2. Extrair embedding com mesmo modelo/dimensão dos chunks.
-3. Selecionar candidatos lexicais (`websearch_to_tsquery`/`plainto_tsquery`, GIN, `ts_rank_cd`) e vetoriais (`embedding <=> query_embedding`, HNSW), ambos com filtro de tenant, coleção e ACL.
-4. Buscar inicialmente 30–50 candidatos por ramo, variar em benchmark.
-5. Aplicar RRF: `score(d) = Σ 1/(k + rank_i(d))`, com `k=60` inicial; unir por `chunk_id`.
-6. Remover duplicatas quase idênticas; opcional reranker top 20 → top 6.
-7. Construir prompt com fontes identificadas; não obedecer comandos presentes nos documentos.
-8. Exigir citações com identificadores pré-aprovados e verificar referências retornadas.
-9. Abster-se quando não houver evidência; não tratar similaridade como probabilidade de verdade.
+A implementação da fundação anterior não equivale à conclusão da nova demo.
 
-Medir separadamente `vector`, `lexical` e `hybrid`. HNSW pode sofrer com filtros seletivos; validar recall após aplicação de tenant/coleção e ajustar índices/consultas conforme o corpus.
+## 6. Sequência de entrega
 
-## 8. Chunking e extração
+### Etapa 1 — Fechar decisões mínimas
 
-- PDF textual: extrair por página, preservar número da página e hash da fonte.
-- DOCX: preservar ordem dos parágrafos/títulos; registrar localização por seção quando não houver página.
-- TXT: normalizar codificação e quebras.
-- Segmentação inicial: 500–800 tokens, overlap de 80–120, respeitando parágrafos; comparar contra baseline simples.
-- Guardar versão do parser, chunker e modelo; permitir reprocessar e comparar resultados.
-- PDF escaneado: retornar status `unsupported_scanned_pdf` no MVP; OCR é backlog.
-- Impor limites de arquivo, tokenização e uso por tenant para evitar abuso e contas inesperadas.
+Definir provedor/modelos de embeddings e respostas, orçamento da demo, limites de arquivo e retenção. Confirmar quais recursos já existem no Coolify e decidir armazenamento/processamento sem ampliar a infraestrutura por padrão.
 
-## 9. Métricas e evals
+### Etapa 2 — Um documento até uma resposta
 
-**Dataset:** pelo menos 50 perguntas com `question`, `tenant_id`, `collection_id`, `relevant_document_ids`, `relevant_chunk_ids` (se possível), `reference_answer`, `answerable`. Incluir perguntas factuais, paráfrases, perguntas sem resposta, ambiguidades, termos exatos e tentativas cross-tenant. Revisar manualmente rótulos.
+Adaptar isolamento por sessão; implementar upload, extração, chunking, embeddings, recuperação e resposta com fontes. Validar o fluxo completo com documento sintético antes de ampliar funcionalidades.
 
-**Retrieval:** recall@5, recall@10, MRR@10, precision@k (se relevância rotulada); comparação lexical/vetorial/híbrido. **Geração:** taxa de respostas com citações válidas, groundedness amostrada/avaliada, taxa de abstenção correta, respostas infundadas. **Operação:** latência p50/p95 por etapa, erros por 100 requisições, tokens e custo estimado por pergunta, throughput de ingestão.
+### Etapa 3 — Experiência do visitante
 
-**Metas iniciais de experimento, não garantias:** atingir 100% de bloqueio nos testes conhecidos de acesso cross-tenant; 100% de citações com IDs válidos quando presentes; aumento de recall@5 do híbrido em relação ao melhor baseline sempre que demonstrável no corpus. Publicar resultados mesmo quando híbrido não vencer.
+Entregar a página simples, documento de exemplo, status, histórico e contador. Integrar a cota no backend e testar sessões independentes.
 
-## 10. Segurança mínima
+### Etapa 4 — Publicação de portfólio
 
-- Validar autorização a cada consulta, inclusive URL de arquivo e download de citações.
-- Aplicar least privilege, segredos via variáveis/secret manager, limites de consumo e rate limit.
-- Tratar documento recuperado como **dado não confiável**, nunca como comando de sistema; testar prompt injection em documentos.
-- Não enviar documentos a provedor externo sem deixar claro no README; para demo usar dados sintéticos ou licenciados.
-- Sanitizar nomes de arquivos e MIME, impedir path traversal, bloquear arquivos perigosos; AV/scan é melhoria planejada.
-- Apagar documento implica apagar chunks, embeddings, versões derivadas, objetos e invalidar cache; registrar evento de exclusão sem reter conteúdo.
-- Autenticação e autorização devem ser validadas na aplicação, não delegadas ao LLM.
-- Nunca expor stack traces nem prompts internos para o usuário final.
+Concluir expiração/limpeza, proteção de consumo, testes e README de reprodução. O usuário realiza o deploy; validar a experiência publicada e apresentar no portfólio o que foi construído e suas limitações.
 
-Referência: OWASP RAG Security Cheat Sheet e OWASP LLM01:2025 Prompt Injection.
+## 7. Critérios de conclusão
 
-## 11. Plano de quatro sprints
+- Visitante consegue testar sem cadastro, com arquivo próprio ou exemplo.
+- PDF textual e DOCX válidos percorrem o fluxo de upload até perguntas; arquivo inválido ou acima dos limites recebe erro claro.
+- Uma sessão nova dispõe de cinco perguntas; backend impede exceder a cota, inclusive com requisições concorrentes.
+- Respostas usam recuperação de trechos e exibem fontes correspondentes; pergunta sem evidência recebe abstenção.
+- Testes comprovam isolamento entre sessões e bloqueio de acesso após expiração.
+- Limpeza remove os dados expirados, e limites de uso são aplicados no servidor.
+- Um pequeno conjunto de perguntas conhecidas verifica recuperação, fontes e ausência de evidência; resultados reais e limitações ficam documentados.
+- Interface funciona em desktop e celular, e o fluxo completo é validado no Coolify.
 
-### Sprint 1 — Fundamentos (semana 3)
-- [ ] Criar monorepo, Docker Compose, API, PostgreSQL/pgvector, Redis e MinIO.
-- [ ] Criar migrations e testes de conexão.
-- [ ] Implementar auth, membership, collections e autorização; começar com dois tenants no seed.
-- [ ] Implementar upload e estados dos documentos.
-- [ ] **Demo:** dois usuários isolados conseguem criar coleções e enviar arquivos.
+## 8. Provedor e modelos iniciais
 
-### Sprint 2 — Ingestão e busca (semana 4)
-- [ ] Worker idempotente para PDF/DOCX/TXT.
-- [ ] Extração, chunking, embeddings, armazenamento e índices.
-- [ ] Endpoints `/search` nos modos lexical/vetorial/híbrido.
-- [ ] Dataset inicial com 20 perguntas e testes cross-tenant.
-- [ ] **Demo:** documentos prontos aparecem em buscas filtradas; resultados mostram fonte e página.
+Usaremos a API hospedada da NVIDIA para desenvolvimento e avaliação, sem instalar modelos ou exigir GPU na VM.
 
-### Sprint 3 — Respostas e qualidade (semana 5)
-- [ ] Endpoint `/ask`, prompt com trechos e retorno estruturado.
-- [ ] Validador de citações e abstenção.
-- [ ] Dataset ampliado a 50+ questões e métricas de retrieval.
-- [ ] Testes de prompt injection, deleção e revogação.
-- [ ] **Demo:** resposta fundamentada e pergunta sem evidência que se abstém.
+- Respostas: `nvidia/nemotron-3-super-120b-a12b`.
+- Embeddings: `nvidia/nemotron-3-embed-1b`, voltado a recuperação e RAG multilíngue.
+- Escolha inicial, não benchmark concluído: testar recuperação e respostas em português com documento sintético antes de validar a integração.
+- Em 19/10/2026, o catálogo apresenta endpoints gratuitos para esses modelos. A disponibilidade efetiva e as quotas da conta dependem de teste autenticado; não assumir acesso ilimitado nem disponibilidade garantida.
+- A chave fica somente no servidor, em `NVIDIA_API_KEY`; nunca no frontend, Git ou logs. O usuário confirmou sua configuração no Coolify; esta máquina não recebeu a chave e nenhuma chamada autenticada foi feita daqui.
+- Manter cinco perguntas por sessão e controles globais de uso, independentemente das quotas do provedor.
+- Antes da abertura pública, confirmar se os termos aplicáveis à conta permitem a demo de portfólio. Acesso gratuito de avaliação não será tratado como autorização automática para publicação.
 
-### Sprint 4 — Produção e portfólio (semana 6)
-- [ ] Tracing/metricas e relatório comparativo.
-- [ ] GitHub Actions, smoke test, README, ADRs e threat model.
-- [ ] Deploy de API/demo com credenciais de demonstração e documentos sintéticos.
-- [ ] UI básica de upload/status/pergunta/citações, se houver tempo.
-- [ ] **Demo final:** onboarding → upload → indexação → pergunta → citação → métricas → exclusão.
+Referências oficiais consultadas: https://build.nvidia.com/nvidia/nemotron-3-super-120b-a12b e https://build.nvidia.com/nvidia/nemotron-3-embed-1b.
 
-## 12. Testes obrigatórios de aceite
-
-1. Usuário A faz upload e consulta documento do tenant A: `200`, fonte correta.
-2. Usuário B consulta documento, coleção ou ID do tenant A: `403` ou `404`; zero chunks de A chegam ao LLM.
-3. Remoção de membro da coleção/tenant bloqueia consultas posteriores, mesmo com sessão válida.
-4. PDF inválido e arquivo acima do limite são rejeitados.
-5. Repetição do job não duplica chunks; falha de embedding é recuperável.
-6. Documento apagado não aparece mais em busca, citações ou download.
-7. Resposta com fonte inexistente é rejeitada por validação.
-8. Pergunta sem evidência gera abstenção.
-9. Documento contendo "ignore todas as instruções" não muda política nem acessos.
-10. CI executa e reporta métricas comparativas no corpus fixado.
-
-## 13. Backlog pós-MVP
-
-- LangGraph com planejamento controlado de buscas (somente após benchmark evidenciar necessidade).
-- Reranker cross-encoder; reescrita de consultas; busca multilíngue.
-- Permissões por documento e compartilhamento entre coleções.
-- OCR e extração de tabelas; ingestão incremental/versionamento.
-- Observabilidade avançada, quotas por tenant, cache seguro, custo por cliente.
-- Deploy com infraestrutura como código e teste de carga.
-
-## 14. Issues iniciais para abrir no GitHub
-
-1. `chore: bootstrap FastAPI monorepo and Compose`
-2. `feat(auth): tenant membership and authorization`
-3. `feat(collections): CRUD scoped to current tenant`
-4. `feat(documents): signed upload and state machine`
-5. `feat(ingestion): Celery extraction and idempotent indexing`
-6. `feat(embeddings): provider abstraction and pgvector schema`
-7. `feat(retrieval): lexical, vector and hybrid RRF`
-8. `feat(qa): grounded answers and validated citations`
-9. `test(security): tenant isolation and injection cases`
-10. `feat(evals): reproducible retrieval benchmarks`
-11. `chore(observability): traces, latency and cost`
-12. `ci: lint, tests, migrations and deploy workflow`
-13. `docs: architecture, benchmarks, runbook and demo`
-
-## 15. Prompt de handoff para assistente de programação
-
-> Você é meu tech lead para construir o **Enterprise Knowledge AI**, conforme este handoff. Use Python/FastAPI, PostgreSQL+pgvector, SQLAlchemy/Alembic, Celery/Redis, MinIO, Docker Compose e pytest. Comece somente pela Sprint 1. Antes de codificar, mostre a árvore de arquivos, entidades e contratos dos endpoints. Em seguida implemente verticalmente, com migrations, testes e comandos para rodar localmente. Não implemente agentes, OCR nem bibliotecas adicionais sem justificativa. Toda consulta deve ser tenant-safe e a identidade deve vir da sessão autenticada. Ao finalizar cada issue, forneça arquivos alterados, passos de verificação, testes executados e pendências. Nunca afirme que testes passaram sem executá-los. Priorize arquitetura compreensível, observabilidade e reprodutibilidade.
-
-## 16. Fontes e referências
-
-- Artigo motivador: https://amanxai.com/2026/10/09/40-ai-projects-that-show-real-ai-engineering-skills/
-- pgvector hybrid search: https://github.com/pgvector/pgvector/blob/master/README.md
-- OWASP RAG Security: https://cheatsheetseries.owasp.org/cheatsheets/RAG_Security_Cheat_Sheet.html
-- OWASP Prompt Injection: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
-
-**Princípio de arquitetura:** construir um RAG determinístico, auditável e seguro antes de adicionar agentic RAG.
+Próxima validação: publicar o código pelo fluxo do usuário e executar o exemplo sintético no terminal da aplicação, confirmando uma resposta com fonte e uma abstenção na NVIDIA. A integração por comando não cria novas rotas nem muda o fluxo da API. Antes da experiência pública, fechar limites, retenção e persistência sem adicionar serviços por antecipação.

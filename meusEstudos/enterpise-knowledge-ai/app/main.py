@@ -4,11 +4,14 @@ import secrets
 import zlib
 from datetime import timedelta
 from io import BytesIO
+from pathlib import Path
 from uuid import uuid4
 from xml.etree import ElementTree
 from zipfile import BadZipFile, ZipFile
 
 from fastapi import Depends, FastAPI, File, Header, HTTPException, Query, Request, UploadFile
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, field_validator
 from pypdf import PdfReader
 from sqlalchemy import select
@@ -28,7 +31,25 @@ from .security import (
 from .storage import storage
 
 app = FastAPI(title="Enterprise Knowledge AI", version="0.1.0")
+static_directory = Path(__file__).resolve().parent / "static"
+app.mount("/static", StaticFiles(directory=static_directory), name="static")
 dummy_password_hash = hash_password(secrets.token_urlsafe(32))
+
+
+@app.get("/", include_in_schema=False)
+def home():
+    return FileResponse(
+        static_directory / "index.html",
+        headers={
+            "Content-Security-Policy": (
+                "default-src 'self'; script-src 'self'; style-src 'self'; "
+                "object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
+            ),
+            "X-Content-Type-Options": "nosniff",
+            "Referrer-Policy": "same-origin",
+            "Cache-Control": "no-cache",
+        },
+    )
 
 
 class Login(BaseModel):
