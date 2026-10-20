@@ -1,3 +1,4 @@
+import logging
 import math
 from dataclasses import asdict, dataclass
 from io import BytesIO
@@ -9,6 +10,7 @@ from pypdf import PdfReader
 from .nvidia import NvidiaClient, ProviderError
 
 ABSTENTION = "Não encontrei informações suficientes no documento para responder."
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -73,12 +75,14 @@ class RagSession:
         self.questions_used += 1
         query = self.provider.embed([question], "query")[0]
         if len(query) != len(self.vectors[0]):
+            logger.warning("rag_failure stage=retrieval code=embedding_dimensions_changed")
             raise ProviderError("embedding_dimensions_changed")
         scores = [
             sum(left * right for left, right in zip(query, vector, strict=True))
             for vector in self.vectors
         ]
         if not all(math.isfinite(score) for score in scores):
+            logger.warning("rag_failure stage=retrieval code=nvidia_invalid_embeddings")
             raise ProviderError("nvidia_invalid_embeddings")
         indexes = sorted(range(len(scores)), key=lambda index: scores[index], reverse=True)[:4]
         sources = [asdict(self.chunks[index]) for index in indexes]
@@ -94,6 +98,7 @@ class RagSession:
             or not set(identifiers).issubset(allowed)
             or (identifiers and not answer.strip())
         ):
+            logger.warning("rag_failure stage=source_validation code=invalid_answer_sources")
             raise ProviderError("invalid_answer_sources")
         return {
             "answer": answer.strip() if identifiers else ABSTENTION,

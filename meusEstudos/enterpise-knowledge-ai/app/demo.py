@@ -136,6 +136,7 @@ def create_session(
     try:
         rag = RagSession(extract_chunks(data, mime), NvidiaClient())
     except ProviderError:
+        logging.getLogger(__name__).warning("demo_rag_failed operation=document")
         raise HTTPException(503, "demo_provider_unavailable") from None
     except Exception:
         raise HTTPException(400, "document_not_readable_or_too_long") from None
@@ -250,6 +251,7 @@ def answer_question(request: Request, question: str, db: Session):
         result["questions_remaining"] = 5 - claimed
         return result
     except ProviderError:
+        logging.getLogger(__name__).warning("demo_rag_failed operation=question")
         raise HTTPException(503, "demo_provider_unavailable") from None
     finally:
         db.execute(

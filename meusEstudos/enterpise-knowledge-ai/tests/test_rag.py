@@ -20,10 +20,11 @@ def provider(monkeypatch):
     return NvidiaClient()
 
 
-def test_nvidia_key_is_required_and_masked(monkeypatch):
+def test_nvidia_key_is_required_and_masked(monkeypatch, caplog):
     monkeypatch.setattr(settings(), "nvidia_api_key", SecretStr(""))
     with pytest.raises(ProviderError, match="nvidia_key_not_configured"):
         NvidiaClient()
+    assert "stage=configuration code=nvidia_key_not_configured" in caplog.text
     monkeypatch.setattr(settings(), "nvidia_api_key", SecretStr("test-only-key"))
     assert "test-only-key" not in repr(settings())
 
@@ -67,25 +68,47 @@ def test_invalid_embeddings_fail_safely(provider, monkeypatch, items):
 
 @pytest.mark.parametrize(
     ("status", "code"),
-    [(401, "nvidia_access_denied"), (429, "nvidia_rate_limited"), (500, "nvidia_request_failed")],
+    [
+        (401, "nvidia_access_denied"),
+        (403, "nvidia_access_denied"),
+        (422, "nvidia_request_failed"),
+        (429, "nvidia_rate_limited"),
+        (500, "nvidia_request_failed"),
+    ],
 )
-def test_http_errors_do_not_leak_body_or_key(provider, monkeypatch, status, code):
+@pytest.mark.parametrize(
+    "endpoint,stage", [("embeddings", "embeddings"), ("chat/completions", "generation")]
+)
+def test_http_errors_do_not_leak_body_or_key(
+    provider, monkeypatch, caplog, status, code, endpoint, stage
+):
     def fail(*_args, **_kwargs):
         raise HTTPError("https://example.test", status, "private-error", {}, BytesIO(b"secret"))
 
     monkeypatch.setattr("app.nvidia.urlopen", fail)
     with pytest.raises(ProviderError) as caught:
-        provider.embed(["private document"], "passage")
+        provider._request(endpoint, {"input": ["private document"]})
     assert str(caught.value) == code
+    assert f"stage={stage} code={code} http_status={status}" in caplog.text
+    assert all(
+        value not in caplog.text
+        for value in ("private document", "private-error", "secret", "test-only-key")
+    )
 
 
-def test_network_failure_is_sanitized(provider, monkeypatch):
+@pytest.mark.parametrize("timeout", [False, True])
+def test_network_failure_is_sanitized(provider, monkeypatch, caplog, timeout):
     def fail(*_args, **_kwargs):
+        if timeout:
+            raise URLError(TimeoutError("private-timeout-details"))
         raise URLError("private-network-details")
 
     monkeypatch.setattr("app.nvidia.urlopen", fail)
     with pytest.raises(ProviderError, match="^nvidia_unavailable$"):
         provider.embed(["texto"], "query")
+    assert f"reason={'timeout' if timeout else 'network_error'}" in caplog.text
+    assert f"error_type={'TimeoutError' if timeout else 'str'}" in caplog.text
+    assert "private-" not in caplog.text
 
 
 @pytest.mark.parametrize(
@@ -142,15 +165,29 @@ def test_chat_contract(provider, monkeypatch):
     assert json.loads(payload["messages"][1]["content"])["sources"] == sources
 
 
-@pytest.mark.parametrize("content, reason", [("not-json", "stop"), ("{}", "length")])
-def test_invalid_or_truncated_chat_fails(provider, monkeypatch, content, reason):
+@pytest.mark.parametrize(
+    "content, reason, diagnostic",
+    [
+        ("private-answer-not-json", "stop", "invalid_json"),
+        ("{}", "length", "completion_not_finished"),
+        ("[]", "stop", "not_object"),
+        ("{}", "private-finish-reason", "completion_not_finished"),
+        ("{}", ["private-finish-reason"], "completion_not_finished"),
+    ],
+)
+def test_invalid_or_truncated_chat_fails(
+    provider, monkeypatch, caplog, content, reason, diagnostic
+):
     monkeypatch.setattr(
         provider,
         "_request",
         lambda *_: {"choices": [{"finish_reason": reason, "message": {"content": content}}]},
     )
     with pytest.raises(ProviderError, match="nvidia_invalid_answer"):
-        provider.answer("Pergunta", [])
+        provider.answer("private-question", [{"text": "private-document"}])
+    assert f"stage=answer_validation code=nvidia_invalid_answer reason={diagnostic}" in caplog.text
+    assert f"finish_reason={reason if reason in ('stop', 'length') else 'unknown'}" in caplog.text
+    assert "private-" not in caplog.text
 
 
 def test_chunks_overlap_and_reject_empty_or_excessive_text():
@@ -232,7 +269,7 @@ def test_session_indexes_once_and_retrieves_only_four_sources():
     assert provider.calls == ["passage"] + ["query"] * 5
 
 
-def test_abstention_and_unknown_source_are_not_fabricated():
+def test_abstention_and_unknown_source_are_not_fabricated(caplog):
     provider = FakeProvider()
     session = RagSession([Chunk("chunk-1", "Prazo: 15 dias.", 1)], provider)
     provider.result = {"answer": "Resposta sem fonte", "source_ids": []}
@@ -240,6 +277,8 @@ def test_abstention_and_unknown_source_are_not_fabricated():
     provider.result = {"answer": "Resposta", "source_ids": ["invented"]}
     with pytest.raises(ProviderError, match="invalid_answer_sources"):
         session.ask("Qual o prazo?")
+    assert "stage=source_validation code=invalid_answer_sources" in caplog.text
+    assert "Resposta" not in caplog.text
     assert session.questions_used == 2
 
 

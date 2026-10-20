@@ -139,7 +139,7 @@ def test_shared_question_budget_does_not_consume_session_attempt(environment, mo
     assert client.get("/v1/demo/session").json()["questions_remaining"] == 4
 
 
-def test_provider_error_is_sanitized_and_counts_attempt(environment, monkeypatch):
+def test_provider_error_is_sanitized_and_counts_attempt(environment, monkeypatch, caplog):
     client, _factory, provider = environment
     client.post("/v1/demo/example")
 
@@ -150,6 +150,8 @@ def test_provider_error_is_sanitized_and_counts_attempt(environment, monkeypatch
     response = client.post("/v1/demo/questions", json={"question": "Prazo?"})
     assert response.status_code == 503
     assert "private-key" not in response.text
+    assert "demo_rag_failed operation=question" in caplog.text
+    assert "private-key-or-document-content" not in caplog.text
     info = client.get("/v1/demo/session").json()
     assert info["questions_remaining"] == 4 and info["busy"] is False
 

@@ -1,9 +1,12 @@
 import json
+import logging
 import math
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 from .config import settings
+
+logger = logging.getLogger(__name__)
 
 
 class ProviderError(Exception):
@@ -17,9 +20,11 @@ class NvidiaClient:
         self.chat_model = cfg.nvidia_chat_model
         self.embedding_model = cfg.nvidia_embedding_model
         if not self.api_key.strip():
+            logger.warning("nvidia_failure stage=configuration code=nvidia_key_not_configured")
             raise ProviderError("nvidia_key_not_configured")
 
     def _request(self, endpoint: str, payload: dict) -> dict:
+        stage = "embeddings" if endpoint == "embeddings" else "generation"
         request = Request(
             f"https://integrate.api.nvidia.com/v1/{endpoint}",
             data=json.dumps(payload, ensure_ascii=False).encode(),
@@ -33,12 +38,21 @@ class NvidiaClient:
         try:
             with urlopen(request, timeout=60) as response:
                 if response.status != 200:
+                    logger.warning(
+                        "nvidia_failure stage=%s code=nvidia_response_not_ready http_status=%s",
+                        stage,
+                        response.status,
+                    )
                     raise ProviderError("nvidia_response_not_ready")
                 body = response.read(2_000_001)
             if len(body) > 2_000_000:
+                logger.warning("nvidia_failure stage=%s code=nvidia_response_too_large", stage)
                 raise ProviderError("nvidia_response_too_large")
             result = json.loads(body)
             if not isinstance(result, dict):
+                logger.warning(
+                    "nvidia_failure stage=%s code=nvidia_invalid_response reason=not_object", stage
+                )
                 raise ProviderError("nvidia_invalid_response")
             return result
         except HTTPError as exc:
@@ -49,11 +63,24 @@ class NvidiaClient:
                 if exc.code in (401, 403)
                 else "nvidia_request_failed"
             )
+            logger.warning("nvidia_failure stage=%s code=%s http_status=%s", stage, code, exc.code)
             exc.close()
             raise ProviderError(code) from None
-        except (URLError, TimeoutError, OSError):
+        except (URLError, TimeoutError, OSError) as exc:
+            timeout = isinstance(exc, TimeoutError) or (
+                isinstance(exc, URLError) and isinstance(exc.reason, TimeoutError)
+            )
+            logger.warning(
+                "nvidia_failure stage=%s code=nvidia_unavailable reason=%s error_type=%s",
+                stage,
+                "timeout" if timeout else "network_error",
+                type(exc.reason if isinstance(exc, URLError) else exc).__name__,
+            )
             raise ProviderError("nvidia_unavailable") from None
         except (ValueError, UnicodeError):
+            logger.warning(
+                "nvidia_failure stage=%s code=nvidia_invalid_response reason=invalid_json", stage
+            )
             raise ProviderError("nvidia_invalid_response") from None
 
     def embed(self, texts: list[str], input_type: str) -> list[list[float]]:
@@ -88,6 +115,9 @@ class NvidiaClient:
                         raise ValueError
                     vectors.append([value / norm for value in vector])
             except (KeyError, TypeError, ValueError, OverflowError):
+                logger.warning(
+                    "nvidia_failure stage=embedding_validation code=nvidia_invalid_embeddings"
+                )
                 raise ProviderError("nvidia_invalid_embeddings") from None
         return vectors
 
@@ -122,13 +152,33 @@ class NvidiaClient:
                 ],
             },
         )
+        reason = "invalid_structure"
+        finish_reason = "unknown"
         try:
             choice = response["choices"][0]
-            if choice["finish_reason"] != "stop":
+            raw_reason = choice["finish_reason"]
+            if isinstance(raw_reason, str) and raw_reason in {
+                "stop",
+                "length",
+                "content_filter",
+                "tool_calls",
+                "function_call",
+            }:
+                finish_reason = raw_reason
+            if finish_reason != "stop":
+                reason = "completion_not_finished"
                 raise ValueError
+            reason = "invalid_json"
             result = json.loads(choice["message"]["content"])
+            reason = "not_object"
             if not isinstance(result, dict):
                 raise TypeError
             return result
         except (KeyError, IndexError, TypeError, ValueError):
+            logger.warning(
+                "nvidia_failure stage=answer_validation code=nvidia_invalid_answer "
+                "reason=%s finish_reason=%s",
+                reason,
+                finish_reason,
+            )
             raise ProviderError("nvidia_invalid_answer") from None

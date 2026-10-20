@@ -56,6 +56,20 @@ O comando mantém trechos e vetores apenas na memória do processo, diferente da
 
 As chamadas têm timeout e erros sanitizados de autenticação, indisponibilidade e rate limit. Sem chave, o comando falha antes de qualquer chamada. Testes locais usam respostas simuladas; disponibilidade da conta, latência, qualidade em português e termos para publicação precisam ser verificados no ambiente real.
 
+### Diagnóstico nos logs do Coolify
+
+Falhas geram avisos com `nvidia_failure` ou `rag_failure`, indicando `stage` e `code`. Rejeições HTTP incluem o status retornado pela NVIDIA; falhas de rede distinguem `timeout` de `network_error`. Respostas inválidas indicam JSON, estrutura ou término incompleto, com `finish_reason` limitado a valores conhecidos. Validação de fontes e incompatibilidade de embeddings também são identificadas. `demo_rag_failed operation=question` ou `operation=document` identifica a operação da interface que falhou.
+
+Exemplos ilustrativos, não diagnóstico já confirmado em produção:
+
+```text
+nvidia_failure stage=generation code=nvidia_rate_limited http_status=429
+nvidia_failure stage=answer_validation code=nvidia_invalid_answer reason=completion_not_finished finish_reason=length
+demo_rag_failed operation=question
+```
+
+Os logs não incluem chave, token de sessão, pergunta, texto do documento, resposta do modelo ou corpo de erro do provedor. A mensagem pública e as regras de tentativas permanecem iguais. Após publicar a atualização, reproduza uma única falha e confira os avisos imediatamente anteriores ao `503`; o log HTTP sozinho não identifica a causa.
+
 ## Fundação existente (Sprint 1 original)
 
 API FastAPI multi-tenant com PostgreSQL/pgvector, Redis/Celery preparado e suporte a MinIO privado. A fundação entrega autenticação, memberships, coleções e upload. Documentos dessa API continuam `pending`: não há integração com o motor RAG ou worker de ingestão. A demo anônima tem fluxo separado em `/v1/demo`, sem contas e coleções.
