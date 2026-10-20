@@ -2,80 +2,92 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="Uma demonstração de RAG: converse com um documento e confira as fontes de cada resposta.">
-  <meta name="theme-color" content="#f7f8f5">
+  <meta name="theme-color" content="#f6f8fa">
   <title>Knowledge AI — Converse com seu documento</title>
   <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/static/style.css">
-  <script src="/static/app.js" defer></script>
+  <script src="/static/theme.js?v=2"></script>
+  <link rel="stylesheet" href="/static/style.css?v=2">
+  <script src="/static/app.js?v=2" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#workspace">Ir para a área de perguntas</a>
   <header class="topbar">
-    <a class="brand" href="/" aria-label="Knowledge AI, início">
-      <svg class="brand-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M7 5h13l5 5v17H7V5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M20 5v6h5M11 16h10M11 21h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      <span>Knowledge<span class="brand-ai"> AI</span></span>
-    </a>
-    <span class="project-label">Um projeto de portfólio</span>
-    <a class="about-link" href="#how-it-works">Como funciona <span aria-hidden="true">↗</span></a>
+    <h1 class="brand-heading"><a class="brand" href="/" aria-label="Knowledge AI, início">Knowledge AI</a></h1>
+    <span class="project-label">Projeto de portfólio</span>
+    <nav aria-label="Navegação principal">
+      <a href="#how-it-works">Como funciona</a>
+      <a href="https://raffaelhfarias.github.io/" target="_blank" rel="noopener noreferrer">Portfólio <span aria-hidden="true">↗</span><span class="sr-only"> (nova aba)</span></a>
+      <a href="/docs">API docs</a>
+      <button id="theme-toggle" class="theme-toggle" type="button" hidden>
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 14.2A8.5 8.5 0 0 1 9.8 4 8.5 8.5 0 1 0 20 14.2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span id="theme-label">Escuro</span>
+      </button>
+    </nav>
   </header>
 
-  <div class="preview-banner"><span class="status-dot" aria-hidden="true"></span><p><strong>Demo de portfólio.</strong> O texto do documento e suas perguntas serão enviados à NVIDIA. Use apenas arquivos de teste, sem dados sensíveis.</p></div>
-
-  <div class="layout">
+  <main class="layout">
     <aside class="sidebar" aria-label="Documento e informações da sessão">
-      <div class="sidebar-heading"><h2>Seu documento</h2><span class="small-label">1 por sessão</span></div>
-      <p class="muted sidebar-intro">O ponto de partida para suas perguntas.</p>
-
-      <div id="dropzone" class="dropzone">
-        <svg class="upload-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 21V6m0 0-6 6m6-6 6 6M6 22v4h20v-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <p class="drop-title">Arraste seu documento</p><p class="muted file-hint">PDF ou DOCX · até 20 MB</p>
-        <button id="choose-file" class="button button-secondary" type="button">Selecionar arquivo</button>
-        <input id="file-input" type="file" accept=".pdf,.docx" hidden>
-      </div>
-
-      <section id="selected-file" class="selected-file" aria-label="Arquivo selecionado" hidden>
-        <div class="file-row"><svg class="file-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 3h8l4 4v14H6V3Zm8 0v5h4M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><div class="file-description"><strong id="file-name"></strong><span id="file-meta"></span></div><button id="remove-file" class="icon-button" type="button" aria-label="Remover documento"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button></div>
-        <p id="file-status" class="file-status"></p>
+      <section class="card" aria-labelledby="document-title">
+        <h2 id="document-title" class="card-heading">Documento <span class="small-label">1 por sessão</span></h2>
+        <div class="document-body">
+          <div id="dropzone" class="dropzone">
+            <strong>Arraste seu documento</strong>
+            <p class="muted file-hint">PDF ou DOCX · até 20 MB</p>
+            <button id="choose-file" class="button" type="button">Selecionar arquivo</button>
+            <input id="file-input" type="file" accept=".pdf,.docx" hidden>
+          </div>
+          <p id="document-progress" class="processing-status" role="status" hidden>Extraindo texto e preparando a busca semântica…</p>
+          <section id="selected-file" class="selected-file" aria-label="Arquivo selecionado" hidden>
+            <div class="file-row">
+              <svg class="file-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 3h8l4 4v14H6V3Zm8 0v5h4M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              <div class="file-description"><strong id="file-name"></strong><span id="file-meta"></span></div>
+              <button id="remove-file" class="icon-button" type="button" aria-label="Remover documento"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+            </div>
+            <p id="file-status" class="file-status"></p>
+          </section>
+          <p id="file-error" class="error-message" role="alert" hidden></p>
+          <p class="example-choice">Sem arquivo agora? <button id="use-example" class="text-button" type="button">Testar com um documento fictício <span aria-hidden="true">→</span></button></p>
+        </div>
       </section>
-      <p id="file-error" class="error-message" role="alert" hidden></p>
 
-      <div class="example-choice"><p>Não tem um arquivo agora?</p><button id="use-example" class="text-button" type="button">Testar com um documento fictício <span aria-hidden="true">→</span></button></div>
+      <p class="notice"><strong>Demo de portfólio.</strong> O texto do documento e suas perguntas serão enviados à NVIDIA. Use apenas arquivos de teste, sem dados sensíveis.</p>
 
-      <div class="session-note"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 4 6v5c0 5 8 10 8 10s8-5 8-10V6l-8-3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m8.5 11 2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><p>Use documentos de teste.<br><span class="muted">Não inclua dados pessoais ou informações confidenciais.</span></p></div>
-
-      <details id="how-it-works" class="how-it-works">
+      <details id="how-it-works" class="card how-it-works" open>
         <summary>O que acontece por trás?</summary>
-        <ol><li>O texto é extraído e dividido em trechos.</li><li>A busca semântica encontra as evidências para a pergunta.</li><li>A IA recebe os trechos e produz uma resposta com fontes.</li></ol>
-        <p>Sem cadastro: um documento e cinco tentativas por sessão. Texto e vetores ficam temporariamente no banco por 30 minutos; a limpeza roda a cada minuto. O arquivo original não é armazenado. Recarregar preserva a sessão, mas não o histórico da tela.</p>
-        <a href="/docs">Ver documentação da API <span aria-hidden="true">↗</span></a>
+        <ol><li>O texto é extraído e dividido em trechos.</li><li>A busca semântica encontra as evidências.</li><li>A IA responde com as fontes.</li></ol>
+        <p>A IA pode errar: confira os trechos citados. PDFs escaneados não são suportados. Recarregar preserva a sessão, mas não o histórico da tela.</p>
       </details>
-      <div class="sidebar-footer">FastAPI <span aria-hidden="true">/</span> RAG <span aria-hidden="true">/</span> NVIDIA</div>
     </aside>
 
-    <main id="workspace" class="workspace" tabindex="-1">
-      <div class="workspace-header"><span id="workspace-label">Área de perguntas</span><span class="question-quota"><span class="quota-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span id="quota-text">Até 5 perguntas por sessão</span></span></div>
-
-      <div id="empty-state" class="empty-state">
-        <div class="document-symbol" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M13 7h15l8 8v26H13V7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M28 7v9h8M19 23h11M19 29h11M19 35h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-        <h1>Seu documento.<br><span>As respostas estão nele.</span></h1>
-        <p>Faça perguntas, encontre o que importa<br class="desktop-break"> e confira de onde veio cada resposta.</p>
-        <div class="empty-instruction"><span class="instruction-line" aria-hidden="true"></span>Comece selecionando um arquivo ou explore o exemplo.</div>
+    <section id="workspace" class="card workspace" aria-labelledby="chat-title" tabindex="-1">
+      <h2 id="chat-title" class="card-heading">Conversa <span id="quota-text" class="small-label">0 de 5 tentativas</span></h2>
+      <div id="conversation" class="conversation" role="region" aria-label="Conversa com o documento" tabindex="0">
+        <div id="empty-state" class="empty-state">
+          <h3>Seu documento. As respostas estão nele.</h3>
+          <p>Selecione um arquivo ou explore o exemplo para começar.</p>
+        </div>
+        <section id="example-state" class="example-state" aria-labelledby="example-title" hidden>
+          <div id="conversation-intro" class="conversation-intro"><h3 id="example-title">Documento pronto.</h3><p>Escreva sua pergunta abaixo. A IA responde com os trechos encontrados.</p></div>
+          <div id="history" aria-label="Perguntas e respostas"></div>
+        </section>
+        <p id="question-status" class="processing-status" role="status" hidden>Buscando evidências e elaborando a resposta…</p>
       </div>
-
-      <section id="example-state" class="example-state" aria-labelledby="example-title" hidden>
-        <div class="example-heading"><div><h1 id="example-title">Pergunte ao seu documento.</h1><p>A IA responde usando os trechos encontrados. Confira as fontes: modelos podem errar.</p></div></div>
-        <div id="history" aria-label="Perguntas e respostas"></div>
-      </section>
-
       <div class="composer-area">
-        <div class="composer"><label for="question">Sua pergunta</label><textarea id="question" rows="2" maxlength="1000" placeholder="O que você quer descobrir no documento?" disabled aria-describedby="connection-note"></textarea><div class="composer-bottom"><span>Enter envia · Shift + Enter quebra a linha.</span><button id="send-question" class="send-button" type="button" disabled aria-label="Enviar pergunta"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 18V6m0 0-5 5m5-5 5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
+        <form id="question-form">
+          <label class="sr-only" for="question">Sua pergunta</label>
+          <textarea id="question" rows="1" maxlength="1000" placeholder="Selecione um documento para começar." disabled aria-describedby="connection-note question-error"></textarea>
+          <button id="send-question" class="button button-primary" type="submit" disabled>Perguntar</button>
+        </form>
+        <p class="keyboard-hint">Enter envia · Shift + Enter quebra a linha.</p>
+        <p id="question-error" class="error-message" role="alert" hidden></p>
         <p id="connection-note" class="connection-note">Selecione um documento para começar.</p>
       </div>
-      <footer class="workspace-footer"><span>Knowledge AI</span><span>Conhecimento com contexto. Respostas com fontes.</span></footer>
-    </main>
-  </div>
+    </section>
+  </main>
+  <footer class="page-footer">Sem cadastro. Texto e vetores ficam 30 minutos no banco; o arquivo original não é armazenado. A limpeza roda a cada minuto.</footer>
   <div id="announcement" class="sr-only" role="status" aria-live="polite"></div>
   <noscript><p class="noscript-message">Ative o JavaScript para selecionar arquivos e explorar o exemplo. A documentação da API continua disponível em /docs.</p></noscript>
 </body>

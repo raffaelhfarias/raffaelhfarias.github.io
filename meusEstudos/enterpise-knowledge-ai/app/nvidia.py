@@ -36,7 +36,9 @@ class NvidiaClient:
             method="POST",
         )
         try:
-            with urlopen(request, timeout=60) as response:
+            with urlopen(
+                request, timeout=120 if endpoint == "chat/completions" else 60
+            ) as response:
                 if response.status != 200:
                     logger.warning(
                         "nvidia_failure stage=%s code=nvidia_response_not_ready http_status=%s",

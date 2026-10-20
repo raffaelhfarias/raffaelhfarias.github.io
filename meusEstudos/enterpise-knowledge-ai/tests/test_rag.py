@@ -127,15 +127,20 @@ def test_network_failure_is_sanitized(provider, monkeypatch, caplog, timeout):
         (202, b"{}", "nvidia_response_not_ready"),
     ],
 )
-def test_transport_contract(provider, monkeypatch, status, body, expected):
+@pytest.mark.parametrize(
+    ("endpoint", "expected_timeout"), [("embeddings", 60), ("chat/completions", 120)]
+)
+def test_transport_contract(
+    provider, monkeypatch, status, body, expected, endpoint, expected_timeout
+):
     class Response(BytesIO):
         pass
 
     def respond(request, timeout):
-        assert request.full_url == "https://integrate.api.nvidia.com/v1/embeddings"
+        assert request.full_url == f"https://integrate.api.nvidia.com/v1/{endpoint}"
         assert request.get_header("Authorization") == "Bearer test-only-key"
         assert json.loads(request.data) == {"input": ["texto"]}
-        assert timeout == 60
+        assert timeout == expected_timeout
         response = Response(body)
         response.status = status
         return response
@@ -143,9 +148,9 @@ def test_transport_contract(provider, monkeypatch, status, body, expected):
     monkeypatch.setattr("app.nvidia.urlopen", respond)
     if expected:
         with pytest.raises(ProviderError, match=expected):
-            provider._request("embeddings", {"input": ["texto"]})
+            provider._request(endpoint, {"input": ["texto"]})
     else:
-        assert provider._request("embeddings", {"input": ["texto"]}) == {"data": []}
+        assert provider._request(endpoint, {"input": ["texto"]}) == {"data": []}
 
 
 def test_chat_contract(provider, monkeypatch):

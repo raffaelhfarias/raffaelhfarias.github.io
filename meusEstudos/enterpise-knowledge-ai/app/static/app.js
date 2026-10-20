@@ -7,8 +7,11 @@ const question = document.querySelector("#question");
 const send = document.querySelector("#send-question");
 const announcement = document.querySelector("#announcement");
 const history = document.querySelector("#history");
+const questionError = document.querySelector("#question-error");
+const conversation = document.querySelector("#conversation");
 let session = null;
 let busy = false;
+let operation = null;
 const messages = {
   demo_disabled: "A demo está desativada no servidor. A interface está disponível para visualização.",
   demo_hourly_limit: "A cota compartilhada desta hora foi atingida. Tente novamente mais tarde.",
@@ -44,13 +47,17 @@ async function api(path, options = {}) {
   return data;
 }
 
-function showError(error) {
-  fileError.textContent = error.message;
-  fileError.hidden = false;
+function showError(error, target = fileError) {
+  target.textContent = error.message;
+  target.hidden = false;
 }
 
 function render() {
   document.querySelector("#selected-file").hidden = !session;
+  dropzone.hidden = Boolean(session);
+  document.querySelector(".example-choice").hidden = Boolean(session);
+  document.querySelector("#document-progress").hidden = operation !== "document";
+  document.querySelector("#question-status").hidden = operation !== "question";
   document.querySelector("#empty-state").hidden = Boolean(session);
   document.querySelector("#example-state").hidden = !session;
   document.querySelector("#choose-file").disabled = busy || Boolean(session);
@@ -58,18 +65,16 @@ function render() {
   document.querySelector("#remove-file").disabled = busy;
   question.disabled = busy || !session || session.busy || session.questions_remaining <= 0;
   send.disabled = question.disabled || !question.value.trim();
-  document.querySelector("#quota-text").textContent = session
-    ? `${session.questions_remaining} de 5 perguntas restantes` : "Até 5 perguntas por sessão";
-  document.querySelectorAll(".quota-dots i").forEach((dot, index) => {
-    dot.classList.toggle("used", Boolean(session) && index >= session.questions_remaining);
-  });
-  document.querySelector("#workspace-label").textContent = busy ? "Processando…" : "Área de perguntas";
+  document.querySelector("#quota-text").textContent = `${session ? 5 - session.questions_remaining : 0} de 5 tentativas`;
   document.querySelector("#workspace").setAttribute("aria-busy", String(busy));
   if (session) {
     document.querySelector("#file-name").textContent = session.filename;
     document.querySelector("#file-meta").textContent = "Documento da sessão · temporário";
     document.querySelector("#file-status").textContent = "Texto processado. Sessão válida por 30 minutos a partir do envio.";
   }
+  question.placeholder = !session ? "Selecione um documento para começar."
+    : session.questions_remaining === 0 ? "Limite de cinco tentativas atingido."
+      : "Pergunte algo sobre o documento…";
   document.querySelector("#connection-note").textContent = busy || session?.busy
     ? "Aguarde. O processamento pode levar alguns minutos; não reenvie a solicitação."
     : session?.questions_remaining === 0
@@ -85,7 +90,9 @@ async function startDocument(file) {
     if (file.size > 20 * 1024 * 1024) return showError(new Error("O arquivo ultrapassa 20 MB."));
   }
   busy = true;
+  operation = "document";
   fileError.hidden = true;
+  questionError.hidden = true;
   announcement.textContent = "Extraindo o texto e preparando a busca semântica. Aguarde.";
   render();
   try {
@@ -95,11 +102,13 @@ async function startDocument(file) {
       })
       : await api("example", { method: "POST" });
     history.replaceChildren();
+    document.querySelector("#conversation-intro").hidden = false;
     announcement.textContent = "Documento pronto. Você pode fazer cinco perguntas.";
   } catch (error) {
     showError(error);
   } finally {
     busy = false;
+    operation = null;
     fileInput.value = "";
     render();
     if (session) question.focus();
@@ -109,15 +118,15 @@ async function startDocument(file) {
 function appendAnswer(text, result) {
   const article = document.createElement("article");
   article.className = "answer";
-  const heading = document.createElement("h2");
+  const heading = document.createElement("h3");
   heading.textContent = text;
   const answer = document.createElement("p");
   answer.textContent = result.answer;
   article.append(heading, answer);
-  result.sources.forEach((source) => {
+  result.sources.forEach((source, index) => {
     const details = document.createElement("details");
     const summary = document.createElement("summary");
-    summary.textContent = `${session.filename} · ${source.page ? `página ${source.page}` : source.id}`;
+    summary.textContent = `Fonte ${index + 1} · ${session.filename} · ${source.page ? `página ${source.page}` : source.id}`;
     const quote = document.createElement("blockquote");
     quote.textContent = source.text;
     details.append(summary, quote);
@@ -154,12 +163,16 @@ async function refreshSession() {
   }
 }
 
-send.addEventListener("click", async () => {
+document.querySelector("#question-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
   if (send.disabled) return;
   const text = question.value.trim();
   busy = true;
+  operation = "question";
   fileError.hidden = true;
+  questionError.hidden = true;
   render();
+  conversation.scrollTop = conversation.scrollHeight;
   announcement.textContent = "Buscando evidências e elaborando a resposta.";
   try {
     const result = await api("questions", {
@@ -167,25 +180,33 @@ send.addEventListener("click", async () => {
       body: JSON.stringify({ question: text }),
     });
     appendAnswer(text, result);
+    document.querySelector("#conversation-intro").hidden = true;
     session.questions_remaining = result.questions_remaining;
     question.value = "";
     announcement.textContent = `Resposta recebida. ${result.questions_remaining} perguntas restantes.`;
   } catch (error) {
-    showError(error);
+    showError(error, questionError);
     try { await refreshSession(); } catch { session = null; }
   } finally {
     busy = false;
+    operation = null;
     render();
+    conversation.scrollTop = conversation.scrollHeight;
     if (!question.disabled) question.focus();
   }
 });
 
 question.addEventListener("input", render);
 question.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); send.click(); }
+  if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
+    event.preventDefault();
+    document.querySelector("#question-form").requestSubmit();
+  }
 });
 document.querySelector("#choose-file").addEventListener("click", () => fileInput.click());
-fileInput.addEventListener("change", () => startDocument(fileInput.files[0]));
+fileInput.addEventListener("change", () => {
+  if (fileInput.files[0]) startDocument(fileInput.files[0]);
+});
 document.querySelector("#use-example").addEventListener("click", () => startDocument(null));
 document.querySelector("#remove-file").addEventListener("click", async () => {
   busy = true;
@@ -194,8 +215,10 @@ document.querySelector("#remove-file").addEventListener("click", async () => {
     await api("session", { method: "DELETE" });
     session = null;
     history.replaceChildren();
+    document.querySelector("#conversation-intro").hidden = false;
     question.value = "";
     fileError.hidden = true;
+    questionError.hidden = true;
     announcement.textContent = "Documento e trechos removidos do servidor.";
   } catch (error) { showError(error); }
   finally { busy = false; render(); }

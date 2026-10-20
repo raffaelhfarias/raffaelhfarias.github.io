@@ -14,6 +14,8 @@ Abra `http://127.0.0.1:8765`. Sem habilitação da demo, a página abre, mas o s
 
 O botão de exemplo processa um manual fictício pelo mesmo RAG real; não apresenta respostas pré-definidas. O visitante faz perguntas livres e recebe fontes expansíveis. Todo texto é renderizado como texto, nunca HTML do documento/modelo. O histórico fica apenas na página; recarregar preserva o documento e a cota pelo cookie, mas não restaura as respostas anteriores.
 
+A interface adapta o protótipo fornecido, com documento à esquerda e conversa à direita no desktop, empilhados no celular. O botão claro/escuro segue inicialmente o tema do sistema e salva apenas a preferência visual no `localStorage`; se esse armazenamento estiver bloqueado, a alternância continua funcionando na página. Os estados de processamento refletem chamadas em andamento, sem etapas ou respostas simuladas. O contador usa as tentativas informadas pelo servidor, inclusive em falhas da IA.
+
 ### Habilitar depois do próximo deploy
 
 1. Manter `NVIDIA_API_KEY` somente no runtime e confirmar os termos da conta para exposição pública.
@@ -56,7 +58,7 @@ Sem `--question`, o comando aceita perguntas interativamente; use `/sair` para e
 
 O comando mantém trechos e vetores apenas na memória do processo, diferente das sessões temporárias da interface. O limite é de cinco tentativas por execução, inclusive falhas do provedor, com até 80 trechos e perguntas de até 1000 caracteres. Reiniciar o comando reinicia a contagem; suas chamadas privadas não entram no orçamento das rotas públicas.
 
-As chamadas têm timeout e erros sanitizados de autenticação, indisponibilidade e rate limit. Sem chave, o comando falha antes de qualquer chamada. Testes locais usam respostas simuladas; disponibilidade da conta, latência, qualidade em português e termos para publicação precisam ser verificados no ambiente real.
+As chamadas têm timeout de socket de 120 segundos para geração e 60 segundos para embeddings, sem retentativas automáticas, e erros sanitizados de autenticação, indisponibilidade e rate limit. Sem chave, o comando falha antes de qualquer chamada. Testes locais usam respostas simuladas; disponibilidade da conta, latência, qualidade em português e termos para publicação precisam ser verificados no ambiente real.
 
 ### Diagnóstico nos logs do Coolify
 
