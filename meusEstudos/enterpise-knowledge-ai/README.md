@@ -1,156 +1,105 @@
-# Enterprise Knowledge AI — Demo RAG de portfólio
+# Knowledge AI — perguntas sobre documentos
 
-O objetivo atual é uma demo pública: enviar um PDF/DOCX e fazer cinco perguntas por sessão, com respostas fundamentadas e fontes. O escopo vigente está em [enterprise_knowledge_ai_handoff.md](enterprise_knowledge_ai_handoff.md). A interface está ligada ao motor RAG por sessões anônimas temporárias. Os endpoints autenticados da fundação anterior continuam separados; não estamos construindo uma plataforma B2B.
+Demo de portfólio que permite enviar um PDF ou DOCX e fazer até **cinco tentativas de pergunta**. O sistema recupera trechos do documento, gera uma resposta com fontes e se abstém quando o modelo não indica evidência suficiente.
 
-## Interface e demo
+**Objetivo:** demonstrar um fluxo RAG de ponta a ponta, com uma interface acessível a recrutadores e visitantes, sem cadastro. Não é uma plataforma empresarial pronta para comercialização.
 
-A rota `/` serve a página em português com HTML, CSS e JavaScript locais, sem framework, CDN ou processo de build separado. O mesmo Dockerfile já inclui os arquivos. Para visualizar sem banco, chave NVIDIA ou serviços externos:
+- **[Experimentar a demo](https://7cgxisdn5j0nlskxuxjewivm.coolify.cogni.qzz.io/)** · **[Documentação da API](https://7cgxisdn5j0nlskxuxjewivm.coolify.cogni.qzz.io/docs)**
+- **Entrada:** um documento textual e uma pergunta em português.
+- **Saída:** resposta com trechos consultáveis ou uma mensagem de abstenção.
+- **Stack:** Python, FastAPI, SQLAlchemy, PostgreSQL em produção, APIs NVIDIA e HTML/CSS/JavaScript sem framework de frontend.
+
+## Experimente em um minuto
+
+1. Abra a demo e escolha o exemplo fictício **Manual da equipe Aurora**, ou envie um PDF textual/DOCX sem dados sensíveis.
+2. Aguarde o processamento e faça uma pergunta sobre o conteúdo.
+3. Confira os trechos apresentados como fontes, não apenas a resposta.
+4. Teste uma pergunta cuja resposta não está no documento.
+
+A interface inclui histórico visual das perguntas, cópia de respostas e alternância claro/escuro. As perguntas são independentes: o histórico não é enviado como contexto de conversa ao modelo.
+
+### Exemplo reproduzível, sem depender do site
+
+O manual fictício informa que o prazo para solicitar reembolso é de **15 dias corridos após a despesa**, exige nota fiscal e identifica Marina como gestora responsável. Não informa salários.
+
+| Pergunta | Comportamento esperado |
+| --- | --- |
+| Qual é o prazo para solicitar reembolso? | Informar 15 dias corridos e citar o trecho correspondente. |
+| Qual é o salário da gestora? | Responder “Não encontrei informações suficientes no documento para responder.”, sem fontes. |
+
+Esses são critérios esperados para o exemplo incluído no [script de demonstração](scripts/rag_demo.py), não uma medição de acurácia do modelo.
+
+## Executar localmente
+
+Requisitos: Python 3.12 ou superior e `uv`. Para experimentar a interface completa, é necessária uma chave NVIDIA com acesso aos modelos configurados. Não é necessário ter GPU local, Redis ou MinIO para a demo.
+
+Na pasta deste projeto, em PowerShell:
 
 ```powershell
+uv sync --frozen
+Copy-Item .env.example .env
+```
+
+No `.env` local, configure `NVIDIA_API_KEY` e `DEMO_ENABLED=true`. Preserve `DATABASE_URL=sqlite:///./local.db` para o teste local. O `.env` é ignorado pelo Git: não publique sua chave.
+
+```powershell
+uv run alembic upgrade head
 uv run uvicorn app.main:app --host 127.0.0.1 --port 8765
 ```
 
-Abra `http://127.0.0.1:8765`. Sem habilitação da demo, a página abre, mas o servidor recusa envios. Com `DEMO_ENABLED=true`, selecionar/arrastar um PDF ou DOCX envia o arquivo ao backend; extensão, conteúdo, tamanho e páginas são validados no servidor. O limite padrão é 20 MB/200 páginas, mas documentos também precisam caber em até 80 trechos de texto. PDF escaneado não tem OCR.
+Abra `http://127.0.0.1:8765/`; a API fica em `/docs`. Sem habilitar a demo e configurar a chave, a página pode ser visualizada, mas o processamento RAG não estará disponível. O seed de usuários da API autenticada não é necessário para este fluxo.
 
-O botão de exemplo processa um manual fictício pelo mesmo RAG real; não apresenta respostas pré-definidas. O visitante faz perguntas livres e recebe fontes expansíveis. Todo texto é renderizado como texto, nunca HTML do documento/modelo. O histórico fica apenas na página; recarregar preserva o documento e a cota pelo cookie, mas não restaura as respostas anteriores.
+### Executar apenas o RAG pelo terminal
 
-A interface adapta o protótipo fornecido, com documento à esquerda e conversa à direita no desktop, empilhados no celular. O botão claro/escuro segue inicialmente o tema do sistema e salva apenas a preferência visual no `localStorage`; se esse armazenamento estiver bloqueado, a alternância continua funcionando na página. Os estados de processamento refletem chamadas em andamento, sem etapas ou respostas simuladas. O contador usa as tentativas informadas pelo servidor, inclusive em falhas da IA.
-
-### Habilitar depois do próximo deploy
-
-1. Manter `NVIDIA_API_KEY` somente no runtime e confirmar os termos da conta para exposição pública.
-2. No terminal da aplicação, executar `alembic upgrade head` (nova migration `0002_demo`).
-3. Configurar `DEMO_ENABLED=true` no runtime e reiniciar/reimplantar pelo Coolify.
-4. Abrir `/`, testar o documento fictício e perguntar pelo prazo de reembolso (15 dias) e pelo salário da gestora (abstenção). Depois testar um PDF textual e um DOCX próprios, sem dados sensíveis.
-
-Nenhum serviço novo é necessário. A demo usa o PostgreSQL existente, sem MinIO/Redis/worker. Trechos e vetores ficam em colunas JSON, com busca de cosseno em memória sobre até 80 trechos; índice vetorial/pgvector não é necessário nessa escala. O arquivo original é descartado após extração. Conteúdo extraído e perguntas são enviados à NVIDIA, cujas políticas de retenção são independentes das nossas.
-
-Sessões expiram em 30 minutos. A limpeza física roda a cada minuto enquanto a aplicação está ativa e também antes de novos uploads; após uma parada, roda novamente quando a aplicação volta. Remover o documento exclui imediatamente a sessão do banco. Isso não apaga backups/WAL do banco nem dados eventualmente retidos pelo provedor. Cookie opaco `HttpOnly`, `SameSite=Strict` e `Secure` em HTTPS; só o hash é armazenado no banco. Não há credencial da NVIDIA no navegador.
-
-Cinco tentativas por sessão, inclusive falha do provedor; chamadas concorrentes da mesma sessão são rejeitadas. Cotas globais persistidas no banco: `DEMO_UPLOADS_PER_HOUR=10` e `DEMO_QUESTIONS_PER_HOUR=50`, por hora UTC de calendário, compartilhadas por visitantes/processos e preservadas em reinícios. Upload inválido após reserva também consome a cota de envio. Limite global atingido não consome uma tentativa da sessão. Limites conservadores não garantem disponibilidade: alguém pode esgotar a cota, apagar cookies ou iniciar sessões novas. Não há identificação por pessoa, CAPTCHA ou proteção antiabuso completa. Recomenda-se manter limite de corpo/conexões no proxy; as cotas da NVIDIA continuam valendo separadamente. Não há retries automáticos.
-
-Rotas da demo: `POST /v1/demo/document?filename=arquivo.pdf` (corpo binário), `POST /v1/demo/example`, `GET /v1/demo/session`, `DELETE /v1/demo/session` e `POST /v1/demo/questions` (`{"question":"..."}`). Escritas exigem `X-Demo-Request: 1` e usam o cookie de sessão; não é permitido CORS. Nenhuma rota recebe ID de outro visitante. A habilitação é desligada por padrão para evitar consumo acidental antes da migration e da revisão dos termos.
-
-## Avaliar o motor RAG com NVIDIA
-
-O comando extrai PDF textual/DOCX/TXT, divide o texto em trechos, gera embeddings uma vez por execução e recupera até quatro trechos por pergunta usando similaridade de cosseno. A resposta inclui os trechos citados, com página para PDF; fontes inexistentes são rejeitadas. Isso valida a referência, não prova automaticamente que toda afirmação do modelo é verdadeira. Uma resposta sem fontes vira abstenção.
-
-Configure `NVIDIA_API_KEY` como segredo de runtime. Os modelos padrão são `nvidia/nemotron-3.5-super-vl-120b-a12b` para respostas e `nvidia/nemotron-3-embed-1b` para embeddings; podem ser alterados por `NVIDIA_CHAT_MODEL` e `NVIDIA_EMBEDDING_MODEL`. Não é necessário instalar modelos, GPU, Redis ou MinIO para esse comando.
-
-Se `NVIDIA_CHAT_MODEL` já estiver definida no Coolify, atualize seu valor para `nvidia/nemotron-3.5-super-vl-120b-a12b`: a variável prevalece sobre o padrão do código. A geração usa somente texto, com `chat_template_kwargs.enable_thinking=false`. A troca não exige migração nem recriação dos embeddings.
-
-Depois que o usuário publicar este código no Coolify, executar no terminal da aplicação:
-
-```sh
-cd /app
-python -m scripts.rag_demo --example --question "Qual é o prazo para solicitar reembolso?" --question "Qual é o salário da gestora?"
-```
-
-O exemplo é um manual fictício em português. A primeira pergunta deve citar o prazo de 15 dias; a segunda deve se abster porque o manual não informa salários. Esses são critérios de validação, não resultados já confirmados no serviço real.
-
-Para um documento local, com a chave configurada no `.env` ignorado pelo Git:
+Com a chave configurada, sem precisar de banco:
 
 ```powershell
+uv run python -m scripts.rag_demo --example --question "Qual é o prazo para solicitar reembolso?" --question "Qual é o salário da gestora?"
 uv run python -m scripts.rag_demo --file ./documento.pdf
 ```
 
-Sem `--question`, o comando aceita perguntas interativamente; use `/sair` para encerrar. É necessário ter o arquivo no ambiente onde o comando roda. O conteúdo extraído e as perguntas são enviados à NVIDIA: use documentos sintéticos, não dados sensíveis.
+Sem `--question`, o script abre uma sessão interativa; use `/sair` para encerrar. O CLI também aceita TXT e mantém os dados somente na memória do processo. São cinco tentativas por execução; os orçamentos da API pública não se aplicam ao CLI.
 
-O comando mantém trechos e vetores apenas na memória do processo, diferente das sessões temporárias da interface. O limite é de cinco tentativas por execução, inclusive falhas do provedor, com até 80 trechos e perguntas de até 1000 caracteres. Reiniciar o comando reinicia a contagem; suas chamadas privadas não entram no orçamento das rotas públicas.
-
-As chamadas têm timeout de socket de 120 segundos para geração e 60 segundos para embeddings, sem retentativas automáticas, e erros sanitizados de autenticação, indisponibilidade e rate limit. Sem chave, o comando falha antes de qualquer chamada. Testes locais usam respostas simuladas; disponibilidade da conta, latência, qualidade em português e termos para publicação precisam ser verificados no ambiente real.
-
-### Diagnóstico nos logs do Coolify
-
-Falhas geram avisos com `nvidia_failure` ou `rag_failure`, indicando `stage` e `code`. Rejeições HTTP incluem o status retornado pela NVIDIA; falhas de rede distinguem `timeout` de `network_error`. Respostas inválidas indicam JSON, estrutura ou término incompleto, com `finish_reason` limitado a valores conhecidos. Validação de fontes e incompatibilidade de embeddings também são identificadas. `demo_rag_failed operation=question` ou `operation=document` identifica a operação da interface que falhou.
-
-Exemplos ilustrativos, não diagnóstico já confirmado em produção:
+## Como funciona
 
 ```text
-nvidia_failure stage=generation code=nvidia_rate_limited http_status=429
-nvidia_failure stage=answer_validation code=nvidia_invalid_answer reason=completion_not_finished finish_reason=length
-demo_rag_failed operation=question
+PDF / DOCX ou exemplo fictício
+  → validação e extração de texto
+  → divisão em trechos com sobreposição
+  → embeddings NVIDIA
+  → trechos e vetores na sessão temporária
+
+Pergunta
+  → embedding NVIDIA
+  → busca dos quatro trechos mais similares
+  → geração NVIDIA com esses trechos
+  → validação da resposta e dos IDs das fontes
+  → resposta com fontes ou abstenção
 ```
 
-Os logs não incluem chave, token de sessão, pergunta, texto do documento, resposta do modelo ou corpo de erro do provedor. A mensagem pública e as regras de tentativas permanecem iguais. Após publicar a atualização, reproduza uma única falha e confira os avisos imediatamente anteriores ao `503`; o log HTTP sozinho não identifica a causa.
+- **Extração:** `pypdf` para PDFs e leitura do XML de DOCX. Não há OCR.
+- **Chunking:** janelas de até 1.000 caracteres, com avanço de 850; no PDF, a divisão respeita cada página.
+- **Recuperação:** produto escalar de vetores normalizados, equivalente à similaridade de cosseno, sobre até 80 trechos. Retorna os quatro melhores, sem reranker ou limiar de relevância calibrado.
+- **Geração:** recebe pergunta e trechos como contexto e deve retornar JSON com resposta e IDs das fontes. Não utiliza ferramentas externas nem agentes.
+- **Validação:** rejeita estrutura inválida e IDs fora dos trechos recuperados. Sem IDs de fontes, retorna a abstenção padrão.
 
-## Fundação existente (Sprint 1 original)
+**Validar um ID de fonte não comprova que o texto citado sustenta cada afirmação.** O usuário ainda precisa conferir as evidências.
 
-API FastAPI multi-tenant com PostgreSQL/pgvector, Redis/Celery preparado e suporte a MinIO privado. A fundação entrega autenticação, memberships, coleções e upload. Documentos dessa API continuam `pending`: não há integração com o motor RAG ou worker de ingestão. A demo anônima tem fluxo separado em `/v1/demo`, sem contas e coleções.
+### Decisões e trade-offs
 
-## Rodar com Docker (fluxo principal)
+| Escolha | Motivo e limite aceito |
+| --- | --- |
+| Frontend estático servido pelo FastAPI | Um único deploy para uma interface pequena. Não exige SPA ou serviço separado. |
+| Embeddings e geração hospedados na NVIDIA | Dispensa GPU própria; aceita dependência de rede, disponibilidade, cotas e latência do provedor. |
+| Busca exata em Python e vetores em JSON no banco | Suficiente para até 80 trechos por sessão. Não usa índice vetorial; reavaliar se o volume ou a concorrência crescerem. |
+| Chunking por caracteres | Implementação simples e inspecionável; pode cortar contexto semântico. Uma alternativa deve ser comparada em avaliação antes de substituir. |
+| Sessão anônima e temporária | Reduz atrito para quem visita o portfólio; não oferece contas, histórico permanente ou gestão de documentos. |
 
-Requer Docker com Compose v2 recente. O Compose usa credenciais conhecidas de demonstração local; não exponha este ambiente à internet. `.env` é opcional. Para definir senhas próprias, copie o exemplo antes de subir:
+A demo não utiliza pgvector para recuperar trechos, embora a fundação original do repositório tenha suporte à extensão.
 
-```powershell
-Copy-Item .env.example .env
-docker compose up --build
-```
+## Testes e avaliação: coisas diferentes
 
-Em outro terminal, o seed é executado explicitamente e é idempotente:
-
-```powershell
-docker compose run --rm migrate python scripts/seed_demo.py
-```
-
-A API fica em `http://localhost:8000`, com contratos interativos em `/docs`.
-
-O Compose sobrescreve dentro dos containers as URLs de Postgres, Redis e MinIO para usar os nomes dos serviços. O `.env.example` usa `localhost` para o fluxo sem Docker e não é usado como `env_file` obrigatório pelo Compose.
-
-Para o teste opt-in de integração de serviços, monte os testes e habilite explicitamente a variável:
-
-```powershell
-docker compose run --rm -e RUN_SERVICE_TESTS=1 -v "${PWD}/tests:/app/tests:ro" api uv run --frozen --group dev pytest tests/test_services.py
-```
-
-Esse comando instala o grupo dev no container via `uv`, usa os serviços do Compose e verifica PostgreSQL/pgvector, Redis e MinIO. Os testes de serviço não fazem parte do fluxo padrão.
-
-## Fluxo local sem Docker
-
-Requer Python 3.12+ e `uv`. O exemplo usa SQLite para desenvolvimento e testes de regras; o banco de referência é PostgreSQL no Compose. Migrações, seed e login funcionam sem os outros serviços. Para upload funcionar, é necessário um MinIO acessível em `S3_ENDPOINT`, com bucket privado `S3_BUCKET` já criado; o worker também requer Redis.
-
-```powershell
-Copy-Item .env.example .env
-uv sync
-uv run alembic upgrade head
-uv run python scripts/seed_demo.py
-uv run uvicorn app.main:app --reload
-```
-
-## Endpoints e isolamento
-
-`POST /v1/auth/login` recebe `{email,password}` e retorna somente Bearer: `access_token`, `token_type`, `expires_in`, `user_id` e `tenants` (`id`, `name`, `role`). O tenant selecionado vem de `X-Tenant-ID`, validado contra a membership do usuário; não vem do payload. Envie o token em `Authorization: Bearer <access_token>`.
-
-No Swagger (`/docs`), autorize com o token e preencha o campo obrigatório `X-Tenant-ID` em `POST /v1/collections` com um ID retornado no login. Sem esse header, a API retorna `422` de validação; enviar `tenant_id` no JSON não o substitui.
-
-Exemplo PowerShell 7 usando as senhas padrão locais (substitua a senha se alterou o `.env`):
-
-```powershell
-$login = Invoke-RestMethod http://localhost:8000/v1/auth/login -Method Post -ContentType 'application/json' -Body (@{email='owner.a@example.test';password='change-me-owner'} | ConvertTo-Json)
-$tenantId = $login.tenants[0].id
-$headers = @{ Authorization = "Bearer $($login.access_token)"; 'X-Tenant-ID' = $tenantId }
-Invoke-RestMethod http://localhost:8000/v1/collections -Method Get -Headers $headers
-$collection = Invoke-RestMethod http://localhost:8000/v1/collections -Method Post -Headers $headers -ContentType 'application/json' -Body '{"name":"Documentos de teste"}'
-```
-
-Com um arquivo sintético `documento.txt` no diretório atual, envie e consulte o status:
-
-```powershell
-$upload = Invoke-RestMethod "http://localhost:8000/v1/collections/$($collection.id)/documents" -Method Post -Headers $headers -Form @{file=Get-Item ./documento.txt}
-Invoke-RestMethod "http://localhost:8000/v1/documents/$($upload.document_id)" -Headers $headers
-```
-
-`POST /v1/auth/logout` revoga a sessão. A sessão é opaca, armazenada por hash e vinculada ao usuário; `X-Tenant-ID` apenas seleciona um tenant entre suas memberships. Cada operação revalida o acesso no banco. `POST /v1/collections` cria com esse seletor; `GET /v1/collections` lista todas as coleções autorizadas do usuário. IDs de outro tenant retornam `404` para não confirmar existência. Owner/editor criam e enviam; viewer apenas lê.
-
-`GET /v1/collections/{id}/documents?page=1&page_size=50` lista documentos (página até 1.000.000, tamanho de 1 a 100). `GET /v1/documents/{id}` retorna status, páginas e erro sanitizado. `/health/live` verifica o processo; `/health/ready` verifica acesso ao schema no banco, não a disponibilidade de Redis/MinIO.
-
-O seed cria três usuários e dois tenants: `owner.a@example.test` é owner de Demo Alpha, `owner.b@example.test` é owner de Demo Beta e `viewer.a@example.test` é viewer somente de Demo Alpha. As senhas vêm de `settings()` carregando `.env`; o script imprime apenas `id`, `email` e `role`, nunca senhas.
-
-O seed não altera senhas de usuários existentes. Alterar as variáveis de senha e executá-lo novamente não rotaciona essas credenciais.
-
-Uploads aceitos: PDF com assinatura e contagem de páginas, DOCX com estrutura XML validada e TXT UTF-8. Não se confia no Content-Type informado pelo cliente. O limite padrão é 20 MB/200 páginas de PDF; configure `MAX_UPLOAD_BYTES` e `MAX_PDF_PAGES` no `.env`. A detecção de PDF escaneado depende da extração, na Sprint 2. Se MinIO falhar, o registro permanece rastreável como `failed` com `storage_upload_failed`.
-
-## Verificações
+### Verificações automatizadas
 
 ```powershell
 uv run ruff check .
@@ -158,8 +107,94 @@ uv run ruff format --check .
 uv run pytest
 ```
 
-Se o pytest encontrar erro de permissão no diretório temporário padrão do Windows, execute `uv run pytest --basetemp=.pytest_cache/tmp`. Esse diretório é descartável. A suíte cobre isolamento, papéis, revogação, arquivos inválidos/limites, falha de storage, migrações de ida e volta e seed idempotente; três testes de serviços ficam ignorados sem `RUN_SERVICE_TESTS=1`.
+Se houver erro de permissão no temporário padrão do Windows, use `uv run pytest --basetemp=.pytest_cache/tmp`. Esse diretório é descartável.
 
-As verificações locais cobrem SQLite; Postgres/pgvector, Redis, Celery e MinIO exigem Docker/serviços disponíveis. Não há alegação de validação Postgres sem executar o Compose.
+A suíte cobre extração e limites, recuperação, validação de fontes, abstenção, erros do provedor, timeouts, isolamento e expiração das sessões, tentativas concorrentes, orçamentos compartilhados, frontend e migrações em SQLite. Também há testes da fundação autenticada.
 
-Cadastro público, busca, exclusão e ingestão dos uploads da API autenticada não foram implementados; os usuários dessa API vêm do seed. RLS e ACL por coleção não foram adicionados. Para essa fundação ainda são necessários proteção contra brute force/rate limiting e revisão dos segredos de demonstração. Diferentemente do upload autenticado, as rotas anônimas `/v1/demo` enviam texto e perguntas à NVIDIA quando habilitadas. Use TLS e limites de corpo/conexões no proxy.
+Os testes do RAG usam **respostas simuladas do provedor**: verificam o comportamento do código, não a qualidade real do modelo. Três testes de integração com serviços externos são opcionais, habilitados por `RUN_SERVICE_TESTS=1`, e exigem os serviços da fundação disponíveis.
+
+### Evidência manual e lacunas
+
+Em testes manuais relatados pelo autor com um DOCX de política de reembolso, a aplicação respondeu **15 dias corridos** à pergunta sobre cancelamento e se absteve sobre um suposto cupom `PROMO100`. Outra consulta retornou **30 dias corridos** para o caso Enterprise com mais de 50 licenças, com referência ao trecho.
+
+Essas observações demonstram exemplos de uso, **não comprovam qualidade geral**. Ainda não há conjunto rotulado de avaliação, comparação com busca por palavras-chave, métricas de recuperação/fidelidade ou medições consolidadas de latência e custo.
+
+O próximo passo de qualidade é montar um conjunto pequeno de perguntas com respostas e evidências esperadas, incluindo casos respondíveis, fora do documento e de abstenção. Só então comparar recuperação, suporte das citações e respostas com uma baseline simples. Isso é trabalho pendente, não uma funcionalidade já entregue.
+
+## Falhas reais e diagnóstico
+
+Durante os testes de deploy, a geração retornou `404` porque a variável do modelo estava sem o prefixo `nvidia/`. Conferir a configuração efetivamente carregada permitiu corrigir o identificador no Coolify.
+
+Também houve timeout de geração: uma pergunta falhou e uma posterior funcionou. O timeout de socket foi separado por etapa: **120 segundos para geração e 60 para embeddings**, sem retentativas automáticas. Essa mudança não garante disponibilidade nem representa um tempo máximo total da requisição.
+
+Para distinguir falha de processamento, recuperação e geração, os logs registram etapa, código sanitizado e status HTTP quando disponível. Exemplo de timeout observado:
+
+```text
+nvidia_failure stage=generation code=nvidia_unavailable reason=timeout error_type=TimeoutError
+demo_rag_failed operation=question
+```
+
+Os logs de diagnóstico não registram chave, token de sessão, perguntas, conteúdo do documento, respostas ou corpo de erro do provedor. Ainda não há monitoramento consolidado de tokens, custos ou latências. Um `503` sozinho não identifica a causa; consulte os avisos imediatamente anteriores.
+
+## Limites e privacidade
+
+- **Um documento por sessão**, até 20 MB, 200 páginas de PDF e 80 trechos extraídos; perguntas de até 1.000 caracteres. Os limites de bytes/páginas são configuráveis.
+- **Cinco tentativas por sessão**, incluindo falhas do provedor. Não são cinco respostas bem-sucedidas garantidas.
+- Orçamentos públicos padrão de **10 uploads e 50 perguntas por hora UTC**, compartilhados entre visitantes e persistidos no banco. Não são cotas individuais; uma reserva de upload pode ser consumida mesmo se o arquivo for inválido.
+- Sessões expiram em **30 minutos**. A limpeza roda periodicamente enquanto a aplicação está ativa e antes de novos uploads. O cookie é HttpOnly, SameSite Strict e seguro em HTTPS; o banco guarda o hash do token.
+- O arquivo original é descartado após a extração; os trechos e vetores ficam temporariamente no banco. Excluir a sessão remove seus registros ativos, não backups ou dados eventualmente retidos pelo provedor.
+- **Texto extraído e perguntas são enviados à NVIDIA.** Use documentos sintéticos ou públicos, nunca dados pessoais, confidenciais ou de clientes.
+- PDFs escaneados não são suportados; tabelas e layouts complexos podem perder estrutura. DOCX não oferece numeração confiável de páginas.
+- O modelo pode errar mesmo com fontes. Instruções no documento são tratadas como conteúdo não confiável, mas não há promessa de imunidade a prompt injection.
+- Não há streaming, fallback de modelo, proteção completa contra abuso ou garantia de serviço. Cotas e condições de uso da NVIDIA dependem da conta e do provedor.
+
+## Configuração e deploy no Coolify
+
+O projeto é uma subpasta do repositório do portfólio. O deploy usa o [Dockerfile](Dockerfile) existente e um recurso PostgreSQL na rede privada do Coolify.
+
+| Configuração | Valor |
+| --- | --- |
+| Base directory | `/meusEstudos/enterpise-knowledge-ai` |
+| Dockerfile location | `/Dockerfile` |
+| Porta interna | `8000` |
+| `DATABASE_URL` | URL privada do PostgreSQL, com driver `postgresql+psycopg` |
+| `DEMO_ENABLED` | `true` |
+| `NVIDIA_API_KEY` | Segredo de runtime, nunca no frontend ou Git |
+| `NVIDIA_CHAT_MODEL` | `nvidia/nemotron-3.5-super-vl-120b-a12b` |
+| `NVIDIA_EMBEDDING_MODEL` | `nvidia/nemotron-3-embed-1b` |
+
+As variáveis prevalecem sobre os padrões do código. Os modelos são usados somente para texto. Ao trocar o modelo de embeddings, descarte sessões antigas e reprocesse os documentos; trocar somente o modelo de geração não exige refazer embeddings.
+
+Na instalação ou quando houver novas migrações, execute **no terminal da aplicação**, não no PostgreSQL:
+
+```sh
+cd /app
+alembic upgrade head
+```
+
+`/health/live` verifica o processo; `/health/ready` verifica acesso ao schema do banco, não a disponibilidade da NVIDIA. Use HTTPS e configure limites de corpo e conexões no proxy. A demo não precisa de Redis, Celery, MinIO nem seed de usuários para funcionar.
+
+## Onde olhar no código
+
+| Arquivo | Responsabilidade |
+| --- | --- |
+| [app/rag.py](app/rag.py) | Extração, chunking, recuperação e validação de fontes |
+| [app/nvidia.py](app/nvidia.py) | Chamadas de embeddings/geração e erros sanitizados |
+| [app/demo.py](app/demo.py) | API anônima, sessões, tentativas e orçamentos |
+| [app/static/index.html](app/static/index.html) | Interface; CSS e JavaScript ficam na mesma pasta |
+| [app/config.py](app/config.py) e [.env.example](.env.example) | Configuração e variáveis disponíveis |
+| [migrations/versions/0002_demo.py](migrations/versions/0002_demo.py) | Schema das sessões e orçamentos da demo |
+| [tests/test_rag.py](tests/test_rag.py) e [tests/test_demo.py](tests/test_demo.py) | Comportamento do RAG e da API pública |
+| [tests/test_frontend.py](tests/test_frontend.py) e [tests/test_migrations.py](tests/test_migrations.py) | Interface e evolução do schema |
+
+### Fundação anterior: fora do caminho da demo
+
+A Sprint 1 original deixou autenticação, tenants, papéis, coleções e uploads privados em [app/main.py](app/main.py), com suporte a MinIO e configuração Redis/Celery. Essa API é separada das rotas `/v1/demo`: seus uploads permanecem `pending`, sem ingestão integrada ao RAG. Não é um sistema empresarial concluído.
+
+O [compose.yaml](compose.yaml) atende essa fundação para desenvolvimento, não é requisito para a demo. Contém credenciais locais conhecidas e não deve ser exposto à internet. O [seed](scripts/seed_demo.py) cria usuários de teste, mas não rotaciona senhas existentes. O [handoff original](enterprise_knowledge_ai_handoff.md) registra o planejamento inicial; não deve ser interpretado como lista de funcionalidades implementadas.
+
+## Autoria e foco do portfólio
+
+Projeto conduzido por Raffael Farias, com assistência de IA no desenvolvimento. As decisões de reduzir o escopo a uma demo, utilizar a infraestrutura existente, configurar o ambiente, realizar o deploy e testar documentos foram conduzidas pelo autor. O objetivo é discutir o fluxo, suas decisões e falhas com transparência, não apresentar código assistido por IA como trabalho inteiramente manual.
+
+Este README segue as diretrizes aplicáveis do [AI Engineering Field Guide — Portfolio](https://github.com/alexeygrigorev/ai-engineering-field-guide/tree/main/portfolio), especialmente [apresentação do projeto](https://github.com/alexeygrigorev/ai-engineering-field-guide/blob/main/portfolio/05-present-the-project.md): problema, demonstração, arquitetura, decisões, evidências, limitações e autoria. Avaliações quantitativas ficam explicitamente como próximas etapas.
