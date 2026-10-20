@@ -33,7 +33,9 @@ Rotas da demo: `POST /v1/demo/document?filename=arquivo.pdf` (corpo binário), `
 
 O comando extrai PDF textual/DOCX/TXT, divide o texto em trechos, gera embeddings uma vez por execução e recupera até quatro trechos por pergunta usando similaridade de cosseno. A resposta inclui os trechos citados, com página para PDF; fontes inexistentes são rejeitadas. Isso valida a referência, não prova automaticamente que toda afirmação do modelo é verdadeira. Uma resposta sem fontes vira abstenção.
 
-Configure `NVIDIA_API_KEY` como segredo de runtime. Os modelos padrão são `nvidia/nemotron-3-super-120b-a12b` para respostas e `nvidia/nemotron-3-embed-1b` para embeddings; podem ser alterados por `NVIDIA_CHAT_MODEL` e `NVIDIA_EMBEDDING_MODEL`. Não é necessário instalar modelos, GPU, Redis ou MinIO para esse comando.
+Configure `NVIDIA_API_KEY` como segredo de runtime. Os modelos padrão são `nvidia/nemotron-3.5-super-vl-120b-a12b` para respostas e `nvidia/nemotron-3-embed-1b` para embeddings; podem ser alterados por `NVIDIA_CHAT_MODEL` e `NVIDIA_EMBEDDING_MODEL`. Não é necessário instalar modelos, GPU, Redis ou MinIO para esse comando.
+
+Se `NVIDIA_CHAT_MODEL` já estiver definida no Coolify, atualize seu valor para `nvidia/nemotron-3.5-super-vl-120b-a12b`: a variável prevalece sobre o padrão do código. A geração usa somente texto, com `chat_template_kwargs.enable_thinking=false`. A troca não exige migração nem recriação dos embeddings.
 
 Depois que o usuário publicar este código no Coolify, executar no terminal da aplicação:
 

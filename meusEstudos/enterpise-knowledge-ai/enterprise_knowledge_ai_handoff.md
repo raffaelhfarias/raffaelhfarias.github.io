@@ -130,14 +130,14 @@ Concluir expiração/limpeza, proteção de consumo, testes e README de reprodu�
 
 Usaremos a API hospedada da NVIDIA para desenvolvimento e avaliação, sem instalar modelos ou exigir GPU na VM.
 
-- Respostas: `nvidia/nemotron-3-super-120b-a12b`.
+- Respostas: `nvidia/nemotron-3.5-super-vl-120b-a12b`, somente texto e com `chat_template_kwargs.enable_thinking=false`.
 - Embeddings: `nvidia/nemotron-3-embed-1b`, voltado a recuperação e RAG multilíngue.
 - Escolha inicial, não benchmark concluído: testar recuperação e respostas em português com documento sintético antes de validar a integração.
-- Em 19/10/2026, o catálogo apresenta endpoints gratuitos para esses modelos. A disponibilidade efetiva e as quotas da conta dependem de teste autenticado; não assumir acesso ilimitado nem disponibilidade garantida.
+- Em 20/10/2026, a página oficial do modelo de respostas selecionado apresenta endpoint gratuito disponível. Ele substitui o modelo anterior após erro HTTP 404 na geração. A disponibilidade efetiva e as quotas da conta dependem de teste autenticado; não assumir acesso ilimitado nem disponibilidade garantida.
 - A chave fica somente no servidor, em `NVIDIA_API_KEY`; nunca no frontend, Git ou logs. O usuário confirmou sua configuração no Coolify; esta máquina não recebeu a chave e nenhuma chamada autenticada foi feita daqui.
 - Manter cinco perguntas por sessão e controles globais de uso, independentemente das quotas do provedor.
 - Antes da abertura pública, confirmar se os termos aplicáveis à conta permitem a demo de portfólio. Acesso gratuito de avaliação não será tratado como autorização automática para publicação.
 
-Referências oficiais consultadas: https://build.nvidia.com/nvidia/nemotron-3-super-120b-a12b e https://build.nvidia.com/nvidia/nemotron-3-embed-1b.
+Referências oficiais consultadas: https://build.nvidia.com/nvidia/nemotron-3.5-super-vl-120b-a12b e https://build.nvidia.com/nvidia/nemotron-3-embed-1b.
 
 Próxima validação: publicar o código pelo fluxo do usuário e executar o exemplo sintético no terminal da aplicação, confirmando uma resposta com fonte e uma abstenção na NVIDIA. A integração por comando não cria novas rotas nem muda o fluxo da API. Antes da experiência pública, fechar limites, retenção e persistência sem adicionar serviços por antecipação.

@@ -8,7 +8,7 @@ from pydantic import SecretStr
 from pypdf import PdfWriter
 from pypdf.generic import DecodedStreamObject, DictionaryObject, NameObject
 
-from app.config import settings
+from app.config import Settings, settings
 from app.nvidia import NvidiaClient, ProviderError
 from app.rag import ABSTENTION, Chunk, RagSession, extract_chunks
 from scripts import rag_demo
@@ -18,6 +18,13 @@ from scripts import rag_demo
 def provider(monkeypatch):
     monkeypatch.setattr(settings(), "nvidia_api_key", SecretStr("test-only-key"))
     return NvidiaClient()
+
+
+def test_default_chat_model():
+    assert (
+        Settings.model_fields["nvidia_chat_model"].default
+        == "nvidia/nemotron-3.5-super-vl-120b-a12b"
+    )
 
 
 def test_nvidia_key_is_required_and_masked(monkeypatch, caplog):
@@ -160,7 +167,9 @@ def test_chat_contract(provider, monkeypatch):
     assert provider.answer("Qual o prazo?", sources)["source_ids"] == ["chunk-1"]
     endpoint, payload = calls[0]
     assert endpoint == "chat/completions"
-    assert payload["reasoning_effort"] == "none"
+    assert payload["model"] == provider.chat_model
+    assert payload["chat_template_kwargs"] == {"enable_thinking": False}
+    assert "reasoning_effort" not in payload
     assert payload["stream"] is False
     assert json.loads(payload["messages"][1]["content"])["sources"] == sources
 

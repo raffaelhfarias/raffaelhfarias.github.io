@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     demo_second_owner_password: str = "change-me-owner-b"
     demo_viewer_password: str = "change-me-viewer"
     nvidia_api_key: SecretStr = SecretStr("")
-    nvidia_chat_model: str = "nvidia/nemotron-3-super-120b-a12b"
+    nvidia_chat_model: str = "nvidia/nemotron-3.5-super-vl-120b-a12b"
     nvidia_embedding_model: str = "nvidia/nemotron-3-embed-1b"
     demo_enabled: bool = False
     demo_uploads_per_hour: int = Field(default=10, gt=0, le=100)

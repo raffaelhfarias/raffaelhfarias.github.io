@@ -128,7 +128,7 @@ class NvidiaClient:
                 "model": self.chat_model,
                 "temperature": 0,
                 "max_tokens": 1024,
-                "reasoning_effort": "none",
+                "chat_template_kwargs": {"enable_thinking": False},
                 "stream": False,
                 "messages": [
                     {
