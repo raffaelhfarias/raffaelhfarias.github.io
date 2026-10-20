@@ -656,10 +656,31 @@ a {
 }
 
 .project-spotlight {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: 28px;
   grid-column: 1 / -1;
   min-height: 0;
   padding: 28px;
   border-color: var(--link);
+}
+
+.project-spotlight-content {
+  min-width: 0;
+}
+
+.project-spotlight-preview {
+  display: block;
+  min-width: 0;
+}
+
+.project-spotlight-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 }
 
 .project-spotlight .featured-project-title h2,
@@ -1252,6 +1273,12 @@ a {
   color: var(--muted);
   font-size: 13px;
   font-weight: 600;
+}
+
+@media (max-width: 1100px) {
+  .project-spotlight {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 820px) {
