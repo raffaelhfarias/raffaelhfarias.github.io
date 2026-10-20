@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#f6f8fa" />
     <meta
       name="description"
-      content="Projetos de Raffael Henrique no GitHub."
+      content="Projetos de dados e inteligência artificial de Raffael Henrique."
     />
     <title>Projetos — Raffael Henrique</title>
     <link rel="stylesheet" href="css/styles.css" />
@@ -96,17 +96,28 @@
 
         <div class="content-stack">
           <section class="projects-page" aria-labelledby="projects-title">
-            <h1 class="sr-only" id="projects-title">Projetos no GitHub</h1>
+            <h1 class="sr-only" id="projects-title">Projetos de Raffael Henrique</h1>
+
+            <article class="featured-project-card project-spotlight">
+              <div class="featured-project-title">
+                <h2><a href="https://7cgxisdn5j0nlskxuxjewivm.coolify.cogni.qzz.io/" target="_blank" rel="noreferrer">Knowledge AI — RAG</a></h2>
+              </div>
+              <p class="project-spotlight-summary">Seu documento, suas perguntas, respostas com fontes.</p>
+              <p>Envie um PDF ou DOCX e faça até cinco tentativas de pergunta. Confira os trechos usados na resposta e experimente perguntas que não estão no documento.</p>
+              <p class="project-spotlight-note">Sem cadastro · Documento de exemplo disponível</p>
+              <div class="project-spotlight-actions">
+                <a class="project-demo-link" href="https://7cgxisdn5j0nlskxuxjewivm.coolify.cogni.qzz.io/" target="_blank" rel="noreferrer">Experimentar agora</a>
+                <a href="https://github.com/raffaelhfarias/raffaelhfarias.github.io/tree/main/meusEstudos/enterpise-knowledge-ai#readme" target="_blank" rel="noreferrer">Como foi construído</a>
+              </div>
+            </article>
+
+            <h2 class="project-catalog-title">Outros projetos</h2>
 
             <div class="projects-toolbar" aria-label="Filtros de projetos">
               <label class="search-field">
                 <span class="sr-only">Buscar projeto</span>
-                <input id="project-search" type="search" placeholder="Buscar um repositório..." />
+                <input id="project-search" type="search" placeholder="Buscar projeto..." />
               </label>
-              <select id="project-type" aria-label="Filtrar por tipo">
-                <option value="all">Tipo</option>
-                <option value="public">Públicos</option>
-              </select>
               <select id="project-language" aria-label="Filtrar por linguagem">
                 <option value="all">Linguagem</option>
               </select>
@@ -117,7 +128,8 @@
               </select>
             </div>
 
-            <div id="project-list" class="project-list" aria-live="polite"></div>
+            <div id="project-list" class="featured-project-grid project-catalog" aria-live="polite"></div>
+            <noscript><p>Ative o JavaScript para visualizar os demais projetos ou <a href="https://github.com/raffaelhfarias?tab=repositories">consulte os repositórios no GitHub</a>.</p></noscript>
             <p id="project-status" class="project-status" role="status"></p>
           </section>
         </div>

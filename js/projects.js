@@ -106,24 +106,22 @@ const formatDate = (date) =>
 
 const createProjectCard = (project) => {
   const article = document.createElement("article");
-  article.className = "project-card";
+  article.className = "featured-project-card";
   article.innerHTML = `
-    <div class="project-card-content">
-      <div class="project-title-row">
-        <a href="${project.url}" target="_blank" rel="noreferrer">
-          <h2>${project.name}</h2>
-        </a>
-        <span class="visibility-badge">Público</span>
-      </div>
-      <p>${project.description}</p>
-      <div class="project-meta">
-        <span>${project.language}</span>
-        <span>${project.stars} estrelas</span>
-        <span>${project.forks} forks</span>
-        <time datetime="${project.updatedAt}">Atualizado em ${formatDate(project.updatedAt)}</time>
-      </div>
+    <div class="featured-project-title">
+      <h3><a href="${project.url}" target="_blank" rel="noreferrer">${project.name}</a></h3>
+      <a class="project-external" href="${project.url}" target="_blank" rel="noreferrer" aria-label="Abrir ${project.name} no GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M14 4h6v6M20 4l-9 9" />
+          <path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5" />
+        </svg>
+      </a>
     </div>
-    <a class="project-action" href="${project.url}" target="_blank" rel="noreferrer">Ver no GitHub</a>
+    <p>${project.description}</p>
+    <div class="project-meta">
+      <span>${project.language}</span>
+      <time datetime="${project.updatedAt}">Atualizado em ${formatDate(project.updatedAt)}</time>
+    </div>
   `;
   return article;
 };
@@ -158,7 +156,9 @@ const renderProjects = () => {
     });
 
   projectList.replaceChildren(...filtered.map(createProjectCard));
-  projectStatus.textContent = `${filtered.length} projeto${filtered.length === 1 ? "" : "s"}`;
+  projectStatus.textContent = filtered.length
+    ? `${filtered.length} projeto${filtered.length === 1 ? "" : "s"}`
+    : "Nenhum projeto encontrado. Tente outro termo ou selecione todas as linguagens.";
 };
 
 populateLanguages();
