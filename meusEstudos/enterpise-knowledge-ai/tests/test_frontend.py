@@ -32,7 +32,7 @@ def test_interface_preserves_real_api_and_accessible_theme_controls():
         theme = client.get("/static/theme.js").text
     assert 'id="theme-toggle"' in html
     assert 'src="/static/theme.js?v=2"' in html
-    assert 'src="/static/app.js?v=2"' in html
+    assert 'src="/static/app.js?v=3"' in html
     assert 'href="/static/style.css?v=2"' in html
     assert 'id="question-form"' in html
     assert 'id="question-error"' in html

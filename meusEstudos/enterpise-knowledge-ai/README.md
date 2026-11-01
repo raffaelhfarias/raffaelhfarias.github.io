@@ -18,6 +18,8 @@ Demo de portfólio que permite enviar um PDF ou DOCX e fazer até **cinco tentat
 
 A interface inclui histórico visual das perguntas, cópia de respostas e alternância claro/escuro. As perguntas são independentes: o histórico não é enviado como contexto de conversa ao modelo.
 
+Se recarregar a página durante uma pergunta, use **Atualizar sessão** para conferir se ela terminou. Falhas temporárias de conexão preservam o documento na tela; atualizar consulta o estado sem reenviar a pergunta nem consumir outra tentativa.
+
 ### Exemplo reproduzível, sem depender do site
 
 O manual fictício informa que o prazo para solicitar reembolso é de **15 dias corridos após a despesa**, exige nota fiscal e identifica Marina como gestora responsável. Não informa salários.
@@ -106,6 +108,8 @@ uv run ruff check .
 uv run ruff format --check .
 uv run pytest
 ```
+
+Na raiz do repositório do portfólio, execute `node --test tests/frontend.test.cjs` (Node.js 18 ou superior) para verificar recuperação de sessão e tema com DOM e respostas da API simulados, sem chamar a NVIDIA.
 
 Se houver erro de permissão no temporário padrão do Windows, use `uv run pytest --basetemp=.pytest_cache/tmp`. Esse diretório é descartável.
 

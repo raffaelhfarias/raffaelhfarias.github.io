@@ -18,6 +18,8 @@ applyTheme(root.dataset.theme || "light");
 
 themeToggle.addEventListener("click", () => {
   const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
-  localStorage.setItem("portfolio-theme", nextTheme);
   applyTheme(nextTheme);
+  try {
+    localStorage.setItem("portfolio-theme", nextTheme);
+  } catch {}
 });

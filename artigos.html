@@ -11,8 +11,10 @@
     <title>Artigos — Raffael Henrique</title>
     <link rel="stylesheet" href="css/styles.css" />
     <script>
-      document.documentElement.dataset.theme =
-        localStorage.getItem("portfolio-theme") || "light";
+      try {
+        document.documentElement.dataset.theme =
+          localStorage.getItem("portfolio-theme") || "light";
+      } catch {}
     </script>
     <script src="js/script.js" defer></script>
   </head>

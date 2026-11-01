@@ -12,6 +12,7 @@ const conversation = document.querySelector("#conversation");
 let session = null;
 let busy = false;
 let operation = null;
+let sessionUncertain = false;
 const messages = {
   demo_disabled: "A demo está desativada no servidor. A interface está disponível para visualização.",
   demo_hourly_limit: "A cota compartilhada desta hora foi atingida. Tente novamente mais tarde.",
@@ -60,10 +61,12 @@ function render() {
   document.querySelector("#question-status").hidden = operation !== "question";
   document.querySelector("#empty-state").hidden = Boolean(session);
   document.querySelector("#example-state").hidden = !session;
-  document.querySelector("#choose-file").disabled = busy || Boolean(session);
-  document.querySelector("#use-example").disabled = busy || Boolean(session);
+  document.querySelector("#choose-file").disabled = busy || sessionUncertain || Boolean(session);
+  document.querySelector("#use-example").disabled = busy || sessionUncertain || Boolean(session);
   document.querySelector("#remove-file").disabled = busy;
-  question.disabled = busy || !session || session.busy || session.questions_remaining <= 0;
+  document.querySelector("#refresh-session").hidden = !sessionUncertain && !session?.busy;
+  document.querySelector("#refresh-session").disabled = busy;
+  question.disabled = busy || sessionUncertain || !session || session.busy || session.questions_remaining <= 0;
   send.disabled = question.disabled || !question.value.trim();
   document.querySelector("#quota-text").textContent = `${session ? 5 - session.questions_remaining : 0} de 5 tentativas`;
   document.querySelector("#workspace").setAttribute("aria-busy", String(busy));
@@ -75,15 +78,19 @@ function render() {
   question.placeholder = !session ? "Selecione um documento para começar."
     : session.questions_remaining === 0 ? "Limite de cinco tentativas atingido."
       : "Pergunte algo sobre o documento…";
-  document.querySelector("#connection-note").textContent = busy || session?.busy
+  document.querySelector("#connection-note").textContent = busy
     ? "Aguarde. O processamento pode levar alguns minutos; não reenvie a solicitação."
-    : session?.questions_remaining === 0
-      ? "Você usou as cinco tentativas desta sessão. Confira as respostas e suas fontes."
-      : "Cada envio conta como tentativa, mesmo se a IA falhar. A demo tem uma cota compartilhada por hora.";
+    : sessionUncertain
+      ? "Não foi possível confirmar o estado da sessão. Use Atualizar sessão para tentar novamente."
+      : session?.busy
+        ? "Há uma pergunta em andamento. Use Atualizar sessão para conferir se terminou."
+        : session?.questions_remaining === 0
+          ? "Você usou as cinco tentativas desta sessão. Confira as respostas e suas fontes."
+          : "Cada envio conta como tentativa, mesmo se a IA falhar. A demo tem uma cota compartilhada por hora.";
 }
 
 async function startDocument(file) {
-  if (busy || session) return;
+  if (busy || sessionUncertain || session) return;
   if (file) {
     if (!/\.(pdf|docx)$/i.test(file.name)) return showError(new Error("Escolha um PDF ou DOCX."));
     if (!file.size) return showError(new Error("O arquivo está vazio."));
@@ -155,11 +162,39 @@ function appendAnswer(text, result) {
 }
 
 async function refreshSession() {
+  const previousExpiry = session?.expires_at;
   try {
     session = await api("session");
+    sessionUncertain = false;
   } catch (error) {
-    if ([401, 410].includes(error.status)) session = null;
-    else throw error;
+    if ([401, 410].includes(error.status)) {
+      session = null;
+      sessionUncertain = false;
+    } else {
+      sessionUncertain = true;
+      throw error;
+    }
+  }
+  if (previousExpiry !== session?.expires_at) {
+    history.replaceChildren();
+    document.querySelector("#conversation-intro").hidden = false;
+    question.value = "";
+  }
+}
+
+async function syncSession() {
+  if (busy) return;
+  busy = true;
+  render();
+  try {
+    await refreshSession();
+    fileError.hidden = true;
+    questionError.hidden = true;
+  } catch (error) {
+    showError(error);
+  } finally {
+    busy = false;
+    render();
   }
 }
 
@@ -186,7 +221,7 @@ document.querySelector("#question-form").addEventListener("submit", async (event
     announcement.textContent = `Resposta recebida. ${result.questions_remaining} perguntas restantes.`;
   } catch (error) {
     showError(error, questionError);
-    try { await refreshSession(); } catch { session = null; }
+    try { await refreshSession(); } catch (error) { showError(error, questionError); }
   } finally {
     busy = false;
     operation = null;
@@ -208,12 +243,14 @@ fileInput.addEventListener("change", () => {
   if (fileInput.files[0]) startDocument(fileInput.files[0]);
 });
 document.querySelector("#use-example").addEventListener("click", () => startDocument(null));
+document.querySelector("#refresh-session").addEventListener("click", syncSession);
 document.querySelector("#remove-file").addEventListener("click", async () => {
   busy = true;
   render();
   try {
     await api("session", { method: "DELETE" });
     session = null;
+    sessionUncertain = false;
     history.replaceChildren();
     document.querySelector("#conversation-intro").hidden = false;
     question.value = "";
@@ -233,9 +270,4 @@ document.querySelector("#remove-file").addEventListener("click", async () => {
     }
   });
 });
-busy = true;
-render();
-refreshSession().catch(showError).finally(() => {
-  busy = false;
-  render();
-});
+syncSession();
