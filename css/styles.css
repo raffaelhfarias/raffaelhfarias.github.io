@@ -1791,3 +1791,8 @@ a {
   font-size: 14px;
   font-weight: 600;
 }
+
+/* "Como eu trabalho": os cards vêm logo depois dos números, sem título no meio */
+.case-stats + .case-grid {
+  margin-top: 16px;
+}
