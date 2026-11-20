@@ -1777,3 +1777,17 @@ a {
     width: 132px;
   }
 }
+
+/* Títulos de card na página "Como eu trabalho" (h2 dentro do card: sem a folga dos títulos de seção) */
+.case-card h2 {
+  margin: 4px 0 0;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+/* Link para páginas internas no painel do README (fora do bloco "Links externos") */
+.readme-link {
+  margin: 14px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+}
