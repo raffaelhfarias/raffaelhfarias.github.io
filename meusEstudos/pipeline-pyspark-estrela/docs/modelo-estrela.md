@@ -71,8 +71,17 @@ Registros que não podem entrar no modelo vão para quarentena (`data/rejected`,
 |---|---|---|
 | `json_malformado` | raw | linha truncada |
 | `campo_obrigatorio_ausente` | pedido | sem `customer.id` |
+| `status_invalido` | pedido | status nulo ou fora de ENTREGUE/ENVIADO/PAGO/CANCELADO |
 | `pedido_duplicado` | pedido | reenvio do mesmo `order_id` |
 | `item_invalido` | item | `qty <= 0`, preço inválido, pedido sem itens |
-| `sku_fora_do_catalogo` | item | SKU inexistente em `products.csv` |
+| `desconto_fora_da_faixa` | item | desconto menor que 0 ou maior que 1 |
+| `sku_fora_do_catalogo` | item | SKU inexistente (ou sem catálogo confiável) |
+| `produto_invalido` | catálogo | custo ausente/≤ 0 ou campo obrigatório nulo |
+| `sku_duplicado_no_catalogo` | catálogo | mesmo SKU em mais de uma linha (todas rejeitadas: é ambíguo) |
 
-Depois da gold, `validate_star` verifica: nenhuma FK órfã na fato, grão único e chaves únicas em cada dimensão. A pipeline **falha** se qualquer violação for encontrada, e também se a contagem da fato não reconciliar com os itens não cancelados da silver.
+Depois da gold, duas funções verificam o modelo e a pipeline **falha** se houver qualquer violação:
+
+- `validate_star`: grão único da fato e chaves únicas nas dimensões. Também confere FKs órfãs, mas isso é **zero por construção** (fato e dimensões usam o mesmo hash dos mesmos dados), então só pega regressão no código. A integridade referencial de fato é imposta pelas FKs do PostgreSQL na carga.
+- `reconcile`: compara a gold com a silver usando expressões independentes — linhas, receita recalculada (`qty × preço × (1 − desconto)`) com tolerância de arredondamento, clientes distintos e dias do calendário.
+
+A carga no banco é **atômica**: o Spark grava em `stage.*` e uma única transação troca `dw.*`. Se qualquer coisa falhar, o `dw` mantém a carga anterior.

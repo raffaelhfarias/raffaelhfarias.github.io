@@ -14,7 +14,7 @@ import time
 from pathlib import Path
 
 from pipeline.spark_session import get_spark
-from pipeline.transform import build_gold, build_silver, validate_star
+from pipeline.transform import build_gold, build_silver, reconcile, validate_star
 
 log = logging.getLogger("pipeline")
 
@@ -27,7 +27,10 @@ def run(raw_dir: Path, out_dir: Path, load_postgres: bool = False) -> dict:
     log.info("[1/4] Silver: leitura, limpeza e validação")
     silver = build_silver(spark, raw_dir)
     silver.items.write.mode("overwrite").parquet(str(silver_dir / "itens_pedido"))
-    silver.rejected.write.mode("overwrite").partitionBy("motivo").parquet(str(rejected_dir))
+    # Reprocessamento completo: "static" apaga partições antigas que não receberam dados
+    # nesta execução (com "dynamic" elas sobrariam e entrariam na carga do banco).
+    (silver.rejected.write.mode("overwrite").option("partitionOverwriteMode", "static")
+        .partitionBy("motivo").parquet(str(rejected_dir)))
 
     # Relê do disco: as etapas seguintes partem do dado já materializado,
     # sem recalcular a cadeia de transformações do raw.
@@ -39,20 +42,17 @@ def run(raw_dir: Path, out_dir: Path, load_postgres: bool = False) -> dict:
     for nome, df in gold.items():
         escritor = df.write.mode("overwrite")
         if nome == "fato_vendas":
-            escritor = escritor.partitionBy("ano_mes")  # poda de partições em consultas por período
+            # poda de partições em consultas por período; "static" pelo mesmo motivo acima
+            escritor = escritor.option("partitionOverwriteMode", "static").partitionBy("ano_mes")
         escritor.parquet(str(gold_dir / nome))
 
     log.info("[3/4] Verificações de qualidade")
     gold_lido = {n: spark.read.parquet(str(gold_dir / n)) for n in gold}
-    violacoes = validate_star(gold_lido)
+    violacoes = validate_star(gold_lido) | reconcile(itens, gold_lido)
     falhas = {k: v for k, v in violacoes.items() if v}
     if falhas:
-        raise RuntimeError(f"Integridade do modelo violada: {falhas}")
-
-    nao_cancelados = itens.where("status != 'CANCELADO'").count()
+        raise RuntimeError(f"Qualidade do modelo violada: {falhas}")
     linhas_fato = gold_lido["fato_vendas"].count()
-    if nao_cancelados != linhas_fato:
-        raise RuntimeError(f"Reconciliação falhou: silver={nao_cancelados} fato={linhas_fato}")
 
     resumo = {
         "itens_silver": itens.count(),

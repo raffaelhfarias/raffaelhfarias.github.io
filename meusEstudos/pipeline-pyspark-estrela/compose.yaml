@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: dw
       POSTGRES_PASSWORD: dw
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"   # só acessível da própria máquina (senha de estudo)
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./sql/01_ddl_estrela.sql:/docker-entrypoint-initdb.d/01_ddl_estrela.sql:ro  # cria o modelo na 1ª subida

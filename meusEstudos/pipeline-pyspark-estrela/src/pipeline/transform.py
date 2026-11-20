@@ -19,6 +19,9 @@ from pyspark.sql import functions as F
 from pipeline.schemas import ORDERS_SCHEMA, PRODUCTS_SCHEMA
 
 STATUS_EXCLUIDO_DA_FATO = "CANCELADO"
+# Domínio permitido. Fora disso o pedido vai para quarentena: um filtro como
+# `status != 'CANCELADO'` descartaria NULL em silêncio (NULL != x é NULL, não verdadeiro).
+STATUS_VALIDOS = ["ENTREGUE", "ENVIADO", "PAGO", "CANCELADO"]
 MESES = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
          "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
 DIAS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
@@ -79,6 +82,24 @@ def read_products(spark: SparkSession, path: str | Path) -> DataFrame:
     )
 
 
+def clean_products(products: DataFrame) -> tuple[DataFrame, DataFrame]:
+    """Valida o catálogo. SKU duplicado é ambíguo (multiplicaria linhas da fato num
+    join), então todas as linhas daquele SKU vão para quarentena em vez de se escolher uma."""
+    colunas = ["sku", "product_name", "category", "subcategory", "brand", "cost"]
+    incompleto = F.lit(False)
+    for c in colunas:
+        incompleto = incompleto | F.col(c).isNull()
+    incompleto = incompleto | (F.col("cost") <= 0)
+
+    marcados = products.withColumn("_n", F.count(F.lit(1)).over(Window.partitionBy("sku")))
+    invalidos = _rejeitado(marcados.where(incompleto).drop("_n"), "produto_invalido", "catalogo")
+    duplicados = _rejeitado(
+        marcados.where(~incompleto & (F.col("_n") > 1)).drop("_n"), "sku_duplicado_no_catalogo", "catalogo"
+    )
+    validos = marcados.where(~incompleto & (F.col("_n") == 1)).drop("_n")
+    return validos, invalidos.unionByName(duplicados)
+
+
 def split_corrupt(raw: DataFrame) -> tuple[DataFrame, DataFrame]:
     """Separa linhas de JSON malformado (quarentena) das linhas parseáveis."""
     raw = raw.cache()  # exigido pelo Spark ao consultar _corrupt_record
@@ -102,11 +123,21 @@ def clean_orders(orders: DataFrame) -> tuple[DataFrame, DataFrame]:
     obrigatorio_ausente = (
         F.col("order_id").isNull() | F.col("customer.id").isNull() | F.col("order_ts").isNull()
     )
-    invalidos = _rejeitado(tipados.where(obrigatorio_ausente), "campo_obrigatorio_ausente", "pedido")
-    validos = tipados.where(~obrigatorio_ausente)
+    # isin() devolve NULL quando status é NULL; coalesce transforma isso em "inválido".
+    status_invalido = ~F.coalesce(F.col("status").isin(*STATUS_VALIDOS), F.lit(False))
 
-    # Reenvios: mantém a ocorrência mais recente de cada order_id.
-    janela = Window.partitionBy("order_id").orderBy(F.col("order_ts").desc())
+    invalidos = _rejeitado(tipados.where(obrigatorio_ausente), "campo_obrigatorio_ausente", "pedido")
+    invalidos = invalidos.unionByName(
+        _rejeitado(tipados.where(~obrigatorio_ausente & status_invalido), "status_invalido", "pedido")
+    )
+    validos = tipados.where(~obrigatorio_ausente & ~status_invalido)
+
+    # Reenvios: mantém a ocorrência mais recente de cada order_id. O desempate pelo
+    # conteúdo serializado torna a escolha determinística quando dois reenvios têm o
+    # mesmo order_ts (sem isso o vencedor dependeria da ordem das partições).
+    janela = Window.partitionBy("order_id").orderBy(
+        F.col("order_ts").desc(), F.to_json(F.struct(*validos.columns)).desc()
+    )
     ranqueados = validos.withColumn("_rn", F.row_number().over(janela))
     duplicados = _rejeitado(ranqueados.where("_rn > 1").drop("_rn"), "pedido_duplicado", "pedido")
     unicos = ranqueados.where("_rn = 1").drop("_rn")
@@ -138,7 +169,8 @@ def explode_items(orders: DataFrame) -> DataFrame:
         F.col("item.sku").alias("sku"),
         F.col("item.qty").alias("qty"),
         F.round("item.unit_price", 2).cast("decimal(12,2)").alias("unit_price"),
-        F.coalesce(F.col("item.discount"), F.lit(0.0)).cast("decimal(5,4)").alias("discount_pct"),
+        # Sem cast aqui: decimal(5,4) transformaria valores fora da faixa em NULL em silêncio.
+        F.coalesce(F.col("item.discount"), F.lit(0.0)).alias("discount_pct"),
     ).drop("item")
 
 
@@ -148,7 +180,11 @@ def validate_items(items: DataFrame) -> tuple[DataFrame, DataFrame]:
         | F.col("qty").isNull() | (F.col("qty") <= 0)
         | F.col("unit_price").isNull() | (F.col("unit_price") <= 0)
     )
-    return items.where(~invalido), _rejeitado(items.where(invalido), "item_invalido", "item")
+    desconto_fora_da_faixa = ~invalido & ((F.col("discount_pct") < 0) | (F.col("discount_pct") > 1))
+    rejeitados = _rejeitado(items.where(invalido), "item_invalido", "item").unionByName(
+        _rejeitado(items.where(desconto_fora_da_faixa), "desconto_fora_da_faixa", "item")
+    )
+    return items.where(~invalido & ~desconto_fora_da_faixa), rejeitados
 
 
 def check_catalog(items: DataFrame, products: DataFrame) -> tuple[DataFrame, DataFrame]:
@@ -170,7 +206,7 @@ class Silver:
 def build_silver(spark: SparkSession, raw_dir: str | Path) -> Silver:
     raw_dir = Path(raw_dir)
     raw = read_orders(spark, raw_dir / "orders.jsonl")
-    products = read_products(spark, raw_dir / "products.csv")
+    products, rejeitados_catalogo = clean_products(read_products(spark, raw_dir / "products.csv"))
 
     parseaveis, corrompidos = split_corrupt(raw)
     pedidos, rejeitados_pedido = clean_orders(parseaveis)
@@ -181,6 +217,7 @@ def build_silver(spark: SparkSession, raw_dir: str | Path) -> Silver:
         corrompidos.unionByName(rejeitados_pedido)
         .unionByName(rejeitados_item)
         .unionByName(rejeitados_sku)
+        .unionByName(rejeitados_catalogo)
     )
     return Silver(items=itens, products=products, rejected=rejected)
 
@@ -198,7 +235,7 @@ def build_dim_cliente(items: DataFrame) -> DataFrame:
             _ultimo_nao_nulo("customer_state").alias("estado"),
             _ultimo_nao_nulo("customer_segment").alias("segmento"),
         )
-        .fillna({"cidade": "Não informada", "estado": "NI", "nome": "Não informado", "segmento": "varejo"})
+        .fillna({"cidade": "Não informada", "estado": "NI", "nome": "Não informado", "segmento": "Não informado"})
         .select(
             surrogate_key("customer_id").alias("cliente_key"),
             F.col("customer_id").alias("cliente_id"),
@@ -264,6 +301,7 @@ def build_fato_vendas(items: DataFrame, products: DataFrame) -> DataFrame:
     base = (
         items.where(F.col("status") != STATUS_EXCLUIDO_DA_FATO)
         .join(products.select("sku", "cost"), "sku")
+        .withColumn("discount_pct", F.col("discount_pct").cast("decimal(5,4)"))
         .withColumn("valor_bruto", d2(F.col("qty") * F.col("unit_price")))
         .withColumn("valor_desconto", d2(F.col("valor_bruto") * F.col("discount_pct")))
         .withColumn("valor_liquido", d2(F.col("valor_bruto") - F.col("valor_desconto")))
@@ -313,7 +351,15 @@ FOREIGN_KEYS = {
 
 
 def validate_star(gold: dict[str, DataFrame]) -> dict[str, int]:
-    """Verificações de integridade do modelo. Devolve contagens de violações (0 = ok)."""
+    """Verificações estruturais do modelo. Devolve contagens de violações (0 = ok).
+
+    Atenção ao que cada uma prova: como as chaves da fato e das dimensões vêm do mesmo
+    hash dos mesmos dados, ``orfaos_*`` é zero *por construção* enquanto o código de
+    derivação for consistente. Ele detecta regressão no código (alguém mudar o hash de um
+    lado só), não problema nos dados. As garantias que dependem dos dados são grão único,
+    chave única nas dimensões e, em :func:`reconcile`, a conferência contra a silver.
+    A integridade referencial "de verdade" é imposta pelas FKs do PostgreSQL na carga.
+    """
     fato = gold["fato_vendas"]
     violacoes: dict[str, int] = {}
     for coluna, dimensao in FOREIGN_KEYS.items():
@@ -328,3 +374,33 @@ def validate_star(gold: dict[str, DataFrame]) -> dict[str, int]:
             gold[nome].groupBy(chave).count().where("count > 1").count()
         )
     return violacoes
+
+
+def reconcile(items: DataFrame, gold: dict[str, DataFrame]) -> dict[str, int]:
+    """Confere a gold contra a silver com expressões independentes das usadas para construí-la.
+
+    Devolve divergências (0 = ok). Esta é a verificação que pega perda silenciosa de linhas
+    ou erro de cálculo: a receita esperada é recalculada em ``double`` a partir de
+    ``qty * unit_price * (1 - desconto)``, enquanto a fato usa decimais arredondados por linha.
+    """
+    fato = gold["fato_vendas"]
+    esperado = items.where(F.coalesce(F.col("status") != STATUS_EXCLUIDO_DA_FATO, F.lit(False)))
+    esp = esperado.agg(
+        F.count(F.lit(1)).alias("linhas"),
+        F.sum(F.col("qty") * F.col("unit_price").cast("double") * (1 - F.col("discount_pct"))).alias("valor"),
+    ).first()
+    obt = fato.agg(F.count(F.lit(1)).alias("linhas"), F.sum("valor_liquido").cast("double").alias("valor")).first()
+
+    # O arredondamento a 2 casas por linha pode deslocar no máximo meio centavo por linha.
+    tolerancia = 0.005 * (esp["linhas"] or 0) + 1.0
+    divergencia_valor = abs((esp["valor"] or 0.0) - (obt["valor"] or 0.0)) > tolerancia
+
+    limites = items.agg(F.min("order_date").alias("ini"), F.max("order_date").alias("fim")).first()
+    dias_esperados = (limites["fim"] - limites["ini"]).days + 1 if limites["ini"] else 0
+
+    return {
+        "divergencia_linhas": abs(esp["linhas"] - obt["linhas"]),
+        "divergencia_valor": int(divergencia_valor),
+        "divergencia_clientes": abs(items.select("customer_id").distinct().count() - gold["dim_cliente"].count()),
+        "divergencia_dias": abs(dias_esperados - gold["dim_data"].count()),
+    }

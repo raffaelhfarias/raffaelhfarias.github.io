@@ -5,7 +5,9 @@ import pytest
 from pyspark.sql import SparkSession
 
 from pipeline.generate_data import gerar
-from pipeline.transform import build_gold, build_silver, validate_star
+from pyspark.sql import functions as F
+
+from pipeline.transform import build_gold, build_silver, reconcile, validate_star
 
 
 @pytest.fixture(scope="session")
@@ -36,7 +38,7 @@ def _item(sku="SKU00001", qty=2, preco=100.0, desc=0.1):
     return {"sku": sku, "qty": qty, "unit_price": preco, "discount": desc}
 
 
-def _montar_raw(tmp_path, pedidos, linhas_extras=()):
+def _montar_raw(tmp_path, pedidos, linhas_extras=(), catalogo=None):
     raw = tmp_path / "raw"
     raw.mkdir()
     with (raw / "orders.jsonl").open("w", encoding="utf-8") as f:
@@ -45,9 +47,12 @@ def _montar_raw(tmp_path, pedidos, linhas_extras=()):
         for linha in linhas_extras:
             f.write(linha + "\n")
     (raw / "products.csv").write_text(
-        "sku,product_name,category,subcategory,brand,cost\n"
-        "SKU00001,Fone,Eletrônicos,Áudio,Aurora,40.00\n"
-        "SKU00002,Livro,Livros,Técnicos,Atlas,10.00\n",
+        catalogo
+        or (
+            "sku,product_name,category,subcategory,brand,cost\n"
+            "SKU00001,Fone,Eletrônicos,Áudio,Aurora,40.00\n"
+            "SKU00002,Livro,Livros,Técnicos,Atlas,10.00\n"
+        ),
         encoding="utf-8",
     )
     return raw
@@ -143,3 +148,98 @@ def test_pipeline_ponta_a_ponta_com_dados_gerados(spark, tmp_path):
     assert gold["fato_vendas"].count() == nao_cancelados
     # o gerador injeta problemas: a quarentena precisa ter capturado ao menos alguns
     assert silver.rejected.count() > 0
+
+
+# --- Regressões dos bugs apontados na revisão ------------------------------------------------ #
+def test_status_nulo_ou_fora_do_dominio_vai_para_quarentena_e_nao_some(spark, tmp_path):
+    pedidos = [
+        _pedido("O1", [_item()]),
+        _pedido("O2", [_item()], status=None),
+        _pedido("O3", [_item()], status="DEVOLVIDO"),
+    ]
+    silver = build_silver(spark, _montar_raw(tmp_path, pedidos))
+    assert [r["order_id"] for r in silver.items.collect()] == ["O1"]
+    assert _motivos(silver) == {"status_invalido": 2}
+
+
+def test_desconto_fora_da_faixa_e_rejeitado_em_vez_de_virar_nulo_ou_receita_negativa(spark, tmp_path):
+    pedidos = [
+        _pedido("O1", [_item(desc=0.1)]),
+        _pedido("O2", [_item(desc=1.5)]),   # maior que 100%
+        _pedido("O3", [_item(desc=-0.2)]),  # negativo
+        _pedido("O4", [_item(desc=123456.0)]),  # estouraria decimal(5,4)
+    ]
+    silver = build_silver(spark, _montar_raw(tmp_path, pedidos))
+    assert [r["order_id"] for r in silver.items.collect()] == ["O1"]
+    assert _motivos(silver) == {"desconto_fora_da_faixa": 3}
+    fato = build_gold(spark, silver)["fato_vendas"]
+    assert fato.where("valor_liquido < 0 OR desconto_pct IS NULL").count() == 0
+
+
+def test_catalogo_com_sku_duplicado_ou_custo_invalido_vai_para_quarentena(spark, tmp_path):
+    catalogo = (
+        "sku,product_name,category,subcategory,brand,cost\n"
+        "SKU00001,Fone,Eletrônicos,Áudio,Aurora,40.00\n"
+        "SKU00001,Fone duplicado,Eletrônicos,Áudio,Aurora,45.00\n"  # duplicado: ambíguo
+        "SKU00002,Livro,Livros,Técnicos,Atlas,\n"  # custo ausente
+        "SKU00003,Bolsa,Moda,Bolsas,Prisma,25.00\n"
+    )
+    pedidos = [_pedido("O1", [_item(sku="SKU00001")]), _pedido("O2", [_item(sku="SKU00003")])]
+    silver = build_silver(spark, _montar_raw(tmp_path, pedidos, catalogo=catalogo))
+
+    assert [r["sku"] for r in silver.products.collect()] == ["SKU00003"]
+    motivos = _motivos(silver)
+    assert motivos["sku_duplicado_no_catalogo"] == 2
+    assert motivos["produto_invalido"] == 1
+    assert motivos["sku_fora_do_catalogo"] == 1  # o item de SKU00001 não tem catálogo confiável
+    # e a fato não multiplica linhas por causa do duplicado
+    assert build_gold(spark, silver)["fato_vendas"].count() == 1
+
+
+def test_dedupe_com_mesmo_timestamp_escolhe_sempre_o_mesmo_vencedor(spark, tmp_path):
+    def vencedor(subdir):
+        pedidos = [
+            _pedido("O1", [_item()], cidade="Recife"),
+            _pedido("O1", [_item()], cidade="Olinda"),  # mesmo order_id e mesmo order_ts
+        ]
+        pasta = tmp_path / subdir
+        pasta.mkdir()
+        silver = build_silver(spark, _montar_raw(pasta, pedidos))
+        return silver.items.collect()[0]["customer_city"]
+
+    resultados = {vencedor(f"rodada{i}") for i in range(3)}
+    assert len(resultados) == 1
+
+
+def _gold_pequeno(spark, tmp_path):
+    pedidos = [_pedido(f"O{i}", [_item(), _item(sku="SKU00002")], cliente=f"C{i}") for i in range(1, 4)]
+    silver = build_silver(spark, _montar_raw(tmp_path, pedidos))
+    return silver, build_gold(spark, silver)
+
+
+def test_validate_star_detecta_erros_de_verdade(spark, tmp_path):
+    _, gold = _gold_pequeno(spark, tmp_path)
+    assert all(v == 0 for v in validate_star(gold).values())  # modelo íntegro
+
+    sem_cliente = {**gold, "dim_cliente": gold["dim_cliente"].limit(1)}
+    assert validate_star(sem_cliente)["orfaos_cliente_key"] > 0  # fato aponta para dimensão ausente
+
+    fato_duplicada = {**gold, "fato_vendas": gold["fato_vendas"].unionByName(gold["fato_vendas"].limit(1))}
+    assert validate_star(fato_duplicada)["grao_duplicado"] > 0
+
+    dim_duplicada = {**gold, "dim_canal": gold["dim_canal"].unionByName(gold["dim_canal"])}
+    assert validate_star(dim_duplicada)["chave_duplicada_dim_canal"] > 0
+
+
+def test_reconcile_detecta_perda_de_linhas_e_erro_de_valor(spark, tmp_path):
+    silver, gold = _gold_pequeno(spark, tmp_path)
+    assert all(v == 0 for v in reconcile(silver.items, gold).values())
+
+    perdeu_linha = {**gold, "fato_vendas": gold["fato_vendas"].limit(gold["fato_vendas"].count() - 1)}
+    assert reconcile(silver.items, perdeu_linha)["divergencia_linhas"] == 1
+
+    valor_errado = {**gold, "fato_vendas": gold["fato_vendas"].withColumn("valor_liquido", F.col("valor_liquido") * 2)}
+    assert reconcile(silver.items, valor_errado)["divergencia_valor"] == 1
+
+    sem_dias = {**gold, "dim_data": gold["dim_data"].limit(0)}
+    assert reconcile(silver.items, sem_dias)["divergencia_dias"] > 0

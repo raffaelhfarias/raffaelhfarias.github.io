@@ -54,20 +54,35 @@ Para exercitar o paralelismo: `--orders 5000000` no passo 2.
 
 ## Estado de verificação
 
-Executado de ponta a ponta com Docker (Docker Desktop no Windows, containers Linux), com 200 mil pedidos:
+Executado de ponta a ponta com Docker (Docker Desktop no Windows, containers Linux), com **200 mil pedidos sintéticos**:
 
-- **Pipeline completa:** raw → silver → gold → PostgreSQL em ~4 min. 347.447 itens na silver, 312.770 linhas na fato, **0 violações de integridade**, fato reconciliada com a silver. A contagem no banco (312.770) e a receita total (R$ 618,2 mi) conferem com o Parquet.
+- **Pipeline completa:** raw → silver → gold → PostgreSQL em ~5 min. 347.447 itens na silver e 312.770 linhas na fato. As contagens e a receita total (R$ 618,2 mi) conferem entre Parquet e banco; as contagens do log da carga são lidas **do PostgreSQL**, não do Parquet.
 - **Quarentena:** os rejeitados batem com o que o gerador injetou — 207 JSON truncados e 1.914 duplicatas, além de 965 itens inválidos e 622 SKUs fora do catálogo.
-- **Testes (6):** passam no container (Spark 3.5.3, Java 17).
+- **Testes (12):** passam no container (Spark 3.5.3, Java 17). Cada bug encontrado em revisão tem um teste de regressão, inclusive um que prova que `validate_star` e `reconcile` **detectam** erro (fato sem linha, valor errado, grão duplicado, dimensão ausente).
 - **SQL:** o DDL é aplicado na criação do banco e as 6 consultas analíticas rodam sem erro.
-- **Bug encontrado na primeira execução:** o `TRUNCATE` do Postgres recusa esvaziar dimensões referenciadas por FK. Corrigido com `cascadeTruncate=true` (ver [`load_postgres.py`](src/pipeline/load_postgres.py)).
+- **Carga atômica comprovada:** forcei uma falha na troca (constraint que os dados novos violam) e o `dw` permaneceu com a carga anterior.
+
+### O que cada verificação de qualidade prova (e o que não prova)
+
+| Verificação | Detecta | Observação |
+|---|---|---|
+| Grão único `(pedido_id, item_seq)` e chaves únicas nas dimensões | duplicação nos dados | depende dos dados |
+| `reconcile`: linhas, **receita recalculada de forma independente**, clientes e dias | perda silenciosa de linhas, erro de cálculo, calendário com lacuna | depende dos dados |
+| FKs órfãs (`orfaos_*`) | regressão no código (hash derivado de um lado só) | **zero por construção**: fato e dimensões usam o mesmo hash dos mesmos dados |
+| FKs reais do PostgreSQL | dado inconsistente na carga | é a garantia de integridade referencial de fato |
 
 > Os dados sintéticos são uniformes por construção (margem ~29,6% em todo canto, ticket igual em dia útil e fim de semana). As consultas provam que o modelo e o SQL funcionam; **não** revelam padrões de negócio.
 
+### Bugs encontrados e corrigidos
+
+1. **Primeira execução:** o `TRUNCATE` do Postgres recusa esvaziar dimensões referenciadas por FK. Resolvido pela carga em staging com troca atômica.
+2. **Revisão independente:** status nulo sumia da fato sem quarentena (`NULL != 'CANCELADO'` não é verdadeiro) e a reconciliação, usando o mesmo filtro, não via; desconto fora de `[0, 1]` virava NULL ou receita negativa; catálogo com SKU duplicado multiplicaria linhas; o desempate do dedupe não era determinístico; a carga não era atômica; partições antigas sobravam no Parquet.
+
 ## Limitações e próximos passos
 
-- **Desempenho:** ~4 min para 200 mil pedidos é lento. O run relê o Parquet várias vezes e dispara muitos `count()` nas verificações, cada um reexecutando parte do plano. Há ganho fácil com `cache()`/`persist()` da silver e consolidando as contagens em uma única ação. Não otimizei de propósito, para não complicar o código antes de você entendê-lo.
-- Execução em `local[*]` (uma máquina). A mesma aplicação roda em um cluster Spark/YARN trocando o `master`, mas isso não foi testado aqui.
-- `dim_cliente` é SCD tipo 1; histórico de endereços exigiria SCD tipo 2.
-- Reprocessamento é por sobrescrita das partições afetadas; carga incremental (apenas novos pedidos) é uma evolução natural.
+- **Desempenho:** ~5 min para 200 mil pedidos é lento e **não foi perfilado no Spark UI**. As verificações disparam muitos `count()`, cada um reexecutando parte do plano, e as camadas são relidas do disco. Persistir a silver e consolidar as contagens em uma única ação são os primeiros ganhos. 200 mil linhas não justificam Spark: o volume serve para exercitar a API e a estrutura, não para mostrar ganho de escala.
+- **Execução local:** `local[*]`, uma máquina, Parquet em disco. **Não há HDFS, YARN nem cluster.** Rodar em YARN exigiria também `HADOOP_CONF_DIR`, caminhos HDFS e distribuição do JAR JDBC; isso não foi feito nem testado.
+- **Reprocessamento completo, sem incremental.** A evolução seria `MERGE` por `(pedido_id, item_seq)` com marca d'água de ingestão. O desempate do dedupe usa `order_ts` (data de criação do pedido), pois os dados não têm timestamp de ingestão.
+- **Chaves por hash:** colisão em 64 bits é desprezível neste volume, mas a chave serve para SCD1; um SCD2 exigiria incluir a vigência na chave (ou usar sequences).
+- `dim_cliente` é SCD tipo 1; histórico de endereços exigiria SCD tipo 2. Cliente sem segmento vira "Não informado".
 - Orquestração com Airflow (agendamento, retries, dependências entre as etapas) é o próximo projeto deste laboratório.

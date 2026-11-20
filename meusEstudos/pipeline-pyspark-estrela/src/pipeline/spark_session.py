@@ -19,14 +19,16 @@ def get_spark(app_name: str = "pipeline-estrela", shuffle_partitions: int | None
         SparkSession.builder.master(os.getenv("SPARK_MASTER", "local[*]"))
         .appName(app_name)
         .config("spark.sql.shuffle.partitions", partitions)
-        # Sobrescreve só as partições que recebem dados novos (reprocessamento idempotente).
-        .config("spark.sql.sources.partitionOverwriteMode", "dynamic")
+        # O modo de sobrescrita de partições é definido em cada escrita (ver run_pipeline.py):
+        # esta pipeline reprocessa tudo, então partições antigas devem ser apagadas.
         # "2024-01" deve continuar sendo texto, não ser inferido como data.
         .config("spark.sql.sources.partitionColumnTypeInference.enabled", "false")
         .config("spark.ui.showConsoleProgress", "false")
     )
     if JDBC_JAR.exists():
-        builder = builder.config("spark.jars", str(JDBC_JAR))
+        # extraClassPath coloca o driver no classpath do sistema, o que o DriverManager do JDBC
+        # exige para as transações abertas direto pela JVM (ver load_postgres.py).
+        builder = builder.config("spark.jars", str(JDBC_JAR)).config("spark.driver.extraClassPath", str(JDBC_JAR))
 
     spark = builder.getOrCreate()
     spark.sparkContext.setLogLevel("WARN")
