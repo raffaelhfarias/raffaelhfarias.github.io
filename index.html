@@ -135,136 +135,37 @@
                 Projetos
               </h2>
             </div>
-            <div class="featured-project-grid home-project-grid">
-            <article class="featured-project-card project-spotlight">
-              <div class="project-spotlight-content">
-                <div class="featured-project-title">
+            <div class="project-grid">
+              <article class="project-card">
+                <a class="project-thumb" href="https://7cgxisdn5j0nlskxuxjewivm.coolify.cogni.qzz.io/" target="_blank" rel="noreferrer" aria-label="Abrir a demo do Knowledge AI (nova aba)">
+                  <img src="assets/projects/knowledge-ai-thumb.webp" width="1000" height="441" loading="lazy" decoding="async" alt="Interface do Knowledge AI: a pergunta sobre a gestora da equipe Aurora respondida com o trecho do manual exibido como fonte." />
+                </a>
+                <div class="project-body">
+                  <p class="project-kicker">Projeto 01 · IA aplicada</p>
                   <h3><a href="https://7cgxisdn5j0nlskxuxjewivm.coolify.cogni.qzz.io/" target="_blank" rel="noreferrer">Knowledge AI — RAG</a></h3>
+                  <p class="project-desc">Envie um PDF ou DOCX e pergunte. A resposta traz os trechos do documento usados como fonte, e o sistema se abstém quando não há evidência.</p>
+                  <p class="project-stack">Python · FastAPI · PostgreSQL · RAG</p>
+                  <div class="project-links">
+                    <a class="project-demo-link" href="https://7cgxisdn5j0nlskxuxjewivm.coolify.cogni.qzz.io/" target="_blank" rel="noreferrer">Experimentar</a>
+                    <a href="https://github.com/raffaelhfarias/raffaelhfarias.github.io/tree/main/meusEstudos/enterpise-knowledge-ai#readme" target="_blank" rel="noreferrer">Como foi construído</a>
+                  </div>
                 </div>
-                <p class="project-spotlight-summary">Seu documento, suas perguntas, respostas com fontes.</p>
-                <p>Envie um PDF ou DOCX e faça até cinco tentativas de pergunta. Confira os trechos usados na resposta e experimente perguntas que não estão no documento.</p>
-                <p class="project-spotlight-note">Sem cadastro · Documento de exemplo disponível</p>
-                <div class="project-spotlight-actions">
-                  <a class="project-demo-link" href="https://7cgxisdn5j0nlskxuxjewivm.coolify.cogni.qzz.io/" target="_blank" rel="noreferrer">Experimentar agora</a>
-                  <a href="https://github.com/raffaelhfarias/raffaelhfarias.github.io/tree/main/meusEstudos/enterpise-knowledge-ai#readme" target="_blank" rel="noreferrer">Como foi construído</a>
-                </div>
-              </div>
-              <a class="project-spotlight-preview" href="assets/projects/knowledge-ai.webp" target="_blank" rel="noreferrer" aria-label="Ampliar captura da interface do Knowledge AI (abre em nova aba)">
-                <img src="assets/projects/knowledge-ai.webp" width="2000" height="882" loading="lazy" decoding="async" alt="Knowledge AI respondendo Marina à pergunta sobre a gestora da equipe Aurora, com o trecho do manual exibido como fonte." />
-              </a>
-            </article>
-
-            <article class="featured-project-card project-spotlight project-spotlight--stacked">
-              <div class="project-spotlight-content">
-                <div class="featured-project-title">
-                  <h3><a href="https://github.com/raffaelhfarias/raffaelhfarias.github.io/tree/main/meusEstudos/pipeline-pyspark-estrela#readme" target="_blank" rel="noreferrer">Pipeline PySpark + modelo estrela</a></h3>
-                </div>
-                <p class="project-spotlight-summary">Do JSON bruto ao banco analítico, com qualidade de dados no caminho.</p>
-                <p>ETL em PySpark que lê pedidos semiestruturados, isola registros ruins em quarentena, monta um modelo dimensional em estrela e carrega tudo no PostgreSQL. Roda inteiro em Docker.</p>
-                <ul class="stat-chips" aria-label="Resultados verificados">
-                  <li><strong>200 mil</strong> pedidos processados</li>
-                  <li><strong>312.770</strong> linhas na fato</li>
-                  <li><strong>0</strong> violações de integridade</li>
-                  <li><strong>6</strong> testes automatizados</li>
-                </ul>
-                <div class="project-spotlight-actions">
-                  <a class="project-demo-link" href="https://github.com/raffaelhfarias/raffaelhfarias.github.io/tree/main/meusEstudos/pipeline-pyspark-estrela#readme" target="_blank" rel="noreferrer">Ver o código</a>
-                  <a href="https://github.com/raffaelhfarias/raffaelhfarias.github.io/blob/main/meusEstudos/pipeline-pyspark-estrela/docs/modelo-estrela.md" target="_blank" rel="noreferrer">Decisões de modelagem</a>
-                </div>
-              </div>
-              <figure class="flow-diagram" tabindex="0" aria-label="Diagrama da arquitetura (role na horizontal em telas pequenas)">
-                <svg viewBox="0 0 760 360" role="img" aria-labelledby="fd-title fd-desc">
-                  <title id="fd-title">Arquitetura da pipeline</title>
-                  <desc id="fd-desc">Dados brutos em JSON e CSV passam pela camada silver, que isola registros rejeitados em quarentena, depois pela camada gold em estrela e são carregados no PostgreSQL. Abaixo, a tabela fato de vendas ligada às dimensões data, cliente, produto, pagamento e canal.</desc>
-                  <defs>
-                    <marker id="fd-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="d-arrowhead" /></marker>
-                  </defs>
-
-                  <!-- Fluxo -->
-                  <rect class="d-box" x="10" y="20" width="170" height="80" rx="8" />
-                  <text class="d-title" x="95" y="52" text-anchor="middle">RAW</text>
-                  <text class="d-sub" x="95" y="74" text-anchor="middle">JSON aninhado + CSV</text>
-
-                  <rect class="d-box" x="200" y="20" width="170" height="80" rx="8" />
-                  <text class="d-title" x="285" y="52" text-anchor="middle">SILVER</text>
-                  <text class="d-sub" x="285" y="74" text-anchor="middle">limpo · tipado · único</text>
-
-                  <rect class="d-box d-accent" x="390" y="20" width="170" height="80" rx="8" />
-                  <text class="d-title" x="475" y="52" text-anchor="middle">GOLD</text>
-                  <text class="d-sub" x="475" y="74" text-anchor="middle">estrela em Parquet</text>
-
-                  <rect class="d-box" x="580" y="20" width="170" height="80" rx="8" />
-                  <text class="d-title" x="665" y="52" text-anchor="middle">POSTGRESQL</text>
-                  <text class="d-sub" x="665" y="74" text-anchor="middle">PK · FK · índices</text>
-
-                  <path class="d-line" d="M180 60h18" marker-end="url(#fd-arrow)" />
-                  <path class="d-line" d="M370 60h18" marker-end="url(#fd-arrow)" />
-                  <path class="d-line" d="M560 60h18" marker-end="url(#fd-arrow)" />
-
-                  <!-- Quarentena -->
-                  <path class="d-line d-dashed" d="M285 100v22" marker-end="url(#fd-arrow)" />
-                  <rect class="d-box d-warn" x="200" y="124" width="170" height="40" rx="8" />
-                  <text class="d-sub d-strong" x="285" y="148" text-anchor="middle">Quarentena por motivo</text>
-
-                  <!-- Estrela -->
-                  <text class="d-label" x="10" y="196">Camada gold · modelo estrela</text>
-
-                  <path class="d-line" d="M380 230v35" />
-                  <path class="d-line" d="M210 230 310 283" />
-                  <path class="d-line" d="M210 320 310 303" />
-                  <path class="d-line" d="M550 230 450 283" />
-                  <path class="d-line" d="M550 320 450 303" />
-
-                  <rect class="d-box d-accent" x="310" y="265" width="140" height="56" rx="8" />
-                  <text class="d-title" x="380" y="289" text-anchor="middle">fato_vendas</text>
-                  <text class="d-sub" x="380" y="308" text-anchor="middle">grão: item de pedido</text>
-
-                  <rect class="d-box" x="310" y="190" width="140" height="40" rx="8" />
-                  <text class="d-sub d-strong" x="380" y="215" text-anchor="middle">dim_canal</text>
-                  <rect class="d-box" x="70" y="210" width="140" height="40" rx="8" />
-                  <text class="d-sub d-strong" x="140" y="235" text-anchor="middle">dim_data</text>
-                  <rect class="d-box" x="70" y="300" width="140" height="40" rx="8" />
-                  <text class="d-sub d-strong" x="140" y="325" text-anchor="middle">dim_cliente</text>
-                  <rect class="d-box" x="550" y="210" width="140" height="40" rx="8" />
-                  <text class="d-sub d-strong" x="620" y="235" text-anchor="middle">dim_produto</text>
-                  <rect class="d-box" x="550" y="300" width="140" height="40" rx="8" />
-                  <text class="d-sub d-strong" x="620" y="325" text-anchor="middle">dim_pagamento</text>
-                </svg>
-              </figure>
-            </article>
-
-              <article class="featured-project-card">
-                <div class="featured-project-title">
-                  <h3>
-                    <a href="https://github.com/raffaelhfarias/Dados_Airbnb" target="_blank" rel="noreferrer">
-                      Dados_Airbnb
-                    </a>
-                  </h3>
-                  <a class="project-external" href="https://github.com/raffaelhfarias/Dados_Airbnb" target="_blank" rel="noreferrer" aria-label="Abrir Dados_Airbnb no GitHub">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M14 4h6v6M20 4l-9 9" />
-                      <path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5" />
-                    </svg>
-                  </a>
-                </div>
-                <p>Analisando dados do Airbnb.</p>
               </article>
 
-              <article class="featured-project-card">
-                <div class="featured-project-title">
-                  <h3>
-                    <a href="https://github.com/raffaelhfarias/Panorama_COVID-19" target="_blank" rel="noreferrer">
-                      Panorama_COVID-19
-                    </a>
-                  </h3>
-                  <a class="project-external" href="https://github.com/raffaelhfarias/Panorama_COVID-19" target="_blank" rel="noreferrer" aria-label="Abrir Panorama_COVID-19 no GitHub">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M14 4h6v6M20 4l-9 9" />
-                      <path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5" />
-                    </svg>
-                  </a>
+              <article class="project-card">
+                <a class="project-thumb" href="https://github.com/raffaelhfarias/raffaelhfarias.github.io/tree/main/meusEstudos/pipeline-pyspark-estrela#readme" target="_blank" rel="noreferrer" aria-label="Abrir o código do pipeline PySpark (nova aba)">
+                  <img src="assets/projects/pipeline-pyspark.svg" width="640" height="360" loading="lazy" decoding="async" alt="Ilustração: registros JSON passam por limpeza, linhas inválidas vão para quarentena e os dados viram um modelo estrela com uma fato e cinco dimensões." />
+                </a>
+                <div class="project-body">
+                  <p class="project-kicker">Projeto 02 · Engenharia de dados</p>
+                  <h3><a href="https://github.com/raffaelhfarias/raffaelhfarias.github.io/tree/main/meusEstudos/pipeline-pyspark-estrela#readme" target="_blank" rel="noreferrer">Pipeline PySpark + modelo estrela</a></h3>
+                  <p class="project-desc">ETL que transforma JSON aninhado em modelo dimensional, isola dados ruins em quarentena e carrega tudo no PostgreSQL. Testado com 200 mil pedidos sintéticos.</p>
+                  <p class="project-stack">PySpark · SQL · PostgreSQL · Docker</p>
+                  <div class="project-links">
+                    <a class="project-demo-link" href="https://github.com/raffaelhfarias/raffaelhfarias.github.io/tree/main/meusEstudos/pipeline-pyspark-estrela#readme" target="_blank" rel="noreferrer">Ver o código</a>
+                    <a href="https://github.com/raffaelhfarias/raffaelhfarias.github.io/blob/main/meusEstudos/pipeline-pyspark-estrela/docs/modelo-estrela.md" target="_blank" rel="noreferrer">Decisões de modelagem</a>
+                  </div>
                 </div>
-                <p>Panorama do COVID-19 no Brasil.</p>
               </article>
             </div>
             <a class="all-projects-link" href="projects.html">Ver todos os projetos</a>

@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="t d">
+  <title id="t">Pipeline PySpark</title>
+  <desc id="d">Registros JSON passam por uma etapa de limpeza, em que linhas inválidas vão para quarentena, e viram um modelo estrela com uma tabela fato ligada a cinco dimensões.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#8a7a5c"/></marker>
+  </defs>
+  <g font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace" font-size="13">
+    <rect width="640" height="360" fill="#f6f1e7"/>
+    <text x="32" y="38" fill="#5b4e37">PySpark · raw → silver → gold → PostgreSQL</text>
+
+    <!-- RAW: JSON aninhado -->
+    <rect x="32" y="84" width="140" height="180" rx="10" fill="#fffaf0" stroke="#b9a373" stroke-width="1.5"/>
+    <text x="46" y="112" font-size="22" font-weight="700" fill="#a67c00">{</text>
+    <rect x="68" y="102" width="70" height="8" rx="3" fill="#d9b45a"/>
+    <rect x="68" y="124" width="50" height="8" rx="3" fill="#e6cf94"/>
+    <rect x="82" y="146" width="62" height="8" rx="3" fill="#d9b45a"/>
+    <rect x="82" y="168" width="44" height="8" rx="3" fill="#e6cf94"/>
+    <rect x="96" y="190" width="52" height="8" rx="3" fill="#d9b45a"/>
+    <rect x="68" y="212" width="66" height="8" rx="3" fill="#e6cf94"/>
+    <text x="46" y="250" font-size="22" font-weight="700" fill="#a67c00">}</text>
+    <text x="102" y="296" text-anchor="middle" fill="#5b4e37">raw · JSON</text>
+
+    <path d="M180 174h36" stroke="#8a7a5c" stroke-width="1.6" fill="none" marker-end="url(#a)"/>
+
+    <!-- SILVER: grade de registros + quarentena -->
+    <g stroke-width="1.5">
+      <g fill="#e6cf94" stroke="#cdb572">
+        <rect x="232" y="84" width="22" height="22" rx="4"/><rect x="262" y="84" width="22" height="22" rx="4"/><rect x="292" y="84" width="22" height="22" rx="4"/><rect x="322" y="84" width="22" height="22" rx="4"/><rect x="352" y="84" width="22" height="22" rx="4"/>
+        <rect x="232" y="114" width="22" height="22" rx="4"/><rect x="262" y="114" width="22" height="22" rx="4"/><rect x="322" y="114" width="22" height="22" rx="4"/><rect x="352" y="114" width="22" height="22" rx="4"/>
+        <rect x="232" y="144" width="22" height="22" rx="4"/><rect x="292" y="144" width="22" height="22" rx="4"/><rect x="322" y="144" width="22" height="22" rx="4"/><rect x="352" y="144" width="22" height="22" rx="4"/>
+        <rect x="232" y="174" width="22" height="22" rx="4"/><rect x="262" y="174" width="22" height="22" rx="4"/><rect x="292" y="174" width="22" height="22" rx="4"/><rect x="352" y="174" width="22" height="22" rx="4"/>
+      </g>
+      <g fill="#d9b45a" stroke="#b8923a">
+        <rect x="292" y="114" width="22" height="22" rx="4"/><rect x="262" y="144" width="22" height="22" rx="4"/><rect x="322" y="174" width="22" height="22" rx="4"/>
+      </g>
+      <!-- rejeitados -->
+      <g fill="#f3c9bd" stroke="#c0553f">
+        <rect x="292" y="224" width="22" height="22" rx="4"/><rect x="262" y="224" width="22" height="22" rx="4"/><rect x="322" y="224" width="22" height="22" rx="4"/>
+      </g>
+    </g>
+    <path d="M232 210h142" stroke="#c0553f" stroke-width="1.3" stroke-dasharray="5 4"/>
+    <g stroke="#c0553f" stroke-width="2" stroke-linecap="round">
+      <path d="M268 230l10 10M278 230l-10 10"/><path d="M298 230l10 10M308 230l-10 10"/><path d="M328 230l10 10M338 230l-10 10"/>
+    </g>
+    <text x="303" y="296" text-anchor="middle" fill="#5b4e37">silver + quarentena</text>
+
+    <path d="M386 174h36" stroke="#8a7a5c" stroke-width="1.6" fill="none" marker-end="url(#a)"/>
+
+    <!-- GOLD: estrela -->
+    <g stroke="#2f7d5b" stroke-width="1.6">
+      <path d="M528 174V122M528 174l66-34M528 174l42 66M528 174l-42 66M528 174l-66-34"/>
+    </g>
+    <rect x="504" y="150" width="48" height="48" rx="8" fill="#2f7d5b"/>
+    <text x="528" y="179" text-anchor="middle" fill="#f6f1e7" font-weight="700">fato</text>
+    <g fill="#dcefe5" stroke="#2f7d5b" stroke-width="1.6">
+      <rect x="510" y="94" width="36" height="28" rx="6"/>
+      <rect x="578" y="124" width="36" height="28" rx="6"/>
+      <rect x="552" y="226" width="36" height="28" rx="6"/>
+      <rect x="468" y="226" width="36" height="28" rx="6"/>
+      <rect x="442" y="124" width="36" height="28" rx="6"/>
+    </g>
+    <text x="528" y="296" text-anchor="middle" fill="#5b4e37">estrela · fato + 5 dim.</text>
+  </g>
+</svg>

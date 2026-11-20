@@ -151,6 +151,9 @@ const renderProjects = () => {
     : "Nenhum projeto encontrado. Tente outro termo ou selecione todas as linguagens.";
 };
 
+const studiesCount = document.querySelector("#studies-count");
+if (studiesCount) studiesCount.textContent = `(${projects.length})`;
+
 populateLanguages();
 renderProjects();
 searchInput.addEventListener("input", renderProjects);
