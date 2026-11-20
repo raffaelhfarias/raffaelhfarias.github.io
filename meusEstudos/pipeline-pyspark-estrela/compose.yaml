@@ -1,0 +1,40 @@
+# Credenciais abaixo são só para ambiente local de estudo.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: dw
+      POSTGRES_USER: dw
+      POSTGRES_PASSWORD: dw
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql/01_ddl_estrela.sql:/docker-entrypoint-initdb.d/01_ddl_estrela.sql:ro  # cria o modelo na 1ª subida
+      - ./sql:/sql:ro                                                               # para rodar as consultas com psql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dw -d dw"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  # Job sob demanda: `docker compose run --rm pipeline ...` (não sobe com `up`).
+  pipeline:
+    build: .
+    profiles: ["job"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: dw
+      POSTGRES_USER: dw
+      POSTGRES_PASSWORD: dw
+      SHUFFLE_PARTITIONS: "16"
+    volumes:
+      - ./data:/app/data
+    ports:
+      - "4040:4040"   # Spark UI enquanto o job roda
+
+volumes:
+  pgdata:
