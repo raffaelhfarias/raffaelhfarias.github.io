@@ -1315,3 +1315,107 @@ a {
     scroll-behavior: auto;
   }
 }
+
+/* Destaque com diagrama (pipeline PySpark) */
+.project-spotlight--stacked {
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+.stat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stat-chips li {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.stat-chips strong {
+  color: var(--text);
+  font-size: 15px;
+}
+
+.flow-diagram {
+  margin: 4px 0 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  overflow-x: auto;
+}
+
+.flow-diagram svg {
+  display: block;
+  width: 100%;
+  min-width: 600px; /* abaixo disso o texto fica ilegível: o quadro rola na horizontal */
+  height: auto;
+}
+
+.flow-diagram .d-box {
+  fill: var(--surface);
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+}
+
+.flow-diagram .d-accent {
+  fill: var(--accent-soft);
+  stroke: var(--link);
+}
+
+.flow-diagram .d-warn {
+  fill: var(--surface-muted);
+  stroke-dasharray: 5 4;
+}
+
+.flow-diagram .d-line {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1.6;
+}
+
+.flow-diagram .d-dashed {
+  stroke-dasharray: 4 4;
+}
+
+.flow-diagram .d-arrowhead {
+  fill: var(--muted);
+}
+
+.flow-diagram text {
+  fill: var(--text);
+  font-family: inherit;
+}
+
+.flow-diagram .d-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.flow-diagram .d-sub {
+  fill: var(--muted);
+  font-size: 13px;
+}
+
+.flow-diagram .d-strong {
+  fill: var(--text);
+  font-weight: 600;
+}
+
+.flow-diagram .d-label {
+  fill: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
