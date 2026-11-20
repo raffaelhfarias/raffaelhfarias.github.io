@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f6f8fa" />
+    <meta
+      name="description"
+      content="Case de plataforma própria de automação de dados: gatilhos, orquestração, estado, filas e tratamento de erro."
+    />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href="https://raffaelhfarias.github.io/case-automacao.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content="Automação em produção — Raffael Henrique" />
+    <meta property="og:description" content="Case de plataforma própria de automação de dados: gatilhos, orquestração, estado, filas e tratamento de erro." />
+    <meta property="og:url" content="https://raffaelhfarias.github.io/case-automacao.html" />
+    <meta property="og:image" content="https://raffaelhfarias.github.io/assets/profile/profile.jpg" />
+    <meta name="twitter:card" content="summary" />
+    <title>Automação em produção — Raffael Henrique</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script>
+      try {
+        document.documentElement.dataset.theme =
+          localStorage.getItem("portfolio-theme") || "light";
+      } catch {}
+    </script>
+    <script src="js/script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+    <header class="site-header">
+      <a class="site-brand" href="index.html" aria-label="Página inicial">
+        rhfariasn
+      </a>
+      <button
+        class="theme-toggle"
+        type="button"
+        aria-label="Ativar tema escuro"
+        aria-pressed="false"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3v2m0 14v2M3 12h2m14 0h2m-3.36-6.64-1.42 1.42M6.78 17.22l-1.42 1.42m0-13.28 1.42 1.42m10.44 10.44 1.42 1.42" />
+          <circle cx="12" cy="12" r="4" />
+        </svg>
+      </button>
+    </header>
+
+    <div class="page-shell">
+      <aside class="profile-sidebar" aria-label="Perfil">
+        <img class="avatar" src="assets/profile/profile.jpg" alt="Raffael Henrique" />
+        <h1>Raffael Henrique</h1>
+        <p class="username">@raffaelhfarias</p>
+        <p class="profile-copy">
+          Conecto dados, automação e IA para transformar processos manuais em soluções confiáveis e úteis para o negócio.
+        </p>
+        <p class="profile-copy">
+          Tenho 6+ anos de experiência em dados e formação em Ciência da Computação.
+        </p>
+
+        <a class="follow-button" href="https://wa.me/5581981966412" target="_blank" rel="noreferrer">
+          <img class="social-icon" src="assets/contact/whatsapp-svgrepo-com.svg" alt="" aria-hidden="true" />
+          Entrar em contato
+        </a>
+
+        <ul class="profile-details" aria-label="Informações profissionais">
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M4 8h16v10.5A1.5 1.5 0 0 1 18.5 20h-13A1.5 1.5 0 0 1 4 18.5V8Z"/><path d="M4 12h16M10 12v2h4v-2"/></svg>
+            <span>Analista de Dados · Grupo Gomes Sobral</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            <span>Recife, Pernambuco</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
+            <a href="mailto:raffaelhfarias@gmail.com">raffaelhfarias@gmail.com</a>
+          </li>
+        </ul>
+      </aside>
+
+      <main id="conteudo" class="content-column">
+        <nav class="primary-nav" aria-label="Navegação principal">
+          <a class="nav-link" href="index.html">
+            <img class="tab-icon" src="assets/navigation/book-svgrepo-com.svg" alt="" aria-hidden="true" />
+            Overview
+          </a>
+          <a class="nav-link is-active" href="projects.html" aria-current="true">
+            <img class="tab-icon" src="assets/navigation/folder-svgrepo-com.svg" alt="" aria-hidden="true" />
+            Projetos
+          </a>
+          <a class="nav-link" href="artigos.html">
+            <img class="tab-icon" src="assets/navigation/article-svgrepo-com.svg" alt="" aria-hidden="true" />
+            Artigos
+          </a>
+          <a class="nav-link" href="contrate-me.html">
+            <img class="tab-icon" src="assets/navigation/suitcase-svgrepo-com.svg" alt="" aria-hidden="true" />
+            Contrate-me
+          </a>
+          <a class="nav-link" href="cv.html">
+            <img class="tab-icon" src="assets/navigation/person-male-svgrepo-com.svg" alt="" aria-hidden="true" />
+            CV
+          </a>
+        </nav>
+
+        <div class="content-stack">
+          <article class="case-page" aria-labelledby="case-title">
+            <p class="case-back"><a href="projects.html">← Projetos</a></p>
+            <h1 id="case-title">Automação de dados em produção</h1>
+            <p class="case-intro">
+              Plataforma própria que agenda, extrai, confere e entrega dados na nuvem, substituindo verificações manuais por fluxos monitorados. Esta página descreve a arquitetura e os padrões de forma genérica: o código é privado porque integra sistemas de terceiros e credenciais de operação.
+            </p>
+
+            <ul class="case-stats" aria-label="Números do projeto">
+              <li><strong>18</strong><span>fluxos orquestrados</span></li>
+              <li><strong>21</strong><span>agendamentos</span></li>
+              <li><strong>50</strong><span>arquivos de teste</span></li>
+              <li><strong>13</strong><span>fluxos com tratamento de erro</span></li>
+            </ul>
+
+            <h2>Arquitetura</h2>
+            <figure class="case-diagram" tabindex="0" role="region" aria-label="Diagrama de arquitetura (role na horizontal em telas pequenas)">
+              <svg viewBox="0 0 760 330" role="img" aria-labelledby="cd-title cd-desc">
+                <title id="cd-title">Arquitetura da plataforma de automação</title>
+                <desc id="cd-desc">Três tipos de gatilho (agenda, evento de arquivo e mensagem) acionam o orquestrador Kestra, que controla fila, concorrência e erros. As tarefas rodam em containers Python e Playwright, gravam estado persistente e entregam o resultado por mensagem ou planilha. Tudo roda em uma VM própria na nuvem com Coolify e Docker.</desc>
+                <defs>
+                  <marker id="cd-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" class="d-arrowhead" /></marker>
+                </defs>
+                <rect class="d-box" x="10" y="30" width="160" height="52" rx="8" /><text class="d-sub d-strong" x="90" y="62" text-anchor="middle">Agenda (cron)</text>
+                <rect class="d-box" x="10" y="96" width="160" height="52" rx="8" /><text class="d-sub d-strong" x="90" y="128" text-anchor="middle">Evento de arquivo</text>
+                <rect class="d-box" x="10" y="162" width="160" height="52" rx="8" /><text class="d-sub d-strong" x="90" y="194" text-anchor="middle">Mensagem (webhook)</text>
+                <path class="d-line" d="M170 56 228 100" marker-end="url(#cd-arrow)" />
+                <path class="d-line" d="M170 122h58" marker-end="url(#cd-arrow)" />
+                <path class="d-line" d="M170 188 228 146" marker-end="url(#cd-arrow)" />
+
+                <rect class="d-box d-accent" x="230" y="30" width="190" height="184" rx="10" />
+                <text class="d-title" x="325" y="68" text-anchor="middle">KESTRA</text>
+                <text class="d-sub" x="325" y="90" text-anchor="middle">orquestrador</text>
+                <text class="d-sub" x="325" y="126" text-anchor="middle">fila e concorrência</text>
+                <text class="d-sub" x="325" y="148" text-anchor="middle">retry e alerta de erro</text>
+                <text class="d-sub" x="325" y="170" text-anchor="middle">segredos fora do código</text>
+                <text class="d-sub" x="325" y="192" text-anchor="middle">deploy a partir do Git</text>
+                <path class="d-line" d="M420 122h48" marker-end="url(#cd-arrow)" />
+
+                <rect class="d-box" x="470" y="30" width="150" height="184" rx="10" />
+                <text class="d-title" x="545" y="68" text-anchor="middle">CONTAINERS</text>
+                <text class="d-sub" x="545" y="90" text-anchor="middle">Python · Playwright</text>
+                <g class="d-cells"><rect x="490" y="112" width="30" height="30" rx="5"/><rect x="530" y="112" width="30" height="30" rx="5"/><rect x="570" y="112" width="30" height="30" rx="5"/><rect x="490" y="152" width="30" height="30" rx="5"/><rect x="530" y="152" width="30" height="30" rx="5"/></g>
+                <path class="d-line" d="M620 90h24" marker-end="url(#cd-arrow)" />
+                <path class="d-line d-dashed" d="M620 160h24" marker-end="url(#cd-arrow)" />
+
+                <rect class="d-box" x="646" y="64" width="104" height="52" rx="8" /><text class="d-sub d-strong" x="698" y="86" text-anchor="middle">Entrega</text><text class="d-sub" x="698" y="104" text-anchor="middle" font-size="12">mensagens</text>
+                <rect class="d-box d-warn" x="646" y="134" width="104" height="52" rx="8" /><text class="d-sub d-strong" x="698" y="156" text-anchor="middle">Estado</text><text class="d-sub" x="698" y="174" text-anchor="middle" font-size="12">chave-valor</text>
+
+                <rect class="d-box" x="10" y="244" width="740" height="62" rx="10" />
+                <text class="d-title" x="380" y="272" text-anchor="middle">INFRAESTRUTURA PRÓPRIA</text>
+                <text class="d-sub" x="380" y="294" text-anchor="middle">VM na nuvem · Coolify · Docker</text>
+              </svg>
+            </figure>
+
+            <h2>Três casos</h2>
+            <div class="case-grid">
+              <section class="case-card" aria-labelledby="c1">
+                <p class="case-pattern">Detecção incremental com estado</p>
+                <h3 id="c1">Monitor de novos relatórios</h3>
+                <p>Consulta um portal de auditoria em horário comercial e avisa a equipe apenas do que é novo, para antecipar as auditorias e evitar o esquecimento humano na verificação.</p>
+                <ol class="case-steps"><li>Agenda a cada 30 min</li><li>Extrai a lista atual</li><li>Compara com o estado salvo</li><li>Avisa só o novo</li></ol>
+                <p class="case-tech">Estado persistente · fila de 1 execução · gatilho por agenda e por mensagem</p>
+              </section>
+
+              <section class="case-card" aria-labelledby="c2">
+                <p class="case-pattern">Ingestão orientada a evento</p>
+                <h3 id="c2">Processamento de arquivos financeiros</h3>
+                <p>Quando uma planilha cai em uma pasta na nuvem, o fluxo dispara sozinho, processa as linhas no sistema financeiro e move o arquivo para "processados" ou "erro".</p>
+                <ol class="case-steps"><li>Arquivo chega na pasta</li><li>Gatilho verifica a cada minuto</li><li>Processa em série</li><li>Move para processados ou erro</li></ol>
+                <p class="case-tech">Pastas de entrada, sucesso e erro · concorrência limitada a 1 · reprocessamento manual</p>
+              </section>
+
+              <section class="case-card" aria-labelledby="c3">
+                <p class="case-pattern">Extração recorrente e conferência</p>
+                <h3 id="c3">Indicadores de vendas contra metas</h3>
+                <p>Extrai resultados de um sistema de vendas várias vezes ao dia, mantém a sessão renovada de forma programada, compara com as metas e entrega o resumo; outro fluxo cruza uma planilha com o sistema para achar divergências.</p>
+                <ol class="case-steps"><li>Renova a sessão antes de cada envio</li><li>Extrai os indicadores</li><li>Compara com as metas</li><li>Entrega o resumo</li></ol>
+                <p class="case-tech">Sistema sem API · sessão persistida · fila compartilhada · conferência entre duas fontes</p>
+              </section>
+            </div>
+
+            <h2>Princípios de engenharia</h2>
+            <ul class="case-principles">
+              <li><strong>Idempotência:</strong> o estado guardado evita reenviar o mesmo aviso, com limite de um envio por dia onde faz sentido.</li>
+              <li><strong>Concorrência controlada:</strong> fluxos que compartilham sessão ou estado entram em fila, uma execução por vez.</li>
+              <li><strong>Falha visível:</strong> erros disparam alerta para o administrador, e 13 dos 18 fluxos têm tratamento de erro.</li>
+              <li><strong>Testes:</strong> 50 arquivos de teste cobrem a lógica de cada módulo, separada da automação de navegador.</li>
+              <li><strong>Segredos e deploy:</strong> credenciais ficam no cofre do orquestrador, não no código, e o código em produção é sempre o do repositório principal.</li>
+            </ul>
+
+            <p class="case-note">
+              Desenvolvido por mim, do zero, em uma VM própria. Os nomes de sistemas, clientes e pessoas foram omitidos de propósito. Posso detalhar a arquitetura em conversa.
+            </p>
+          </article>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
