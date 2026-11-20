@@ -50,6 +50,17 @@ docker compose run --rm pipeline python -m pytest -q
 
 Para exercitar o paralelismo: `--orders 5000000` no passo 2.
 
+### Rodar por etapas
+
+A pipeline também roda etapa por etapa, cada uma em seu próprio processo Spark, trocando dados por Parquet em disco. É assim que o [Airflow a orquestra](../airflow-orquestracao):
+
+```powershell
+docker compose run --rm pipeline python -m pipeline.run_pipeline --stage silver
+docker compose run --rm pipeline python -m pipeline.run_pipeline --stage gold
+docker compose run --rm pipeline python -m pipeline.run_pipeline --stage quality   # falha se houver violação
+docker compose run --rm pipeline python -m pipeline.run_pipeline --stage load      # carga atômica no PostgreSQL
+```
+
 > **Por que Docker?** O Spark no Windows exige o `winutils.exe` (binário do Hadoop) para gravar Parquet em disco local. No container Linux isso não existe como problema, e o ambiente (Java 17 + PySpark 3.5.3) fica idêntico em qualquer máquina.
 
 ## Estado de verificação
@@ -58,7 +69,7 @@ Executado de ponta a ponta com Docker (Docker Desktop no Windows, containers Lin
 
 - **Pipeline completa:** raw → silver → gold → PostgreSQL em ~5 min. 347.447 itens na silver e 312.770 linhas na fato. As contagens e a receita total (R$ 618,2 mi) conferem entre Parquet e banco; as contagens do log da carga são lidas **do PostgreSQL**, não do Parquet.
 - **Quarentena:** os rejeitados batem com o que o gerador injetou — 207 JSON truncados e 1.914 duplicatas, além de 965 itens inválidos e 622 SKUs fora do catálogo.
-- **Testes (12):** passam no container (Spark 3.5.3, Java 17). Cada bug encontrado em revisão tem um teste de regressão, inclusive um que prova que `validate_star` e `reconcile` **detectam** erro (fato sem linha, valor errado, grão duplicado, dimensão ausente).
+- **Testes (14):** passam no container (Spark 3.5.3, Java 17). Cada bug encontrado em revisão tem um teste de regressão, inclusive um que prova que `validate_star` e `reconcile` **detectam** erro (fato sem linha, valor errado, grão duplicado, dimensão ausente).
 - **SQL:** o DDL é aplicado na criação do banco e as 6 consultas analíticas rodam sem erro.
 - **Carga atômica comprovada:** forcei uma falha na troca (constraint que os dados novos violam) e o `dw` permaneceu com a carga anterior.
 

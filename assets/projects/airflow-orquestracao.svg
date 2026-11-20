@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="t d">
+  <title id="t">DAG de orquestração</title>
+  <desc id="d">Grafo de tarefas do Airflow: uma decisão escolhe entre gerar dados ou reaproveitar os existentes; depois seguem silver, gold, um quality gate e a carga no data warehouse.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#8a7a5c"/></marker>
+  </defs>
+  <g font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace" font-size="14">
+    <rect width="640" height="360" fill="#f6f1e7"/>
+    <text x="32" y="40" fill="#5b4e37" font-size="16">DAG pipeline_vendas · todo dia às 02h</text>
+
+    <!-- arestas -->
+    <g stroke="#8a7a5c" stroke-width="1.6" fill="none" marker-end="url(#a)">
+      <path d="M96 180 130 150"/>
+      <path d="M96 180 130 210" stroke-dasharray="4 4"/>
+      <path d="M206 150 238 176"/>
+      <path d="M206 210 238 184" stroke-dasharray="4 4"/>
+      <path d="M312 180h26"/>
+      <path d="M412 180h26"/>
+      <path d="M512 180h26"/>
+    </g>
+
+    <!-- nós: verde = sucesso -->
+    <g fill="#dcefe5" stroke="#2f7d5b" stroke-width="2">
+      <rect x="20" y="160" width="76" height="40" rx="8"/>
+      <rect x="130" y="130" width="76" height="40" rx="8"/>
+      <rect x="238" y="160" width="76" height="40" rx="8"/>
+      <rect x="338" y="160" width="76" height="40" rx="8"/>
+      <rect x="538" y="160" width="76" height="40" rx="8"/>
+    </g>
+    <!-- gate de qualidade (destaque) -->
+    <rect x="438" y="160" width="76" height="40" rx="8" fill="#2f7d5b" stroke="#2f5d46" stroke-width="2"/>
+    <!-- ramo pulado -->
+    <rect x="130" y="190" width="76" height="40" rx="8" fill="#ece6d6" stroke="#b9a373" stroke-width="2" stroke-dasharray="5 4"/>
+
+    <g fill="#2f5d46" text-anchor="middle">
+      <text x="58" y="185">branch</text>
+      <text x="168" y="155">gerar</text>
+      <text x="276" y="185">silver</text>
+      <text x="376" y="185">gold</text>
+      <text x="576" y="185">carga</text>
+    </g>
+    <text x="476" y="185" text-anchor="middle" fill="#f6f1e7" font-weight="700">gate</text>
+    <text x="168" y="215" text-anchor="middle" fill="#8a7a5c">pulada</text>
+
+    <!-- legenda -->
+    <g font-size="13" fill="#5b4e37">
+      <rect x="32" y="288" width="14" height="14" rx="3" fill="#dcefe5" stroke="#2f7d5b" stroke-width="1.5"/>
+      <text x="54" y="300">sucesso</text>
+      <rect x="140" y="288" width="14" height="14" rx="3" fill="#ece6d6" stroke="#b9a373" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <text x="162" y="300">pulada</text>
+      <rect x="236" y="288" width="14" height="14" rx="3" fill="#2f7d5b"/>
+      <text x="258" y="300">gate: sem retry</text>
+      <text x="32" y="330">retry com backoff nas demais etapas</text>
+    </g>
+  </g>
+</svg>

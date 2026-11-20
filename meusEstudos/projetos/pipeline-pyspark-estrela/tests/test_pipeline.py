@@ -1,10 +1,12 @@
 import json
+import sys
 from decimal import Decimal
 
 import pytest
 from pyspark.sql import SparkSession
 
 from pipeline.generate_data import gerar
+from pipeline.run_pipeline import stage_gold, stage_quality, stage_silver
 from pyspark.sql import functions as F
 
 from pipeline.transform import build_gold, build_silver, reconcile, validate_star
@@ -243,3 +245,38 @@ def test_reconcile_detecta_perda_de_linhas_e_erro_de_valor(spark, tmp_path):
 
     sem_dias = {**gold, "dim_data": gold["dim_data"].limit(0)}
     assert reconcile(silver.items, sem_dias)["divergencia_dias"] > 0
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="gravar Parquet no Windows exige winutils; roda no container Linux")
+def test_etapas_separadas_dao_o_mesmo_resultado_que_a_pipeline_em_memoria(spark, tmp_path):
+    raw, out = tmp_path / "raw", tmp_path / "out"
+    gerar(orders=2000, out=raw, seed=11)
+
+    # como o Airflow executa: cada etapa lê o que a anterior gravou em disco
+    stage_silver(spark, raw, out)
+    stage_gold(spark, out)
+    resumo = stage_quality(spark, out)
+
+    esperado = build_gold(spark, build_silver(spark, raw))["fato_vendas"].count()
+    assert resumo["linhas_fato"] == esperado
+    for tabela in ["dim_data", "dim_cliente", "dim_produto", "dim_pagamento", "dim_canal", "fato_vendas"]:
+        assert spark.read.parquet(str(out / "gold" / tabela)).count() > 0
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="gravar Parquet no Windows exige winutils; roda no container Linux")
+def test_etapa_de_qualidade_falha_quando_a_gold_esta_corrompida(spark, tmp_path):
+    raw, out = tmp_path / "raw", tmp_path / "out"
+    gerar(orders=1000, out=raw, seed=5)
+    stage_silver(spark, raw, out)
+    stage_gold(spark, out)
+
+    # simula perda de dados: apaga metade das dimensões de cliente
+    dim = spark.read.parquet(str(out / "gold" / "dim_cliente"))
+    dim.limit(dim.count() // 2).write.mode("overwrite").parquet(str(out / "gold" / "dim_cliente_tmp"))
+    import shutil
+
+    shutil.rmtree(out / "gold" / "dim_cliente")
+    (out / "gold" / "dim_cliente_tmp").rename(out / "gold" / "dim_cliente")
+
+    with pytest.raises(RuntimeError, match="Qualidade do modelo violada"):
+        stage_quality(spark, out)
