@@ -96,3 +96,38 @@ def test_comandos_apontam_para_as_etapas_da_pipeline(dag):
     assert "--stage quality" in comandos["qualidade"]
     assert "--stage load" in comandos["carregar_dw"]
     assert "pipeline.generate_data" in comandos["gerar_dados"]
+
+
+# --- DAG da carga incremental ---------------------------------------------------------------- #
+INC = "pipeline_vendas_incremental"
+
+
+@pytest.fixture(scope="module")
+def dag_inc(dagbag):
+    return dagbag.dags[INC]
+
+
+def test_dag_incremental_estrutura_e_ordem(dag_inc):
+    assert {t.task_id for t in dag_inc.tasks} == {"receber_lote", "carga_incremental", "concluir"}
+    assert dag_inc.get_task("receber_lote").downstream_task_ids == {"carga_incremental"}
+    assert dag_inc.get_task("carga_incremental").downstream_task_ids == {"concluir"}
+
+
+def test_dag_incremental_e_segura_para_retry_e_nao_concorre_consigo_mesma(dag_inc):
+    # retry é seguro porque a carga é atômica e idempotente (MERGE + controle na mesma transação)
+    assert dag_inc.default_args["retries"] == 2
+    # dois MERGEs ao mesmo tempo no mesmo DW disputariam as mesmas linhas
+    assert dag_inc.max_active_runs == 1
+    assert dag_inc.catchup is False
+
+
+def test_receber_lote_nao_tem_retry_porque_nao_e_idempotente(dag_inc):
+    assert dag_inc.get_task("receber_lote").retries == 0
+    assert dag_inc.get_task("carga_incremental").retries == 2  # esta sim é segura para repetir
+
+
+def test_dag_incremental_usa_schema_proprio_e_nao_o_da_carga_completa(dag_inc, dag):
+    comando = dag_inc.get_task("carga_incremental").bash_command
+    assert "--schema dw_incremental" in comando
+    # a carga completa grava em "dw" (padrão da pipeline): misturar os dois quebraria o controle
+    assert "--schema" not in dag.get_task("carregar_dw").bash_command

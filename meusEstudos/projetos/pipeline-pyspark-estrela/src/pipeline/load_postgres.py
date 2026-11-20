@@ -22,10 +22,13 @@ from pathlib import Path
 
 from pyspark.sql import SparkSession
 
+from pipeline.modelo import ORDEM_DE_CARGA
+
 log = logging.getLogger(__name__)
 
-# Dimensões antes da fato (a fato referencia as dimensões).
-ORDEM_DE_CARGA = ["dim_data", "dim_cliente", "dim_produto", "dim_pagamento", "dim_canal", "fato_vendas"]
+
+
+POSTGRES_DRIVER = "org.postgresql.Driver"
 
 
 def _conexao() -> tuple[str, str, str]:
@@ -43,17 +46,34 @@ def jdbc_url() -> str:
     return _conexao()[0]
 
 
-def _executar_em_transacao(spark: SparkSession, comandos: list[str]) -> None:
-    """Executa os comandos numa única transação (tudo ou nada) usando o driver JDBC do Spark."""
-    url, usuario, senha = _conexao()
+def _executar_em_transacao(
+    spark: SparkSession,
+    comandos: list[str],
+    verificacoes: list[tuple[str, int]] | None = None,
+    conexao_jdbc: tuple[str, str, str, str] | None = None,
+) -> None:
+    """Executa os comandos numa única transação (tudo ou nada) usando o driver JDBC do Spark.
+
+    ``verificacoes`` são pares (consulta, valor esperado) avaliados **antes do commit**: se algum
+    valor divergir, a transação inteira é desfeita. É o jeito de validar o resultado de um MERGE
+    sem que dado errado chegue a ficar visível para quem consulta.
+    """
+    # conexao_jdbc = (url, usuário, senha, classe do driver); o padrão é o PostgreSQL deste projeto.
+    url, usuario, senha, driver = conexao_jdbc or (*_conexao(), POSTGRES_DRIVER)
     jvm = spark._jvm  # noqa: SLF001 - py4j é o único caminho para uma transação multi-comando
-    jvm.java.lang.Class.forName("org.postgresql.Driver")
+    jvm.java.lang.Class.forName(driver)
     conexao = jvm.java.sql.DriverManager.getConnection(url, usuario, senha)
     try:
         conexao.setAutoCommit(False)
         instrucao = conexao.createStatement()
         for comando in comandos:
             instrucao.execute(comando)
+        for consulta, esperado in verificacoes or []:
+            resultado = instrucao.executeQuery(consulta)
+            resultado.next()
+            obtido = int(resultado.getLong(1))
+            if obtido != esperado:
+                raise RuntimeError(f"Verificação antes do commit falhou: esperado {esperado}, obtido {obtido} ({consulta})")
         conexao.commit()
     except Exception:
         conexao.rollback()
@@ -62,19 +82,24 @@ def _executar_em_transacao(spark: SparkSession, comandos: list[str]) -> None:
         conexao.close()
 
 
-def _contar_no_banco(spark: SparkSession, tabela: str) -> int:
-    url, usuario, senha = _conexao()
+def consultar_inteiro(spark: SparkSession, consulta: str, conexao_jdbc: tuple[str, str, str, str] | None = None) -> int:
+    """Executa uma consulta que devolve um único número (por exemplo, um COUNT)."""
+    url, usuario, senha, driver = conexao_jdbc or (*_conexao(), POSTGRES_DRIVER)
     linha = (
         spark.read.format("jdbc")
         .option("url", url)
-        .option("query", f"SELECT count(*) AS total FROM {tabela}")
+        .option("query", consulta)
         .option("user", usuario)
         .option("password", senha)
-        .option("driver", "org.postgresql.Driver")
+        .option("driver", driver)
         .load()
         .first()
     )
-    return int(linha["total"])
+    return int(linha[0])
+
+
+def _contar_no_banco(spark: SparkSession, tabela: str) -> int:
+    return consultar_inteiro(spark, f"SELECT count(*) AS total FROM {tabela}")
 
 
 def load_gold(spark: SparkSession, gold_dir: str | Path, schema: str = "dw", stage: str = "stage") -> dict[str, int]:

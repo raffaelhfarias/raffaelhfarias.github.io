@@ -201,13 +201,19 @@ class Silver:
     items: DataFrame
     products: DataFrame
     rejected: DataFrame
+    # order_id de TODOS os pedidos válidos do arquivo (inclusive os sem nenhum item válido, que ficam
+    # fora de ``items``). A carga incremental precisa deles para saber que o pedido foi reenviado.
+    pedidos: DataFrame | None = None
 
 
-def build_silver(spark: SparkSession, raw_dir: str | Path) -> Silver:
-    raw_dir = Path(raw_dir)
-    raw = read_orders(spark, raw_dir / "orders.jsonl")
-    products, rejeitados_catalogo = clean_products(read_products(spark, raw_dir / "products.csv"))
+def build_silver_from_orders(spark: SparkSession, orders_path: str | Path, products: DataFrame) -> Silver:
+    """Silver de um arquivo (ou pasta) de pedidos, dado um catálogo já validado.
 
+    Serve tanto para a carga completa quanto para um lote da carga incremental.
+    ``rejected`` traz só o que foi rejeitado nos pedidos; a quarentena do catálogo
+    fica com quem validou o catálogo.
+    """
+    raw = read_orders(spark, orders_path)
     parseaveis, corrompidos = split_corrupt(raw)
     pedidos, rejeitados_pedido = clean_orders(parseaveis)
     itens, rejeitados_item = validate_items(explode_items(pedidos))
@@ -217,9 +223,16 @@ def build_silver(spark: SparkSession, raw_dir: str | Path) -> Silver:
         corrompidos.unionByName(rejeitados_pedido)
         .unionByName(rejeitados_item)
         .unionByName(rejeitados_sku)
-        .unionByName(rejeitados_catalogo)
     )
-    return Silver(items=itens, products=products, rejected=rejected)
+    return Silver(items=itens, products=products, rejected=rejected, pedidos=pedidos.select("order_id"))
+
+
+def build_silver(spark: SparkSession, raw_dir: str | Path) -> Silver:
+    raw_dir = Path(raw_dir)
+    products, rejeitados_catalogo = clean_products(read_products(spark, raw_dir / "products.csv"))
+    silver = build_silver_from_orders(spark, raw_dir / "orders.jsonl", products)
+    silver.rejected = silver.rejected.unionByName(rejeitados_catalogo)
+    return silver
 
 
 # --------------------------------------------------------------------------- #

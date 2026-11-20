@@ -73,3 +73,17 @@ CREATE INDEX ix_fato_date     ON fato_vendas (date_key);
 CREATE INDEX ix_fato_cliente  ON fato_vendas (cliente_key);
 CREATE INDEX ix_fato_produto  ON fato_vendas (produto_key);
 CREATE INDEX ix_fato_ano_mes  ON fato_vendas (ano_mes);
+
+-- Controle da carga incremental (pipeline.incremental): um registro por lote já mesclado no DW.
+-- É gravado na MESMA transação do MERGE, então "o lote consta aqui" e "os dados do lote estão
+-- no DW" são sempre a mesma verdade. O checksum detecta um arquivo reenviado com conteúdo novo.
+CREATE TABLE controle_cargas (
+    lote              VARCHAR(80)  PRIMARY KEY,
+    checksum          CHAR(64)     NOT NULL,
+    itens_validos     INTEGER      NOT NULL,
+    fato_inseridas    INTEGER      NOT NULL,
+    fato_atualizadas  INTEGER      NOT NULL,
+    fato_removidas    INTEGER      NOT NULL,
+    rejeitados        INTEGER      NOT NULL,
+    processado_em     TIMESTAMPTZ  NOT NULL DEFAULT now()
+);

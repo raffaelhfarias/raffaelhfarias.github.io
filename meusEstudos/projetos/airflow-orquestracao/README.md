@@ -1,6 +1,6 @@
 # Orquestração com Apache Airflow
 
-DAG de **Apache Airflow 2.10** que orquestra a [pipeline PySpark + modelo estrela](../pipeline-pyspark-estrela): gera um lote de pedidos, processa raw → silver → gold, aplica um **quality gate** e carrega o resultado no PostgreSQL. Tudo roda em Docker, com `LocalExecutor` e banco de metadados em PostgreSQL.
+Duas DAGs de **Apache Airflow 2.10** que orquestram a [pipeline PySpark + modelo estrela](../pipeline-pyspark-estrela): a **carga completa** (gera um lote de pedidos, processa raw → silver → gold, aplica um **quality gate** e carrega no PostgreSQL) e a **carga incremental** (processa só o lote novo e o mescla com `MERGE`). Tudo roda em Docker, com `LocalExecutor` e banco de metadados em PostgreSQL.
 
 Este projeto não duplica código: o Airflow monta `../pipeline-pyspark-estrela/src` e executa as etapas da pipeline como tarefas.
 
@@ -9,7 +9,22 @@ decidir_geracao ─┬─▶ gerar_dados ──────────┐
  (branch)        └─▶ usar_dados_existentes ┴─▶ silver ─▶ gold ─▶ qualidade ─▶ carregar_dw ─▶ concluir
 ```
 
-## O que a DAG demonstra
+## As duas DAGs
+
+| DAG | Agenda | O que faz | Schema no DW |
+|---|---|---|---|
+| `pipeline_vendas` | 02h | **Rebuild**: reprocessa tudo e troca o conteúdo (quality gate, retries, branch) | `dw` |
+| `pipeline_vendas_incremental` | 03h | **Manutenção**: recebe o lote do dia e aplica só o que mudou com `MERGE` | `dw_incremental` |
+
+```
+pipeline_vendas_incremental:   receber_lote ─▶ carga_incremental ─▶ concluir
+```
+
+Cada uma tem seu schema porque a completa troca todo o conteúdo: se as duas escrevessem no mesmo schema, a tabela de controle da incremental diria que lotes antigos estão carregados quando o conteúdo já foi substituído. O desenho da carga incremental está em [`carga-incremental.md`](../pipeline-pyspark-estrela/docs/carga-incremental.md).
+
+`receber_lote` simula a chegada do lote do dia: o gerador é determinístico, então gerar N+1 lotes reproduz os N primeiros **byte a byte** (o controle por checksum não os vê como novos) e acrescenta o lote N+1. A propriedade "gerar N+1 lotes reproduz os N primeiros byte a byte" é **testada** (uma versão anterior do gerador a violava a partir do 3º lote: o nº de clientes dependia do total de lotes; foi achado em revisão e corrigido). O `retry` da `carga_incremental` é seguro porque a carga é atômica e idempotente; já `receber_lote` **não tem retry**, porque decide o próximo número de lote contando os arquivos que já existem e repetir depois de uma falha parcial geraria um lote a mais. Uma trava no banco impede duas cargas simultâneas no mesmo schema, inclusive uma execução manual junto com a agendada.
+
+## O que a DAG completa demonstra
 
 | Conceito | Onde está na DAG | Por quê |
 |---|---|---|
@@ -83,7 +98,8 @@ Executado de ponta a ponta com Docker (Docker Desktop no Windows, containers Lin
 - **Branch e trigger rule:** com `gerar_dados=false`, `usar_dados_existentes` foi executada, `gerar_dados` ficou `skipped` e a `silver` rodou normalmente.
 - **Retry com recuperação:** derrubei o DW de propósito. `carregar_dw` falhou (`UnknownHostException: dw`), entrou em `up_for_retry`, e na segunda tentativa, com o banco de volta, concluiu a execução. O DW terminou com as mesmas 31.274 linhas, então a tentativa que falhou não deixou lixo.
 - **`max_active_runs=1`:** observado na prática (ver o aviso acima): a execução manual esperou a agendada terminar.
-- **Testes da DAG (11):** passam em ~5 s e não precisam de nenhum serviço no ar (estrutura, ordem, retries, timeout, branch, agendamento).
+- **Testes da DAG (15):** passam em ~5 s e não precisam de nenhum serviço no ar (estrutura, ordem, retries, timeout, branch, agendamento; que a incremental usa schema próprio; e que `receber_lote` não tem retry).
+- **DAG incremental, três execuções reais** (pilha zerada): a primeira (a agendada, disparada ao ativar a DAG) processou `lote_0001` (+3.162). A segunda registrou `2 lote(s) encontrado(s), 1 pendente(s)` e processou só o `lote_0002` (+3.110, ~18 atualizadas, -41 removidas). A **terceira**, que a versão anterior do gerador teria quebrado, registrou `3 lote(s) encontrado(s), 1 pendente(s)` e processou só o `lote_0003` (+3.131, ~20, -33). `dw_incremental.controle_cargas` ficou com os três lotes e a fato com 9.329 linhas (9.403 inseridas − 74 removidas).
 - **Testes da pipeline por etapas:** 14 passam no container, incluindo um que prova que rodar silver → gold → qualidade em etapas separadas dá o mesmo resultado que o fluxo em memória.
 
 **Não verificado:**

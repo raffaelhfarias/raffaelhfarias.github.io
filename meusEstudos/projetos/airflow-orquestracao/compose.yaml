@@ -9,7 +9,7 @@ x-airflow-common: &airflow-common
     AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "false"
     # Código da pipeline (montado de ../pipeline-pyspark-estrela/src) e driver JDBC
     PYTHONPATH: /opt/pipeline/src
-    PG_JDBC_JAR: /opt/jars/postgresql.jar
+    PIPELINE_DDL: /opt/pipeline/sql/01_ddl_estrela.sql
     SHUFFLE_PARTITIONS: "8"
     # Data warehouse que a carga atualiza (serviço "dw" abaixo)
     POSTGRES_HOST: dw
@@ -21,6 +21,7 @@ x-airflow-common: &airflow-common
     - ./dags:/opt/airflow/dags
     - ./tests:/opt/airflow/tests
     - ../pipeline-pyspark-estrela/src:/opt/pipeline/src:ro
+    - ../pipeline-pyspark-estrela/sql:/opt/pipeline/sql:ro   # DDL do modelo estrela (o incremental o usa para criar seu schema)
     - ./data:/opt/airflow/data
     - airflow-logs:/opt/airflow/logs
   depends_on:

@@ -14,12 +14,17 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Driver JDBC do SQL Server. Fica depois do pip de propósito: mexer nos drivers não refaz a camada
+# do PySpark (300 MB), que é a mais cara da imagem.
+RUN curl -fsSL -o /opt/jars/mssql-jdbc.jar \
+    https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.8.1.jre11/mssql-jdbc-12.8.1.jre11.jar
+
 COPY src ./src
 COPY tests ./tests
 COPY pytest.ini .
+COPY sql ./sql
 
 ENV PYTHONPATH=/app/src \
-    PYTHONUNBUFFERED=1 \
-    PG_JDBC_JAR=/opt/jars/postgresql.jar
+    PYTHONUNBUFFERED=1
 
 CMD ["python", "-m", "pipeline.run_pipeline", "--load-postgres"]

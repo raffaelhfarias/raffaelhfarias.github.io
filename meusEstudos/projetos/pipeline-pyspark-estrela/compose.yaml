@@ -18,6 +18,46 @@ services:
       timeout: 3s
       retries: 20
 
+  # SQL Server 2022 (edição Developer, gratuita para estudo). Pesa ~2 GB de RAM, então só sobe com
+  # o profile: `docker compose --profile sqlserver up -d sqlserver sqlserver-init`
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    profiles: ["sqlserver"]
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: Dw_Estudo_2026!
+    ports:
+      - "127.0.0.1:1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+      - ./sql:/sql:ro   # para rodar as consultas com sqlcmd
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q \"SELECT 1\" -b || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  # Cria o banco e o modelo estrela (T-SQL) uma vez e termina. Idempotente.
+  sqlserver-init:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    profiles: ["sqlserver"]
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      MSSQL_SA_PASSWORD: Dw_Estudo_2026!
+    volumes:
+      - ./sql:/sql:ro
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        set -e
+        sqlcmd=/opt/mssql-tools18/bin/sqlcmd
+        $$sqlcmd -C -S sqlserver -U sa -P "$$MSSQL_SA_PASSWORD" -b -Q "IF DB_ID('dw') IS NULL CREATE DATABASE dw"
+        $$sqlcmd -C -S sqlserver -U sa -P "$$MSSQL_SA_PASSWORD" -d dw -b -i /sql/sqlserver/01_ddl_estrela.sql
+        echo "modelo estrela criado no SQL Server"
+
   # Job sob demanda: `docker compose run --rm pipeline ...` (não sobe com `up`).
   pipeline:
     build: .
@@ -30,6 +70,8 @@ services:
       POSTGRES_DB: dw
       POSTGRES_USER: dw
       POSTGRES_PASSWORD: dw
+      SQLSERVER_HOST: sqlserver
+      SQLSERVER_PASSWORD: Dw_Estudo_2026!
       SHUFFLE_PARTITIONS: "16"
     volumes:
       - ./data:/app/data
@@ -38,3 +80,4 @@ services:
 
 volumes:
   pgdata:
+  sqlserver-data:

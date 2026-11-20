@@ -11,7 +11,8 @@ tratar: duplicatas, JSON truncado, itens inválidos, SKU fora do catálogo,
 status em caixa mista e cidades nulas.
 
 Uso:
-    python -m pipeline.generate_data --orders 200000 --out data/raw
+    python -m pipeline.generate_data --orders 200000 --out data/raw      # arquivo único
+    python -m pipeline.generate_data --lotes 5 --out data/raw_inc        # lotes diários com atualizações
 """
 
 from __future__ import annotations
@@ -86,9 +87,19 @@ def gerar_clientes(rng: random.Random, n: int) -> list[dict]:
     return clientes
 
 
-def gerar_pedido(rng: random.Random, n_pedido: int, clientes: list[dict], produtos: list[dict]) -> dict:
-    segundos = int((DATA_FIM - DATA_INICIO).total_seconds())
-    ts = DATA_INICIO + timedelta(seconds=rng.randint(0, segundos))
+def gerar_pedido(
+    rng: random.Random,
+    n_pedido: int,
+    clientes: list[dict],
+    produtos: list[dict],
+    dia: datetime | None = None,
+) -> dict:
+    """``dia`` fixa a data do pedido (usado nos lotes diários); sem ele, sorteia em 2024-2025."""
+    if dia is None:
+        segundos = int((DATA_FIM - DATA_INICIO).total_seconds())
+        ts = DATA_INICIO + timedelta(seconds=rng.randint(0, segundos))
+    else:
+        ts = dia + timedelta(seconds=rng.randint(0, 86399))
     cliente = dict(rng.choice(clientes))
     if rng.random() < 0.02:  # cidade ausente
         cliente["city"] = None
@@ -158,12 +169,92 @@ def gerar(orders: int, out: Path, seed: int = 42) -> dict[str, int]:
     return {"linhas": linhas, "duplicadas": duplicadas, "truncadas": truncadas, "produtos": len(produtos)}
 
 
+# --------------------------------------------------------------------------- #
+# Lotes diários com atualizações (para a carga incremental)
+# --------------------------------------------------------------------------- #
+STATUS_ATUALIZAVEIS = ["PAGO", "ENVIADO", "ENTREGUE"]
+
+
+def atualizar_pedido(rng: random.Random, pedido: dict) -> dict:
+    """Versão atualizada de um pedido já enviado: o mesmo ``order_id`` e ``order_ts`` com algo alterado.
+
+    Modela o que acontece de verdade em sistemas transacionais: o pedido avança de status,
+    é cancelado depois de enviado, perde um item ou tem quantidade/desconto corrigido.
+    """
+    novo = json.loads(json.dumps(pedido))  # cópia profunda
+    sorteio = rng.random()
+    if sorteio < 0.15 and len(novo["items"]) > 1:
+        novo["items"].pop()  # item removido do pedido
+    elif sorteio < 0.30:
+        novo["status"] = "CANCELADO"  # cancelamento tardio
+    elif sorteio < 0.50 and novo["items"]:
+        item = novo["items"][0]  # correção de valor: é o que muda a linha da fato (UPDATE no MERGE)
+        if rng.random() < 0.5:
+            item["qty"] = int(item["qty"]) + 1
+        else:
+            item["discount"] = 0.05 if float(item["discount"]) != 0.05 else 0.1
+    else:
+        atual = str(novo["status"]).upper()
+        opcoes = [s for s in STATUS_ATUALIZAVEIS if s != atual] or STATUS_ATUALIZAVEIS
+        novo["status"] = rng.choice(opcoes)
+    return novo
+
+
+def gerar_lotes(
+    lotes: int, pedidos_por_lote: int, out: Path, seed: int = 42, inicio: datetime = datetime(2025, 1, 1)
+) -> dict[str, int]:
+    """Gera ``lotes`` arquivos diários em ``out/lotes``. Do segundo em diante, cada lote traz também
+    ~5% de reenvios de pedidos de lotes anteriores, com atualizações."""
+    rng = random.Random(seed)
+    pasta = out / "lotes"
+    pasta.mkdir(parents=True, exist_ok=True)
+    produtos = gerar_produtos(rng)
+    # O número de clientes NÃO pode depender de `lotes`: ele consome o gerador aleatório, e mudar o total de
+    # lotes alteraria a sequência inteira. Assim, gerar N+1 lotes reproduz os N primeiros byte a byte
+    # (propriedade em que a DAG incremental se apoia; há um teste para ela).
+    clientes = gerar_clientes(rng, max(1000, pedidos_por_lote // 2))
+
+    with (out / "products.csv").open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=list(produtos[0]))
+        writer.writeheader()
+        writer.writerows(produtos)
+
+    historico: list[dict] = []
+    numero = novos = atualizacoes = 0
+    for lote in range(1, lotes + 1):
+        dia = inicio + timedelta(days=lote - 1)
+        do_lote = []
+        for _ in range(pedidos_por_lote):
+            numero += 1
+            do_lote.append(gerar_pedido(rng, numero, clientes, produtos, dia=dia))
+        reenvios = []
+        if historico:
+            amostra = rng.sample(range(len(historico)), min(len(historico), max(1, pedidos_por_lote // 20)))
+            for posicao in amostra:
+                nova_versao = atualizar_pedido(rng, historico[posicao])
+                reenvios.append(nova_versao)
+                historico[posicao] = nova_versao  # próximas atualizações partem desta versão
+        historico.extend(do_lote)
+        with (pasta / f"lote_{lote:04d}.jsonl").open("w", encoding="utf-8") as f:
+            for pedido in do_lote + reenvios:
+                f.write(json.dumps(pedido, ensure_ascii=False) + "\n")
+        novos += len(do_lote)
+        atualizacoes += len(reenvios)
+    return {"lotes": lotes, "pedidos_novos": novos, "atualizacoes": atualizacoes, "produtos": len(produtos)}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--orders", type=int, default=200_000, help="quantidade de pedidos (padrão: 200000)")
     parser.add_argument("--out", type=Path, default=Path("data/raw"))
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--lotes", type=int, default=0, help="se > 0, gera lotes diários em OUT/lotes (carga incremental)")
+    parser.add_argument("--pedidos-por-lote", type=int, default=2000)
     args = parser.parse_args()
+    if args.lotes > 0:
+        resumo = gerar_lotes(args.lotes, args.pedidos_por_lote, args.out, args.seed)
+        print(f"Lotes gerados em {args.out / 'lotes'}: {resumo}")
+        return
     resumo = gerar(args.orders, args.out, args.seed)
     print(f"Dados gerados em {args.out}: {resumo}")
 

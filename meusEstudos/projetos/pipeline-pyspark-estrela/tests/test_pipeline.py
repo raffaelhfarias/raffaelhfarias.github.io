@@ -3,28 +3,12 @@ import sys
 from decimal import Decimal
 
 import pytest
-from pyspark.sql import SparkSession
 
 from pipeline.generate_data import gerar
 from pipeline.run_pipeline import stage_gold, stage_quality, stage_silver
 from pyspark.sql import functions as F
 
 from pipeline.transform import build_gold, build_silver, reconcile, validate_star
-
-
-@pytest.fixture(scope="session")
-def spark():
-    session = (
-        SparkSession.builder.master("local[2]")
-        .appName("testes")
-        .config("spark.sql.shuffle.partitions", 2)
-        .config("spark.ui.enabled", "false")
-        .config("spark.sql.sources.partitionColumnTypeInference.enabled", "false")
-        .getOrCreate()
-    )
-    session.sparkContext.setLogLevel("ERROR")
-    yield session
-    session.stop()
 
 
 def _pedido(order_id, itens, status="ENTREGUE", cliente="C1", ts="2025-03-10T10:00:00", cidade="Recife"):

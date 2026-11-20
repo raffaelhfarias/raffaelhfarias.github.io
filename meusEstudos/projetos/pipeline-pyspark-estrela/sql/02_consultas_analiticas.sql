@@ -61,7 +61,7 @@ JOIN dim_cliente c  USING (cliente_key)
 JOIN dim_canal  ca  USING (canal_key)
 GROUP BY c.estado, ca.canal
 HAVING COUNT(DISTINCT f.pedido_id) >= 500
-ORDER BY margem_pct DESC
+ORDER BY margem_pct DESC, c.estado, ca.canal
 LIMIT 10;
 
 -- 5) Fim de semana vs dia útil: ticket médio por pedido.
@@ -83,5 +83,5 @@ FROM fato_vendas f
 JOIN dim_cliente c USING (cliente_key)
 GROUP BY c.cliente_id, c.nome
 HAVING COUNT(DISTINCT f.canal_key) >= 3
-ORDER BY gasto_total DESC
+ORDER BY gasto_total DESC, c.cliente_id
 LIMIT 10;

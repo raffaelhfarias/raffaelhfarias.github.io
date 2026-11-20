@@ -8,6 +8,7 @@ Uso:
     python -m pipeline.run_pipeline                          # tudo, só Parquet
     python -m pipeline.run_pipeline --load-postgres          # tudo + carga no DW
     python -m pipeline.run_pipeline --stage silver           # só uma etapa
+    python -m pipeline.run_pipeline --stage load --target sqlserver   # carga no SQL Server
     (etapas: silver, gold, quality, load, all)
 """
 
@@ -28,6 +29,7 @@ log = logging.getLogger("pipeline")
 
 GOLD_TABLES = ["dim_data", "dim_cliente", "dim_produto", "dim_pagamento", "dim_canal", "fato_vendas"]
 STAGES = ["silver", "gold", "quality", "load", "all"]
+TARGETS = ["postgres", "sqlserver"]
 
 
 def _dirs(out_dir: Path) -> tuple[Path, Path, Path]:
@@ -87,12 +89,14 @@ def stage_quality(spark: SparkSession, out_dir: Path) -> dict:
     return {"linhas_fato": gold["fato_vendas"].count()}
 
 
-def stage_load(spark: SparkSession, out_dir: Path) -> dict[str, int]:
-    """gold -> PostgreSQL (staging + troca atômica)."""
-    from pipeline.load_postgres import load_gold
-
+def stage_load(spark: SparkSession, out_dir: Path, target: str = "postgres") -> dict[str, int]:
+    """gold -> banco relacional (staging + troca atômica). ``target``: postgres ou sqlserver."""
     _, gold_dir, _ = _dirs(out_dir)
-    log.info("Carga no PostgreSQL")
+    log.info("Carga no %s", target)
+    if target == "sqlserver":
+        from pipeline.load_sqlserver import load_gold
+    else:
+        from pipeline.load_postgres import load_gold
     return load_gold(spark, gold_dir)
 
 
@@ -109,7 +113,7 @@ def summarize(spark: SparkSession, out_dir: Path) -> dict:
 # --------------------------------------------------------------------------- #
 # Execução
 # --------------------------------------------------------------------------- #
-def run(raw_dir: Path, out_dir: Path, load_postgres: bool = False, stage: str = "all") -> dict:
+def run(raw_dir: Path, out_dir: Path, load_postgres: bool = False, stage: str = "all", target: str = "postgres") -> dict:
     spark = get_spark()
     inicio = time.perf_counter()
     resumo: dict = {}
@@ -123,7 +127,7 @@ def run(raw_dir: Path, out_dir: Path, load_postgres: bool = False, stage: str = 
         if stage == "all":
             resumo.update(summarize(spark, out_dir))
         if stage == "load" or (stage == "all" and load_postgres):
-            resumo["postgres"] = stage_load(spark, out_dir)
+            resumo[target] = stage_load(spark, out_dir, target)
     finally:
         spark.stop()
     resumo["segundos"] = round(time.perf_counter() - inicio, 1)
@@ -136,10 +140,11 @@ def main() -> int:
     parser.add_argument("--raw", type=Path, default=Path("data/raw"))
     parser.add_argument("--out", type=Path, default=Path("data"))
     parser.add_argument("--stage", choices=STAGES, default="all")
-    parser.add_argument("--load-postgres", action="store_true", help="com --stage all, também carrega no PostgreSQL")
+    parser.add_argument("--load-postgres", action="store_true", help="com --stage all, também carrega no banco (veja --target)")
+    parser.add_argument("--target", choices=TARGETS, default="postgres", help="banco de destino da carga")
     args = parser.parse_args()
 
-    resumo = run(args.raw, args.out, args.load_postgres, args.stage)
+    resumo = run(args.raw, args.out, args.load_postgres, args.stage, args.target)
     log.info("Etapa '%s' concluída em %ss", args.stage, resumo.pop("segundos"))
     for chave, valor in resumo.items():
         log.info("%s: %s", chave, valor)
