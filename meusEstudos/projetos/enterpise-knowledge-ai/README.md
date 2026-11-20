@@ -158,7 +158,7 @@ O projeto é uma subpasta do repositório do portfólio. O deploy usa o [Dockerf
 
 | Configuração | Valor |
 | --- | --- |
-| Base directory | `/meusEstudos/enterpise-knowledge-ai` |
+| Base directory | `/meusEstudos/projetos/enterpise-knowledge-ai` |
 | Dockerfile location | `/Dockerfile` |
 | Porta interna | `8000` |
 | `DATABASE_URL` | URL privada do PostgreSQL, com driver `postgresql+psycopg` |

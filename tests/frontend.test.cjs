@@ -5,7 +5,7 @@ const vm = require("node:vm");
 const { test } = require("node:test");
 
 const root = path.resolve(__dirname, "..");
-const demoPath = "meusEstudos/enterpise-knowledge-ai/app/static/";
+const demoPath = "meusEstudos/projetos/enterpise-knowledge-ai/app/static/";
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 const response = (status, body) => ({ status, ok: status < 400, json: async () => body });
 const active = (extra = {}) => ({

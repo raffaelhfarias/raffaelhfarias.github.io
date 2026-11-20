@@ -69,7 +69,7 @@ Os valores dos limites, retenção e orçamento serão acordados antes da public
 ## 4. Implementação e infraestrutura
 
 - Reaproveitar FastAPI e PostgreSQL/pgvector já presentes no projeto.
-- Manter o projeto em `meusEstudos/enterpise-knowledge-ai` no repositório do portfólio.
+- Manter o projeto em `meusEstudos/projetos/enterpise-knowledge-ai` no repositório do portfólio.
 - Deploy pelo Dockerfile no Coolify existente; o usuário conduz os deploys.
 - Não exigir Docker local nem criar novos serviços sem necessidade confirmada.
 - Escolher a forma mais simples de servir a interface; nenhum framework frontend é obrigatório neste escopo.

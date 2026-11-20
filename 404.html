@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Página não encontrada — Raffael Henrique</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <script>
+      document.documentElement.dataset.theme = (function () {
+        try {
+          return localStorage.getItem("portfolio-theme") || "light";
+        } catch (e) {
+          return "light";
+        }
+      })();
+
+      // Endereços antigos (antes da reorganização de meusEstudos) -> endereços atuais.
+      // O GitHub Pages serve este arquivo para qualquer caminho inexistente, então o
+      // redirecionamento não exige deixar pastas antigas no repositório.
+      var MOVIDOS = [
+        ["/meusEstudos/rag-do-zero/", "/meusEstudos/artigos/rag-do-zero/"],
+        ["/meusEstudos/enterpise-knowledge-ai/", "/meusEstudos/projetos/enterpise-knowledge-ai/"],
+        ["/meusEstudos/pipeline-pyspark-estrela/", "/meusEstudos/projetos/pipeline-pyspark-estrela/"],
+      ];
+
+      function novoCaminho(pathname) {
+        for (var i = 0; i < MOVIDOS.length; i++) {
+          if (pathname.indexOf(MOVIDOS[i][0]) === 0) {
+            return MOVIDOS[i][1] + pathname.slice(MOVIDOS[i][0].length);
+          }
+        }
+        return null;
+      }
+
+      var destino = novoCaminho(location.pathname);
+      if (destino) {
+        location.replace(destino + location.search + location.hash);
+      }
+    </script>
+  </head>
+  <body>
+    <main class="content-column" style="max-width: 640px; margin: 15vh auto; padding: 0 16px">
+      <h1>Página não encontrada</h1>
+      <p>O endereço que você abriu não existe ou mudou de lugar.</p>
+      <p><a href="/index.html">Voltar ao início</a> · <a href="/projects.html">Projetos</a> · <a href="/artigos.html">Artigos</a></p>
+    </main>
+  </body>
+</html>
